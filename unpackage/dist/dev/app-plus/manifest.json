@@ -1,0 +1,165 @@
+{
+  "@platforms": [
+    "android",
+    "iPhone",
+    "iPad"
+  ],
+  "id": "",
+  "name": "cityk-app",
+  "version": {
+    "name": "1.0.0",
+    "code": "100"
+  },
+  "description": "",
+  "developer": {
+    "name": "",
+    "email": "",
+    "url": ""
+  },
+  "permissions": {
+    "Geolocation": {},
+    "Camera": {},
+    "Barcode": {},
+    "UniNView": {
+      "description": "UniNView原生渲染"
+    }
+  },
+  "plus": {
+    "useragent": {
+      "value": "uni-app",
+      "concatenate": true
+    },
+    "splashscreen": {
+      "target": "id:1",
+      "autoclose": true,
+      "waiting": true,
+      "delay": 0
+    },
+    "popGesture": "close",
+    "launchwebview": {
+      "id": "1",
+      "kernel": "WKWebview"
+    },
+    "usingComponents": true,
+    "nvueStyleCompiler": "uni-app",
+    "compilerVersion": 3,
+    "distribute": {
+      "google": {
+        "permissions": [
+          "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
+          "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+          "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
+          "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+          "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+          "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+          "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
+          "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
+          "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+          "<uses-feature android:name=\"android.hardware.camera\"/>",
+          "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+        ]
+      },
+      "apple": {},
+      "plugins": {
+        "geolocation": {
+          "system": {
+            "__platform__": [
+              "android"
+            ]
+          },
+          "amap": {
+            "name": "amapCuSxwF1IC",
+            "__platform__": [
+              "android"
+            ],
+            "appkey_ios": "",
+            "appkey_android": "f83e7b7709681ecbb84f9de0d50e5cb2"
+          }
+        },
+        "maps": {
+          "amap": {
+            "name": "amapCuSxwF1IC",
+            "appkey_ios": "",
+            "appkey_android": "f83e7b7709681ecbb84f9de0d50e5cb2"
+          }
+        },
+        "audio": {
+          "mp3": {
+            "description": "Android平台录音支持MP3格式文件"
+          }
+        }
+      }
+    },
+    "statusbar": {
+      "immersed": "supportedDevice",
+      "style": "dark",
+      "background": "#F8F8F8"
+    },
+    "uniStatistics": {
+      "enable": false
+    },
+    "allowsInlineMediaPlayback": true,
+    "safearea": {
+      "background": "#FFFFFF",
+      "bottom": {
+        "offset": "auto"
+      }
+    },
+    "uni-app": {
+      "control": "uni-v3",
+      "vueVersion": "3",
+      "compilerVersion": "4.06",
+      "nvueCompiler": "uni-app",
+      "renderer": "auto",
+      "nvue": {
+        "flex-direction": "column"
+      },
+      "nvueLaunchMode": "normal",
+      "webView": {
+        "minUserAgentVersion": "49.0"
+      }
+    },
+    "tabBar": {
+      "position": "bottom",
+      "color": "#000",
+      "selectedColor": "#0050FF",
+      "borderStyle": "rgba(0,0,0,0.4)",
+      "blurEffect": "none",
+      "fontSize": "10px",
+      "iconWidth": "24px",
+      "spacing": "3px",
+      "height": "50px",
+      "list": [
+        {
+          "iconPath": "/static/tabbar-icons/index.png",
+          "selectedIconPath": "/static/tabbar-icons/index_s.png",
+          "text": "采样检测",
+          "pagePath": "pages/sampleDetection/index"
+        },
+        {
+          "iconPath": "/static/tabbar-icons/index.png",
+          "selectedIconPath": "/static/tabbar-icons/index_s.png",
+          "text": "实验室运维",
+          "pagePath": "pages/labOperation/index"
+        },
+        {
+          "iconPath": "/static/tabbar-icons/feeds.png",
+          "selectedIconPath": "/static/tabbar-icons/feeds_s.png",
+          "text": "关于我",
+          "pagePath": "pages/me/index"
+        }
+      ],
+      "selectedIndex": 0,
+      "shown": true,
+      "child": [
+        "lauchwebview"
+      ],
+      "selected": 0
+    }
+  },
+  "launch_path": "__uniappview.html"
+}
