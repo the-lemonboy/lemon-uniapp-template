@@ -287,7 +287,7 @@ export function getSubordinate(id) {
 	})
 }
 // 获取默认配置
-export function getConfig(account) {
+export function getDefaultConfig(account) {
 	return request({
 		url: `/api/oauth/getConfig/${account}`,
 		method: 'get'

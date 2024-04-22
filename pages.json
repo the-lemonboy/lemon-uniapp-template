@@ -42,7 +42,8 @@
 		        "path": "detail/index",
 		        "style": {
 		            "navigationBarTitleText": "采样检测详细",
-		            "enablePullDownRefresh": true
+		            "enablePullDownRefresh": true,
+					"navigationStyle": "custom"
 		        }
 		    }, {
 		        "path": "sampling/index",
@@ -99,7 +100,8 @@
 			    "path": "pageMonitoringPoint/index",
 			    "style": {
 			        "navigationBarTitleText": "采样信息",
-			        "enablePullDownRefresh": true
+			        "enablePullDownRefresh": true,
+					"navigationStyle": "custom"
 			    }
 			},
 			{
@@ -168,6 +170,17 @@
 					"navigationStyle": "custom"
 			    }
 			}
+			]
+		},
+		{
+		    "root": "pages/me",
+		    "pages": [{
+		        "path": "/message/index",
+		        "style": {
+		            "navigationBarTitleText": "消息中心",
+		            "enablePullDownRefresh": true
+		        }
+		    }
 			]
 		}
 		],

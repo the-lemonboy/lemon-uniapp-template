@@ -11,9 +11,9 @@
         "nvueStyleCompiler" : "uni-app",
         "compilerVersion" : 3,
         "splashscreen" : {
-            "alwaysShowBeforeRender" : true,
+            "alwaysShowBeforeRender" : false,
             "waiting" : true,
-            "autoclose" : true,
+            "autoclose" : false,
             "delay" : 0
         },
         /* 模块配置 */
@@ -50,13 +50,7 @@
             "sdkConfigs" : {
                 "geolocation" : {
                     "system" : {
-                        "__platform__" : [ "android" ]
-                    },
-                    "amap" : {
-                        "name" : "amapCuSxwF1IC",
-                        "__platform__" : [ "android" ],
-                        "appkey_ios" : "",
-                        "appkey_android" : "f83e7b7709681ecbb84f9de0d50e5cb2"
+                        "__platform__" : [ "ios", "android" ]
                     }
                 },
                 "maps" : {
@@ -91,5 +85,16 @@
     "uniStatistics" : {
         "enable" : false
     },
-    "vueVersion" : "3"
+    "vueVersion" : "3",
+    "h5" : {
+        "sdkConfigs" : {
+            "maps" : {
+                "amap" : {
+                    "key" : "8a4d8c4fe122cfd768f62e5116b52bfe",
+                    "securityJsCode" : "806153f59a3c14772269da1b00137dce",
+                    "serviceHost" : ""
+                }
+            }
+        }
+    }
 }

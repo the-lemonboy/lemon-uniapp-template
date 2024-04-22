@@ -15,10 +15,10 @@
 		</view>
 		<u-toast ref="uToast" />
 		<u-form :model="dataForm" ref="Form" style="margin: 10px;">
-			<u-form-item label-width='100px' label="监测井编号" prop="wellId"><u-input v-model="wellNoOptions.current.label"
+			<u-form-item label-width='100px' label="监测井编号" prop="wellId"><u-input v-model="dataForm.wellId"
 					type="select" @click="wellNoOptions.show=true" /></u-form-item>
 			<!-- <u-form-item label-width='100px' label="洗井类型" prop="washMode"><u-input  v-model="dataForm.washMode" type="select" @click="washModeOptions.show=true" /></u-form-item> -->
-			<u-form-item label-width='100px' label="监测井类型" prop="washMode"><u-input v-model="washModeOptions.current.label"
+			<u-form-item label-width='100px' label="监测井类型" prop="washMode"><u-input v-model="dataForm.washMode"
 					type="select" @click="washModeOptions.show=true" /></u-form-item>
 			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input @click="showPickerDate('startTime')"
 					v-model="dataForm.startTime" /></u-form-item>
@@ -27,19 +27,19 @@
 			<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
 			<u-form-item label-width='100px' label="洗井设备" prop="deviceId"><u-input
 					v-model="dataForm.deviceId" /></u-form-item>
-			<u-form-item label-width='100px' label="井水体积" prop="waterVolume"><u-number-box
+			<u-form-item label-width='100px' label="井水体积" prop="waterVolume"><u-number-box :positive-integer="false"
 					v-model="dataForm.waterVolume"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="水温" prop="waterTemperature"><u-number-box
+			<u-form-item label-width='100px' label="水温" prop="waterTemperature"><u-number-box :positive-integer="false"
 					v-model="dataForm.waterTemperature"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="pH值" prop="waterPh"><u-number-box
+			<u-form-item label-width='100px' label="pH值" prop="waterPh"><u-number-box :positive-integer="false"
 					v-model="dataForm.waterPh"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="电导率" prop="waterConductivity"><u-number-box
+			<u-form-item label-width='100px' label="电导率" prop="waterConductivity"><u-number-box :positive-integer="false"
 					v-model="dataForm.waterConductivity"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="氧化还原电位" prop="oxReductionPotential"><u-number-box
+			<u-form-item label-width='100px' label="氧化还原电位" prop="oxReductionPotential"><u-number-box :positive-integer="false"
 					v-model="dataForm.oxReductionPotential"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="溶解氧" prop="dissolvedOxygen"><u-number-box
+			<u-form-item label-width='100px' label="溶解氧" prop="dissolvedOxygen"><u-number-box :positive-integer="false"
 					v-model="dataForm.dissolvedOxygen"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="浊度" prop="waterTurbidity"><u-number-box
+			<u-form-item label-width='100px' label="浊度" prop="waterTurbidity"><u-number-box :positive-integer="false"
 					v-model="dataForm.waterTurbidity"></u-number-box></u-form-item>
 			<u-form-item label-width='100px' label="是否发现NAPL" prop="hasNapl">
 				<u-radio-group v-model="dataForm.hasNapl">
@@ -50,7 +50,7 @@
 			<u-form-item label-width='100px' label="备注" prop="waterQualityDesc"><u-input
 					v-model="dataForm.waterQualityDesc" /></u-form-item>
 			<u-form-item label-width='100px' label="上传图片" prop="file">
-				<!-- <upload  v-model:input="dataForm.files" ></upload> -->
+				<upload :watermark='true' @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files"></upload>
 			</u-form-item>
 		</u-form>
 		<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
@@ -59,7 +59,7 @@
 		<u-select v-model="washModeOptions.show" value-name="encode" label-name="fullName" :list="washModeOptions.list"
 			@confirm="onWashModeOptions"></u-select>
 			
-		<u-select v-model="wellNoOptions.show" value-name="encode" label-name="fullName" :list="wellNoOptions.list"
+		<u-select v-model="wellNoOptions.show" value-name="wellNo" label-name="wellNo" :list="wellNoOptions.list"
 			@confirm="onWellNoOptions"></u-select>
 	</view>
 </template>
@@ -119,13 +119,13 @@
 		endTime: '',
 		deviceId: '',
 		judgmentContent: '',
-		waterVolume: '',
-		waterTemperature: '',
-		waterPh: '',
-		waterConductivity: '',
-		oxReductionPotential: '',
-		dissolvedOxygen: '',
-		waterTurbidity: '',
+		waterVolume: 0,
+		waterTemperature: 0,
+		waterPh: 0,
+		waterConductivity: 0,
+		oxReductionPotential: 0,
+		dissolvedOxygen: 0,
+		waterTurbidity: 0,
 		hasNapl: 0,
 		waterQualityDesc: '',
 		files: []
@@ -158,13 +158,15 @@
 	          let _data = res.data.list[i]
 	          _list.push(_data)
 	        }
+			
 	        wellNoOptions.list = _list
+			console.log(wellNoOptions.list)
 	      })
 	    }
 		function onWellNoOptions(arr) {
 			let current = arr[0];
 			wellNoOptions.current = current;
-			dataForm.washId = current.value;
+			dataForm.wellId = current.value;
 		}
 	// 监测井类型
 	const washModeOptions = reactive({
@@ -175,7 +177,7 @@
 	function onWashModeOptions(arr) {
 		let current = arr[0];
 		washModeOptions.current = current;
-		dataForm.washMode = current.label;
+		dataForm.washMode = current.value;
 	}
 	 function getWashModeOptions() {
 	      getDictionaryDataSelector('497336968254857797').then(res => {
@@ -199,12 +201,27 @@
 	function addOrUpdateData() {
 		dataForm = parseFiles(dataForm)
 		if (!dataForm.id) {
-			addWellWashRecord(dataForm).then(res=>console.log('success!'))
+			addWellWashRecord(dataForm).then(res=>ToastFn('创建成功'))
 		} else {
-			updateWellWashRecord(dataForm.id, dataForm)
+			updateWellWashRecord(dataForm.id, dataForm).then(res=>ToastFn('修改成功'))
 		}
 	}
-
+function ToastFn(text){
+		goToBack()
+		uni.showToast({
+			title: text,
+			duration: 2000
+		});
+	}
+	function dataInfo(dataAll) {
+	      let _dataAll = dataAll
+	      if (_dataAll.files) {
+	        _dataAll.files = JSON.parse(_dataAll.files)
+	      } else {
+	        _dataAll.files = []
+	      }
+	      dataForm = _dataAll
+	    }
 	function initData() {
 		const id = uni.getStorageSync('wellWashRecordId')
 		if (id) {
@@ -224,16 +241,6 @@
 		uni.navigateBack({
 			delta: 1
 		})
-	}
-
-	function dataInfo(dataAll) {
-		let _dataAll = dataAll
-		if (_dataAll.files) {
-			_dataAll.files = JSON.parse(_dataAll.files)
-		} else {
-			_dataAll.files = []
-		}
-		dataForm = _dataAll
 	}
 </script>
 

@@ -33,6 +33,15 @@ const actions = {
 				uni.setStorageSync('sysConfigInfo', sysConfigInfo)
 				uni.setStorageSync('copyright', copyright)
 				uni.setStorageSync('userInfo', userInfo)
+				// 水印内容
+				uni.setStorageSync('watermarkFlag',true)
+				uni.setStorageSync('watermarkTime',null)
+				uni.setStorageSync('projectName',null)
+				uni.setStorageSync('latAndLon',null)
+			uni.setStorageSync('watermarkValue',[{name:'经纬度',value:uni.getStorageSync('latAndLon'),flag:true},
+			{name:'日期',value:uni.getStorageSync('watermarkTime'),flag:true},
+			{name:'人员',value:uni.getStorageSync('userInfo').userName,flag:true},
+			{name:'项目名称',value:uni.getStorageSync('projectName'),flag:true}])
 				resolve(userInfo)
 			}).catch(error => {
 				reject(error)

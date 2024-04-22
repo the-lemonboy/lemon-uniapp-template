@@ -12,9 +12,9 @@
 		</view>
 		<u-toast ref="uToast" />
 		<u-form :model="dataForm" ref="Form" style="margin: 10px;">
-			<u-form-item label-width='100px' label="起始深度" prop="startDepth"><u-input type='number' v-model="dataForm.startDepth" /></u-form-item>
-			<u-form-item label-width='100px' label="结束深度" prop="endDepth"><u-input type='number' v-model="dataForm.endDepth" /></u-form-item>
-			<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
+			<u-form-item label-width='100px' label="起始深度" prop="startDepth"><u-number-box v-model="dataForm.startDepth"></u-number-box></u-form-item>
+			<u-form-item label-width='100px' label="结束深度" prop="endDepth"><u-number-box v-model="dataForm.endDepth"></u-number-box></u-form-item>
+			<u-form-item label-width='100px' label="土层类型" prop="holeType"><u-input v-model="holeTypeOptions.current.label" type="select" @click="holeTypeOptions.show = true"/></u-form-item>
 			<u-form-item label-width='100px' label="颜色" prop="solumColor"><u-input v-model="dataForm.solumColor" /></u-form-item>
 			<u-form-item label-width='100px' label="气味" prop="solumSmell"><u-input v-model="dataForm.solumSmell" /></u-form-item>
 			<u-form-item label-width='100px' label="湿度" prop="solumHumidity"><u-input v-model="dataForm.solumHumidity" type="select" @click="solumHumidityOptions.show=true"/></u-form-item>
@@ -22,10 +22,10 @@
 			<u-form-item label-width='100px' label="密实度" prop="solumCompactness"><u-input  v-model="dataForm.solumCompactness" type="select" @click="solumCompactnessOptions.show=true" /></u-form-item>
 			<u-form-item label-width='100px' label="备注" prop="remark"><u-input  v-model="dataForm.remark" /></u-form-item>
 			<u-form-item label-width='100px' label="上传图片" prop="file">
-				<upload  :value="dataForm.files" @input="handleInput"></upload>
+				<upload :watermark='true' @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files"></upload>
 			</u-form-item>
 			</u-form>
-				<!-- <u-select v-model="select1.show" :list="select1.list" @confirm="onSelect1"></u-select> -->
+				<u-select v-model="holeTypeOptions.show" value-name="fullName" label-name="fullName"  :list="holeTypeOptions.list" @confirm="onHoleTypeOptions"></u-select>
 <u-select v-model="solumHumidityOptions.show" value-name="id" label-name="fullName" :list="solumHumidityOptions.list" @confirm="onSolumHumidityOptions"></u-select>
 <u-select v-model="solumCompactnessOptions.show" value-name="id" label-name="fullName" :list="solumCompactnessOptions.list" @confirm="onSolumCompactnessOptions"></u-select>
 <u-select v-model="solumPlasticityOptions.show" value-name="id" label-name="fullName" :list="solumPlasticityOptions.list" @confirm="onSolumPlasticityOptions"></u-select>
@@ -36,7 +36,7 @@
 	import { reactive, ref ,nextTick,watch} from 'vue'
 	import {onLoad} from '@dcloudio/uni-app'
 	import upload from '@/components/cityk-upload.vue';
-	import { getMenuId } from '@/utils/index.js';
+	import { getMenuId,getCurrentTime } from '@/utils/index.js';
 	import { addHoleRecord,updateHoleRecord,getHoleRecordDetail } from '@/api/sample.js'
 	import { getDictionaryDataSelector ,getDictionaryDataSelectorCascade} from '@/api/dictionary'
 	let dataForm = reactive({
@@ -53,11 +53,27 @@
         pollutionDesc: '',
         files: []
       })
-	watch(dataForm, (newVal, oldVal) => {
-	     console.log(newVal, oldVal);
-	   },{deep:true});
 	  // 获取采样类型
-	  // let holeTypeOptions = reactive({show: false,current:{}, list:[],})
+	  let holeTypeOptions = reactive({show: false,current:{}, list:[],})
+	  function getHoleTypeOptions(){
+		  getDictionaryDataSelectorCascade('497318342525198917').then(res=>{
+			  res.data.list.forEach(item=>{		 
+				  changeHoleType(item)
+			  })
+		  })
+	  }
+	  function onHoleTypeOptions(arr) {
+	  			let current = arr[0];
+	  			holeTypeOptions.current = current;
+	  			dataForm.holeType = current.value;
+	  	}
+	  function changeHoleType(node){
+		  if(!node.hasChildren){
+			  holeTypeOptions.list.push(node)
+		  }else{
+			 node.children.forEach(child => changeHoleType(child))  
+		  }
+	  }
 		function onSolumHumidityOptions(arr) {
 					let current = arr[0];
 					solumHumidityOptions.current = current;
@@ -73,6 +89,7 @@
 							solumPlasticityOptions.current = current;
 							dataForm.solumPlasticity = current.label;
 					}
+		
 			// 湿度
 		const solumHumidityOptions = reactive({show: false,current:{}, list:[]})
 	   function getsolumHumidityOptions() {
@@ -107,33 +124,23 @@
 	            return _data
 	      }
 	 function addOrUpdateData(){
-		// dataForm.files = parseFiles(dataForm.files)
-		// dataForm = (dataForm)
-		if(!dataForm.id){
-			addHoleRecord(dataForm).then(res=>console.log('success!'))
-		}else{
-			 updateHoleRecord(dataForm.id, dataForm)
-		}
-	}
-	function initData(){
-		const id = uni.getStorageSync('holeRecordId')
-		if(id){
-		    getHoleRecordDetail(id).then(res=>{
-				// Object.assign(dataForm,res.data)
-				dataInfo(res.data)
+		const data = parseFiles(dataForm)
+		if(!data.id){
+			addHoleRecord(data).then(res=>{
+				ToastFn('创建成功')
 			})
+		}else{
+			 updateHoleRecord(data.id, data).then(res=>{
+				 ToastFn('修改成功')
+			 })
 		}
 	}
-	onLoad(async()=>{
-		await initData()
-		getsolumHumidityOptions()
-		getsolumCompactnessOptions()
-		getsolumPlasticityOptions()
-	})
-
-	function goToBack(){
-		uni.setStorageSync('holeRecordId', null)
-		uni.navigateBack({delta:1})
+	function ToastFn(text){
+		goToBack()
+		uni.showToast({
+			title: text,
+			duration: 2000
+		});
 	}
 	function dataInfo(dataAll) {
 	      let _dataAll = dataAll
@@ -144,6 +151,26 @@
 	      }
 	      dataForm = _dataAll
 	    }
+	function initData(){
+		const id = uni.getStorageSync('holeRecordId')
+		if(id){
+		    getHoleRecordDetail(id).then(res=>{
+				dataInfo(res.data)
+			})
+		}
+	}
+	onLoad(()=>{
+		 initData()
+		getsolumHumidityOptions()
+		getsolumCompactnessOptions()
+		getsolumPlasticityOptions()
+		getHoleTypeOptions()
+	})
+
+	function goToBack(){
+		uni.setStorageSync('holeRecordId', null)
+		uni.navigateBack({delta:1})
+	}
 </script> 
 
 <style lang="scss" scoped>

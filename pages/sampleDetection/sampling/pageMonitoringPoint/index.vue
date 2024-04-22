@@ -1,8 +1,21 @@
 <template>
+	<!-- #ifdef APP-PLUS -->
+	<view class="status_bar">
+		<view class="top_view"></view>
+	</view>
+	<!-- #endif -->
 	<view class="detail-container">
+		<view class="nav-bar"
+			style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
+			<text class="title"
+				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
+			<text @click="scanQRcode" type="primary" class="submit"
+				style="color:blue; line-height: 44px; margin-right: 10px; float:right;"><uni-icons type="scan" size="30"></uni-icons></text>
+		</view>
 		<view class="link-container">
 			<view @click="goToSampling(item.routerUrl)" class="link-box" v-for='item of linkOptions' :key='item.id'>
-				<img :src='item.iconUrl' style="width: 45rpx; margin-bottom: 5px;" />
+				<image :src='item.iconUrl' style="width: 45rpx; margin-bottom: 5px; height: 45rpx;" ></image>
 				<text>{{item.iconName}}</text>
 			</view>
 		</view>
@@ -120,7 +133,38 @@
 			url: router,
 		})
 	}
-	
+	function goToBack() {
+		uni.setStorageSync('holeId', null)
+		uni.navigateBack({
+			delta: 1
+		})
+	}
+	function scanQRcode(){
+		uni.scanCode({
+			success: function (res) {
+				console.log('条码类型：' + res.scanType);
+				console.log('条码内容：' + res.result);
+				const result = JSON.parse(res.result)
+				console.log(result.type)
+				if(result.type === 'soilSample'){
+					uni.setStorageSync('soilSampleId', result.id)
+					uni.navigateTo({
+						url:'/pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/addOrEditor'
+					})
+				}else if(result.type === 'waterSample'){
+					uni.setStorageSync('waterSampleId', result.id)
+					uni.navigateTo({
+						url:'/pages/sampleDetection/sampling/pageMonitoringPoint/waterSample/addOrEditor'
+					})
+				}else{
+					uni.showToast({
+						title: '无效二维码',
+						duration: 2000
+					});
+				}
+			}
+		});
+	}
 </script>
 
 <style lang="scss" scoped>
@@ -128,7 +172,6 @@
 		padding: 0;
 		margin: 0;
 		box-sizing: border-box;
-		padding-top: 20px;
 	}
 
 .tab-box{
@@ -140,6 +183,7 @@
 		// flex-direction: row;
 		// justify-items: center;
 		// box-sizing: border-box;
+		margin-top: 15px;
 		display: grid;
 		grid-template-columns: repeat(4,1fr);
 		grid-row-gap: 20px;

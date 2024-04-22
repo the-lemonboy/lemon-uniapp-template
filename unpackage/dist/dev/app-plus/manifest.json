@@ -30,8 +30,7 @@
       "concatenate": true
     },
     "splashscreen": {
-      "target": "id:1",
-      "autoclose": true,
+      "autoclose": false,
       "waiting": true,
       "delay": 0
     },
@@ -68,16 +67,9 @@
         "geolocation": {
           "system": {
             "__platform__": [
+              "ios",
               "android"
             ]
-          },
-          "amap": {
-            "name": "amapCuSxwF1IC",
-            "__platform__": [
-              "android"
-            ],
-            "appkey_ios": "",
-            "appkey_android": "f83e7b7709681ecbb84f9de0d50e5cb2"
           }
         },
         "maps": {

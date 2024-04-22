@@ -10,12 +10,12 @@
 				style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 				<text class="title"
-					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
+					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">盘点物料库存</text>
 				<text @click="addOrUpdateData()" type="primary" class="submit"
 					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 			</view>
 			<u-toast ref="uToast" />
-			<text class="form-title">基本信息</text>
+			<text class="form-title"  style="margin-left: 20px; font-weight: bold;">基本信息</text>
 			<driver></driver>
 			<u-form :model="dataForm" ref="Form" style="margin: 10px;">
 				<!-- <u-form-item label-width='100px' label="记录编号" prop="startDepth"><u-input  v-model="dataForm.startDepth" /></u-form-item> -->
@@ -34,7 +34,7 @@
 			<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 				:default-time='getCurrentTime()'></u-picker>
 			<view class="stock-title">
-				<text class="form-title">物料库存</text>
+				<text class="form-title"  style="margin-left: 20px; font-weight: bold;">物料库存</text>
 				<u-button type="success" class="add-btn" size="mini" @click="addMateriel">新增</u-button>
 			</view>
 			<driver></driver>
@@ -51,7 +51,7 @@
 							v-model="materielList[index].materialModel" /></u-form-item>
 					<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
 					<!-- <u-form-item label-width='100px' label="检查人" prop="checkUserId"><u-input v-model="dataForm.solumColor" /></u-form-item> -->
-					<u-form-item label-width='100px' label="盘点数量" prop="currStockCount"><u-number-box v-model="value"
+					<u-form-item label-width='100px' label="盘点数量" prop="currStockCount"><u-number-box :positive-integer="false" v-model="value"
 							@change="valChange"></u-number-box></u-form-item>
 					<u-form-item label-width='100px' label="盘存说明" prop="temperature"><u-input
 							v-model="dataForm.temperature" /></u-form-item>

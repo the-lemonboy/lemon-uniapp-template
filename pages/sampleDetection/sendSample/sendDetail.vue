@@ -13,18 +13,18 @@
 				</view>
 				<view class="send-info-box">
 					<view class="left-box">
-						<text>送样人：</text>
-						<text>联系电话：</text>
-						<text>送样时间：</text>
+						<text>送样人：{{userName}}</text>
+						<text>联系电话：{{mobilePhone}}</text>
+						<text>送样时间：{{sendData.transTime}}</text>
 					</view>
 				</view>
-				<view class="send-box-item" v-for="item of unSendDetailList" :key="item.id">
+				<view class="send-box-item" v-for="item of sendData.detailList" :key="item.id">
 					<view class="item-box">
 						<view class="left-item">
 							<view class="title" @click="goToDeatil(item.id)">{{ item.sampleNo }}</view>
 							<view class="center-zone">
-								<text class="area">{{ item.createTime }}</text>
-								<text class="project">{{item.typetext}}</text>
+								<text class="area">{{ item.sampleTime }}</text>
+								<text class="project">{{item.analysisFactorNames}}</text>
 							</view>
 							<text class="time">{{item.registertime}}</text>
 						</view>
@@ -41,15 +41,27 @@
 </template>
 
 <script setup>
-	import {ref,defineExpose,defineEmits} from 'vue'
-	import {updateSendsample} from '@/api/sample/sendSample.js'
+	import {ref,defineExpose,defineEmits,reactive,defineProps} from 'vue'
+	import {updateSendsample,addSendsample} from '@/api/sample/sendSample.js'
 	import {onLoad} from '@dcloudio/uni-app'
 	const emits = defineEmits(['emitVisible'])
+	const props = defineProps({
+		sendId:{type:String,default:null}
+	})
 	const sendDetailVisible = ref(false)
+	function addOrEditor(){
+		sendData.transState = '0'
+		if(props.sendId){
+			updateSendsample(id,sendData.value)
+		}else{
+			addSendsample(sendData.value)
+		}
+	}
 	// 送样和收样详细
 	const sendDetailId = ref(null)
 	const sendDetailList = ref([])
 	const unSendDetailList = ref([])   //未送的样品
+	const sendData = ref()
 	function handleData(oldData,newData){
 		oldData.detailList.forEach((oldItem,oldIndex)=>{
 			newData.forEach(newItem=>{
@@ -68,7 +80,7 @@
 		return oldData
 	}
 	function submitSend(){
-		const data = toRaw(dataList.value)
+		const data = dataList.value
 		const id = sendId.value
 		updateSendsample(id,data).then(res=>{console.log('succeed')})
 	}
@@ -76,13 +88,17 @@
 		sendDetailVisible.value = false
 		emits('emitVisible',true)
 	}
+	let mobilePhone = ref(uni.getStorageSync('userInfo').mobilePhone)
+	let userName = ref(uni.getStorageSync('userInfo').userName)
 	onLoad(()=>{
 		// sendDetail()
+		console.log(uni.getStorageSync('userInfo'))
 	})
 	defineExpose({
 		sendDetailVisible,
 		sendDetailId,
-		unSendDetailList
+		unSendDetailList,
+		sendData
 		
 	})
 </script>
@@ -97,6 +113,18 @@
 		position: absolute;
 		top: 0;
 		background-color: white;
+		.send-info-box{
+			height: 80px;
+			background-color: blue;
+			padding: 10px;
+		.left-box{
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			color: white;
+			justify-content: space-between;
+		}	
+		}
 		.item-box {
 			width: 90%;
 			height: 80px;
@@ -106,7 +134,6 @@
 			border-radius: 5px;
 			box-shadow: 5px 5px 18px #ebebeb, -5px -5px 18px #fff;
 			display: flex;
-			// justify-content: space-between;
 			align-items: center;
 		
 			.left-item {

@@ -32,7 +32,13 @@ export function updateQCCheckBase(id,data){
 		data
 	})
 }
-
+// 删除
+export function delQCCheckBaseDetail(id){
+	return request({
+		url:`/api/project/QCCheckBase/${id}`,
+		method:'delete'
+	})
+}
 // 配置项
 export function QcInitListTree(data){
 	return request({

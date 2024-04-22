@@ -1,11 +1,16 @@
 <template>
+	<!-- #ifdef APP-PLUS -->
+	<view class="status_bar">  
+	    <view class="top_view"></view>  
+	</view>  
+	<!-- #endif -->
 	<view class="logo-v">
-		<view class="login-bg">
+	<!-- 	<view class="login-bg">
 			<image src="/static/login-bg.png" mode="widthFix"></image>
-		</view>
+		</view> -->
 		<view class="logo-hd u-flex-col">
 			<view class="logoImg">
-				<image :src="appIcon" mode="widthFix"></image>
+				<image src="@/static/images/logo.jpg" mode="widthFix"></image>
 			</view>
 			<!-- <view class="u-flex-col introduce u-m-t-30">
 				<text class="u-font-36 text-one">{{sysName}}</text>
@@ -13,7 +18,7 @@
 			</view> -->
 			<view class="loginSwitch u-flex-col">
 				<view class="loginInputBox u-flex-col">
-					<u-form :model="formData" :rules="rules" ref="dataForm" :errorType="['toast']" label-position="left"
+					<u-form :model="formData" :rules="rules" ref="form" :errorType="['toast']" label-position="left"
 						label-width="150" label-align="left">
 						<u-form-item prop="account">
 							<u-input v-model="formData.account" placeholder="请输入帐号" @focus="onFocus" @blur="onBlur">
@@ -34,7 +39,7 @@
 						</u-form-item>
 					</u-form>
 					<view class="loginBtnBox u-m-t-64">
-						<u-button @click="login" type="primary" :loading="loading">{{ loading ? "登录中...":"登录"}}
+						<u-button @click="loginFn" type="primary" :loading="loading">{{ loading ? "登录中...":"登录"}}
 						</u-button>
 					</view>
 				</view>
@@ -44,10 +49,10 @@
 	</view>
 </template>
 
-<script>
+<script setup>
 	import {
 		login,
-		getConfig
+		getDefaultConfig
 	} from '@/api/common.js'
 	// import { mapGetters } from 'vuex'
 	import md5Libs from "@/uni_modules/vk-uview-ui/libs/function/md5";
@@ -58,21 +63,22 @@
 	import {
 			getCurrentUser
 		} from '@/api/common.js'
-	export default {
-		data() {
-			return {
-				imgUrl: '',
-				loading: false,
-				formData: {
+	import {reactive, ref} from 'vue'
+	import {onLoad,onReady} from '@dcloudio/uni-app'
+	import { useStore } from 'vuex'
+		const imgUrl = ref('')
+		const loading = ref(false)
+		const formData = reactive({
 					account: "",
 					password: "",
 					code: "",
 					origin: 'password'
-				},
-				needCode: false,
-				codeLength: 4,
-				isCode: false,
-				rules: {
+				})
+		const needCode = ref(false)
+		const codeLength = ref(4)
+		const isCode = ref(false)
+		const timestamp = ref()
+		const rules = reactive({
 					account: [{
 						required: true,
 						message: '请输入账号',
@@ -83,97 +89,74 @@
 						message: '请输入密码',
 						trigger: 'blur',
 					}],
-				},
-				sysConfigInfo: {},
-				appIcon: '',
-				sysName: '',
-				copyright: ''
+				})
+	    const sysConfigInfo = reactive({})
+		const appIcon = ref('')	
+		const sysName = ref('')
+		const copyRight = ref('')
+		const form = ref()
+		const store = useStore()
+		function onFocus(e) {
+				getConfig(e)
 			}
-		},
-		computed: {
-			baseURL() {
-				return this.define.baseURL
-			},
-		},
-		onReady() {
-			this.$refs.dataForm.setRules(this.rules);
-						setTimeout(()=>{
-							this.$store.dispatch('user/getCurrentUser')
-								// console.log()
-						},1000)
-						
-					
-		},
-		onLoad(e) {
-			this.sysConfigInfo = uni.getStorageSync('sysConfigInfo')
-			this.appIcon = !!this.sysConfigInfo.appIcon ? this.baseURL + this.sysConfigInfo.appIcon :
-				'/static/logo.png'
-			this.sysName = !!this.sysConfigInfo.companyName ? this.sysConfigInfo.sysName :
-				'快速开发平台'
-			this.copyright = !!this.sysConfigInfo.copyright ? this.sysConfigInfo.copyright :
-				'Copyright © 2022 上海城勘信息科技有限公司出品'
-
-			let needCode = uni.getStorageSync('app_loginNeedCode')
-			this.isCode = needCode
-			this.changeCode()
-			this.formData.password = '';
-			
-		},
-		methods: {
-
-			onFocus(e) {
-				this.getConfig(e)
-			},
-			onBlur(e) {
-				this.getConfig(e)
-			},
-
-			getConfig(val) {
+		function onBlur(e) {
+				getConfig(e)
+			}
+		
+		function getConfig(val) {
 				if (!val) return
-				getConfig(this.formData.account).then(res => {
-					this.needCode = !!res.data.enableVerificationCode
-					if (this.needCode) {
-						this.codeLength = res.data.verificationCodeNumber || 4
-						this.changeCode()
+				getDefaultConfig(formData.account).then(res => {
+					needCode.value = !!res.data.enableVerificationCode
+					if (needCode.value) {
+						codeLength.value = res.data.verificationCodeNumber || 4
+						changeCode()
 					}
 				})
-			},
-			changeCode() {
+			}
+		function changeCode() {
 				let timestamp = Math.random()
-				this.timestamp = timestamp
-				this.imgUrl = `/api/oauth/ImageCode/${this.codeLength || 4}/${timestamp}`
-			},
-			login() {
-				this.$refs.dataForm.validate(valid => {
+				timestamp.value = timestamp
+				imgUrl.value = `/api/oauth/ImageCode/${codeLength.value || 4}/${timestamp}`
+			}
+		function loginFn() {
+				form.value.validate(valid => {
 					if (valid) {
-						this.loading = true
+						loading.value = true
 						let query = {
-							account: this.formData.account,
-							password: md5Libs.md5(this.formData.password),
-							timestamp: this.timestamp,
-							code: this.formData.code,
-							origin: this.formData.origin
+							account: formData.account,
+							password: md5Libs.md5(formData.password),
+							timestamp: timestamp.value,
+							code: formData.code,
+							origin: formData.origin
 						}
 						// #ifdef  APP-PLUS
 						const clientId = plus.push.getClientInfo().clientid;
 						query.clientId = clientId
 						// #endif
 						login(query).then(res => {
-							this.loading = false
+							loading.value = false
 							let token = res.data.token
-							this.$store.commit('user/SET_TOKEN', token)
+							store.commit('user/SET_TOKEN', token)
 							uni.setStorageSync('token', token)
 							uni.switchTab({
 								url: '/pages/sampleDetection/index'
 							});
+						store.dispatch('user/getCurrentUser')
 						}).catch((err) => {
-							this.loading = false
+							loading.value = false
 						})
 					}
 				});
-			},
-		}
-	}
+			}
+		onReady(()=>{
+			form.value.setRules(rules);
+			// 			setTimeout(()=>{
+			// 				store.dispatch('user/getCurrentUser')
+			// 			},1000)
+		})
+		onLoad(()=>{
+			formData.password = ''
+		})
 </script>
 
 <style lang="scss">
@@ -279,5 +262,13 @@
 				.loginBtnBox {}
 			}
 		}
+	}
+	.copyright{
+		position: absolute;
+		width: auto;
+		bottom: 10px;
+		left: 50%;
+		transform: translateX(-50%);
+		 white-space: nowrap;
 	}
 </style>

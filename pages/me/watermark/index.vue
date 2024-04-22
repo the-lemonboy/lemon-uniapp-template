@@ -1,0 +1,122 @@
+<template>
+<view class="main-container">
+	<!-- #ifdef APP-PLUS -->
+	<view class="status_bar">
+		<view class="top_view"></view>
+	</view>
+	<!-- #endif -->
+	<view class="detail-container">
+		<view class="nav-bar"
+			style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
+			<text class="title"
+				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">设置</text>
+		</view>
+		<view class="content-box">
+			<view class="control-main">
+				<text>加水印(图片/视频)</text>
+				<u-switch v-model="controlFlag" @change="control"></u-switch>
+			</view>
+			<view class="control-check">
+				<text class="check-title">水印显示内容</text>
+				<u-checkbox-group shape="circle">
+							<view class="check-item" v-for="(item, index) in checkList" :key="index" >
+								<text>{{item.name}}</text>
+								<u-checkbox
+									@change="checkboxChange" 
+									v-model="item.checked" 
+									:name="item.name"
+								></u-checkbox>
+							</view>
+						</u-checkbox-group>
+			</view>
+		</view>
+	</view>
+</view>
+</template>
+
+<script setup>
+	import {ref,defineEmits} from 'vue'
+	import {onLoad} from '@dcloudio/uni-app'
+	const emits = defineEmits('visible')
+	function goToBack(){
+		emits('visible',false)
+	}
+const controlFlag = ref(true)
+function control(val){
+	controlFlag.value = val
+	uni.setStorageSync('watermarkFlag',val)
+}
+const checkList = ref([
+				{
+					name: '日期',
+					disabled: true
+				},
+				{
+					name: '项目名称',
+					disabled: true
+				},
+				{
+					name: '经纬度',
+					disabled: true
+				},{
+					name: '人员',
+					disabled: true
+				}
+			])
+  function initData(){
+	  let watermarkValue = uni.getStorageSync('watermarkValue')
+	  watermarkValue.forEach(item=>{
+		  checkList.value.forEach(el=>{
+			  if(item.name === el.name){
+				  el.checked = item.flag
+			  }
+		  })
+	  })
+	  controlFlag.value = uni.getStorageSync('watermarkFlag')
+  }
+  onLoad(()=>{
+	  initData()
+  })
+		function checkboxChange(val){
+			checkList.value.checked = val
+			let watermarkValue = uni.getStorageSync('watermarkValue')
+			watermarkValue.forEach(item=>{
+				if(item.name === val.name){
+					item.flag = val.value
+				}
+			})
+			uni.setStorageSync('watermarkValue',watermarkValue)
+			}
+</script>
+
+<style lang="scss" scoped>
+	.detail-container{
+		background-color: $uni-bg-color-grey;
+		height: 100vh;
+		.control-main{
+			margin-top: 20px;
+			height: 80px;
+			display: flex;
+			justify-content: space-between;
+			padding: 0 20px;
+			font-size: $uni-font-size-lg;
+			font-weight: bold;
+		}
+		.check-title{
+			font-size: $uni-font-size-lg;
+			font-weight: bold;
+			margin: 0 20px;
+		}
+		.check-item{
+			display: flex;
+			justify-content: space-between;
+			padding: 0 20px;
+			width:100vw;
+			height: 60px;
+			align-items: center;
+			font-size: $uni-font-size-base;
+			font-weight: bold;
+		}
+	}
+</style>

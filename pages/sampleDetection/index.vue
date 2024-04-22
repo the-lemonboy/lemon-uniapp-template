@@ -6,7 +6,7 @@
 	<!-- #endif -->
 	<view class="sp-container">
 		<view class="search-box">
-			<u-search placeholder="搜索" v-model="keyword"></u-search>
+			<u-search placeholder="请输入项目名称" v-model="searchKeyWord" @search="getMenuList()"></u-search>
 		</view>
 		<view class="sort-box">
 			<u-dropdown ref="dropdown1" @open="open" @close="close">
@@ -16,25 +16,34 @@
 			</u-dropdown>
 		</view>
 		<view class="content-box">
-			<!-- <uni-navigator url="{{url}}"></uni-navigator> -->
-			<view class="item-box" v-for="item in tableData" :key="item.id">
-				<view class="left-item">
-					<!-- 使用动态的 URL -->
-					<view class="title" @click="goToDeatil(item.id)">{{ item.name }}</view>
-					<view class="center-zone">
-						<text class="area">{{ item.organizetext }}</text>
-						<text class="project">{{item.typetext}}</text>
-					</view>
-					<text class="time">{{item.registertime}}</text>
-				</view>
-
-				<view class="right-box">
-					<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-					<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-					<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-					<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-				</view>
-			</view>
+			<uni-swipe-action ref="swipeAction" v-if="tableData.length">
+						<uni-swipe-action-item
+						class="swipe-item items-box"
+						v-for="item in tableData" :key="item.id"
+						    :right-options="swiperOptions"
+						    @change="swipeChange($event)"
+						    @click="swipeClick($event,content,item.id)"
+						>
+							<view class="item-box" @click="goToDeatil(item.id,item.name)">
+								<view class="left-item">
+									<view class="title">{{ item.name }}</view>
+									<view class="center-zone">
+										<text class="area">{{ item.organizetext }}</text>
+										<text class="project">{{item.typetext}}</text>
+									</view>
+									<text class="time">{{item.registertime}}</text>
+								</view>
+								
+							<!-- 	<view class="right-box">
+									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
+									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
+									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
+									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
+								</view> -->
+							</view>
+						</uni-swipe-action-item>
+					</uni-swipe-action>
+					<u-empty style="margin-top: 40px;" v-else text="暂无数据" mode="list"></u-empty>
 		</view>
 	</view>
 </template>
@@ -50,78 +59,107 @@
 		onPullDownRefresh
 	} from "@dcloudio/uni-app"
 	import {
-		getProjectBaseList
+		getProjectBaseList,
+		delProjectDetail
 	} from '@/api/sample.js'
 	import {
 		getMenuId
 	} from '@/utils/getMenuId.js'
+	import { useStore } from 'vuex'
+	const store = useStore()
 	// 全局变量
 	const dropdownZone = reactive([{
 			label: '默认排序',
 			value: 1,
 		},
 		{
-			label: '距离优先',
+			label: '生序',
 			value: 2,
 		},
 		{
-			label: '价格优先',
+			label: '降序',
 			value: 3,
 		}
 	])
 	const dropdownStatus = reactive([{
-			label: '默认排序',
+		label: '默认排序',
 			value: 1,
 		},
 		{
-			label: '距离优先',
+			label: '生序',
 			value: 2,
 		},
 		{
-			label: '价格优先',
+			label: '降序',
 			value: 3,
 		}
 	])
 	const dropdownType = reactive([{
-			label: '默认排序',
+		label: '默认排序',
 			value: 1,
 		},
 		{
-			label: '距离优先',
+			label: '生序',
 			value: 2,
 		},
 		{
-			label: '价格优先',
+			label: '降序',
 			value: 3,
 		}
 	])
-	const MenuName = '项目列表'
-	const detailUrl = ''
+	const swiperOptions = ref([{
+		            text: '删除',
+		            style: {
+		                backgroundColor: '#dd524d'
+		            }
+		        }
+	])
+// 搜索
+const searchKeyWord = ref()
+function swipeClick(e,ctx,id){
+	uni.showModal({
+		title: '提示',
+		content: '您确定要删除此项吗？',
+		success: res => {
+			if (res.confirm) {
+				delProjectDetail(id).then(res=>{
+					getMenuList()
+				})
+				uni.showToast({
+					title: '移除成功',
+					icon: 'none'
+				});
+			}
+		}
+	});
+}
 	const tableData = ref([])
-
-	async function getMenuList() {
+	async function getMenuList(name) {
 		const menuId = getMenuId('项目列表')
 		let queryData = {
 			currentPage: 1,
 			// pageSize: 0,
 			sort: "asc",
 			sidx: "encode",
-			menuId: menuId
+			menuId: menuId,
+			name:searchKeyWord.value
 		}
 		getProjectBaseList(queryData).then(res => {
 			tableData.value = res.data;
-			console.log(tableData.value)
 		})
 	}
 	// 项目id传给子孙组件
-	function goToDeatil(id) {
+	function goToDeatil(id,name) {
 	     uni.setStorageSync('projectId', id)
+		 uni.setStorageSync('projectName',name)
+		 console.log(name)
 		uni.navigateTo({
 			url: `/pages/sampleDetection/detail/index?id=${id}`,
 		})
 	}
 	// getMenuList()
 	onLoad(() => {
+		store.dispatch('user/getCurrentUser')
 		getMenuList()
 	})
 	onPullDownRefresh(async () => {
@@ -156,24 +194,18 @@
 			display: flex;
 			flex-direction: column;
 		}
-
-		.item-box {
-			width: 90%;
-			height: 80px;
+		.items-box {
+			width: 95%;
 			margin: 10px auto;
-			padding: 0 10px;
 			border: 1px solid #e6e6e6;
 			border-radius: 5px;
 			box-shadow: 5px 5px 18px #ebebeb, -5px -5px 18px #fff;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
+			// display: flex;
+			// justify-content: space-between;
+			// align-items: center;
 
 			.left-item {
-				height: 100%;
-				display: flex;
-				flex-direction: column;
-
+				margin: 10px;
 				.title {
 					font-size: $uni-font-size-base;
 					margin: $uni-spacing-col-sm 0;

@@ -14,11 +14,8 @@
 		<u-toast ref="uToast" />
 		<u-form :model="dataForm" ref="Form" style="margin: 10px;">
 			<u-form-item v-if="itemId" label-width='100px' label="记录编号" prop="startDepth"><u-input  v-model="dataForm.id" /></u-form-item>
-			<u-form-item label-width='100px' label="检查日期" prop="checkTime"><u-input v-model="dataForm.checkTime" /></u-form-item>
-			<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
-			<!-- <u-form-item label-width='100px' label="检查人" prop="checkUserId"><u-input v-model="dataForm.solumColor" /></u-form-item> -->
-			<!-- <u-form-item label-width='100px' label="天气" prop="weather"><u-input v-model="dataForm.weather" /></u-form-item>
-			<u-form-item label-width='100px' label="温度" prop="temperature"><u-input v-model="dataForm.temperature"/></u-form-item> -->
+			<u-form-item label-width='100px' label="检查日期" prop="checkTime"><u-input @click="showPickerDate('checkTime')"
+					v-model="dataForm.checkTime" /></u-form-item>
 			<view class="detail-content">
 				<text class="zk-title">质控内容</text>
 				<view class="read" v-for="(item,index) in confTreeData" :key = "index" @click="goDetail(index)">
@@ -26,9 +23,11 @@
 				</view>
 			</view>
 			<u-form-item label-width='100px' label="上传图片" prop="file">
-				<upload  @input="(val)=>dataForm.files = val"></upload>
+				<upload @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files"></upload>
 			</u-form-item>
 			</u-form>
+			<u-picker v-model="checkTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
+				:default-time='getCurrentTime()'></u-picker>
 	</view>
 	</view>
 	<editorDetail ref="detailRef" :curConfTreeData = "curConfTreeData" @emitVisible = "(val)=>{visible = val}" @emitConfTreeData="updateConfTree"></editorDetail>
@@ -38,12 +37,47 @@
 	import { reactive, ref ,nextTick,defineProps,watch,defineExpose,defineEmits} from 'vue'
 	import {onLoad} from '@dcloudio/uni-app'
 	import upload from '@/components/cityk-upload.vue';
-	import { getMenuId } from '@/utils/index.js';
+	import { getMenuId,getCurrentTime} from '@/utils/index.js';
 	import { UserSettingInfo } from '@/api/common.js'
 	import { addQCCheckBase,updateQCCheckBase,getQCCheckBaseDetail,QcInitListTree } from '@/api/sample/qualityControl.js'
 	import editorDetail from './editorDetail.vue';
 	const emits = defineEmits(['emitVisible'])
-	let dataForm = reactive({})
+	// 选择时间
+	const timeParams = reactive({
+		year: true,
+		month: true,
+		day: true,
+		hour: true,
+		minute: true,
+		second: true,
+	})
+	const curTimeKey = ref(null)
+	const checkTimeVisible = ref(false)
+	
+	function showPickerDate(value) {
+		curTimeKey.value = value,
+		checkTimeVisible.value = true
+	}
+	
+	function getTime(e) {
+		if (curTimeKey.value === 'checkTime') dataForm.checkTime =
+			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
+		else if (curTimeKey.value === 'endTime') dataForm.endTime =
+			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
+	}
+	let dataForm = reactive({
+				holeId: '',
+		        holeNo: '',
+		        projectId: '',
+		        recordNo: '',
+		        temperature: '',
+		        weather: '',
+		        checkType: '',
+		        files: [],
+		        detailList: [],
+		        checkUserId: '',
+		        checkTime: ''
+	})
 	  const visible = ref(false)
 	  const qcType = reactive({name:'内部质控',type:'1'})
 	  const userInfo = reactive({})
@@ -53,11 +87,6 @@
 		  }
 		  return
 	  }
-	 
-	    watch(dataForm, (newVal, oldVal) => {
-	         console.log(newVal, oldVal);
-	       },{deep:true});
-
 	  function getUser(){
 		  UserSettingInfo().then(res=>{
 			Object.assign(userInfo,res.data)
@@ -71,24 +100,43 @@
 	              _data.files = '[]'
 	            }
 	           _data.projectId = uni.getStorageSync('projectId')
+			   _data.checkType = checkType.value
+			   _data.checkUserId = uni.getStorageSync('userInfo').id
 	            return _data
 	      }
 	 function addOrUpdateData(){
-		// dataForm.files = parseFiles(dataForm.files)
-		// dataForm = (dataForm)
+		dataForm = parseFiles(dataForm)
+		
 		if(!dataForm.id){
-			addQCCheckBase(dataForm).then(res=>console.log('success!'))
+			console.log(dataForm.detailList)
+			addQCCheckBase(dataForm).then(res=>ToastFn('创建成功'))
 		}else{
-			 updateQCCheckBase(dataForm.id, dataForm)
+			 updateQCCheckBase(dataForm.id, dataForm).then(res=>ToastFn('修改成功'))
 		}
 		clearData(dataForm)
 	}
+	function ToastFn(text){
+			goToBack()
+			uni.showToast({
+				title: text,
+				duration: 2000
+			});
+		}
 	const itemId = ref(null)
+	function dataInfo(dataAll) {
+	      let _dataAll = dataAll
+	      if (_dataAll.files) {
+	        _dataAll.files = JSON.parse(_dataAll.files)
+	      } else {
+	        _dataAll.files = []
+	      }
+	      dataForm = _dataAll
+	    }
 	function initData(){
 		const id = itemId.value
 		if(id){
 		    getQCCheckBaseDetail(id).then(res=>{
-				Object.assign(dataForm,res.data)
+				dataInfo(res.data)
 				confTreeData.value = editorTableData(dataForm.detailList)
 			})
 		}else{
@@ -100,7 +148,7 @@
 		// uni.setStorageSync('holeRecordId', null)
 		visible.value = false
 		itemId.value = null
-		 clearData(dataForm)
+		clearData(dataForm)
 		emits('emitVisible',true)
 	}
 	// 质控内容
@@ -177,6 +225,10 @@
 	             _list.push(_data)
 	           }
 	           confTreeData.value = handleTableData(_list)
+			   for(let key in confTreeData.value){
+				   dataForm.detailList = dataForm.detailList.concat(confTreeData.value[key])
+			   }
+			   console.log(dataForm.detailList)
 	         }
 	       })
 	   }
@@ -199,15 +251,6 @@
 			   }
 		   }
 	   }
-	function dataInfo(dataAll) {
-	      let _dataAll = dataAll
-	      if (_dataAll.files) {
-	        _dataAll.files = JSON.parse(_dataAll.files)
-	      } else {
-	        _dataAll.files = []
-	      }
-	      dataForm = _dataAll
-	    }
 		onLoad(async()=>{
 		})
 		defineExpose({

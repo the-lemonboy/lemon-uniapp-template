@@ -1,12 +1,23 @@
 <template>
+	<!-- #ifdef APP-PLUS -->
+	<view class="status_bar">
+		<view class="top_view"></view>
+	</view>
+	<!-- #endif -->
 	<view class="detail-container">
+		<view class="nav-bar"
+			style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
+			<text class="title"
+				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样检测详细</text>
+		</view>
 		<view class="link-container">
+
 			<view @click="goToSampling(item.routerUrl)" class="link-box" v-for='item of linkOptions' :key='item.id'>
-				<img :src='item.iconUrl' style="width: 45rpx;" />
-				<text>{{item.iconName}}</text>
+			<image :src="item.iconUrl" style="width: 45rpx; height: 45rpx;"></image>
+							<text>{{item.iconName}}</text>
 			</view>
 		</view>
-	
 		<view class="tab-box">
 			<u-tabs :list="tabOptions" :is-scroll="true" v-model="tabCurent" @change="change"></u-tabs>
 		</view>
@@ -56,7 +67,6 @@
 			routerUrl: '/pages/sampleDetection/qualityControl/index'
 		},
 	])
-
 	const tabOptions = reactive([{
 			name: '项目'
 		},
@@ -79,7 +89,18 @@
 			url: `${router}?id=${projectId}`,
 		})
 	}
-	
+	function goToBack() {
+		uni.setStorageSync('projectId', null)
+		uni.setStorageSync('holeId',null)
+		uni.setStorageSync('soilSampleId',null)
+		uni.setStorageSync('waterSampleId',null)
+		uni.setStorageSync('wellBaseId',null)
+		uni.setStorageSync('wellWashRecord',null)
+		uni.setStorageSync('projectName',null)
+		uni.navigateBack({
+			delta: 1
+		})
+	}
 </script>
 
 <style lang="scss" scoped>
@@ -87,11 +108,11 @@
 		padding: 0;
 		margin: 0;
 		box-sizing: border-box;
-		padding-top: 20px;
 	}
 
 
 	.link-container {
+		margin-top:15px ;
 		display: flex;
 		flex-direction: row;
 		justify-items: center;

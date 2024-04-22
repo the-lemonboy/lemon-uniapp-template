@@ -8,6 +8,15 @@ export function getMember(data){
 	})
 }
 
+// 样品
+
+export function getSampleBase(data){
+	return request({
+		url:'/api/sample/Base/getList',
+		method:'post',
+		data
+	})
+}
 //  项目列表
 export function getProjectBaseList(data) {
 	return request({
@@ -18,10 +27,17 @@ export function getProjectBaseList(data) {
 }
 
 // 项目详细
-export function getProjectDetail(projectId){
+export function getProjectDetail(id){
 	return request({
-		url:`/api/project/ProjBase/detail/${projectId}`,
+		url:`/api/project/ProjBase/detail/${id}`,
 		method:'get'
+	})
+}
+// 删除
+export function delProjectDetail(id){
+	return request({
+		url:`/api/project/ProjBase/${id}`,
+		method:'delete'
 	})
 }
 // 监测点位-------------------
@@ -41,6 +57,7 @@ export function addHoleBaseDetail(data){
 		data
 	})
 }
+
 // 修改监测点位
 export function updateHoleBase(id,data){
 	return request({
@@ -54,6 +71,13 @@ export function getHoleBaseDetail(id){
 	return request({
 		url:`/api/project/HoleBase/detail/${id}`,
 		method:'get'
+	})
+}
+// 删除
+export function delHoleBaseDetail(id){
+	return request({
+		url:`/api/project/HoleBase/${id}`,
+		method:'delete'
 	})
 }
 // 质控样品---------------------
@@ -88,7 +112,13 @@ export function updateQCSample(id,data){
 		data
 	})
 }
-
+// 删除
+export function delQCSampleDetail(id){
+	return request({
+		url:`/api/project/QCSample/${id}`,
+		method:'delete'
+	})
+}
 // 钻孔记录---------------------
 // 获取列表
 export function getHoleRecordList(data){
@@ -121,7 +151,13 @@ export function updateHoleRecord(id,data){
 		data
 	})
 }
-
+// 删除
+export function delHoleRecordDetail(id){
+	return request({
+		url:`/api/project/HoleRecord/${id}`,
+		method:'delete'
+	})
+}
 // 土样记录---------------------
 // 获取列表
 export function getSoilRecordList(data){
@@ -154,7 +190,13 @@ export function updateSoilRecord(id,data){
 		data
 	})
 }
-
+// 删除
+export function delSoilRecordDetail(id){
+	return request({
+		url:`/api/project/SoilSample/${id}`,
+		method:'delete'
+	})
+}
 // 建井信息---------------------
 // 获取列表
 export function getWellBaseList(data){
@@ -187,7 +229,13 @@ export function updateWellBase(id,data){
 		data
 	})
 }
-
+// 删除
+export function delWellBaseDetail(id){
+	return request({
+		url:`/api/project/WellBase/${id}`,
+		method:'delete'
+	})
+}
 // 洗井记录---------------------
 // 获取列表
 export function getWellWashRecordList(data){
@@ -220,7 +268,13 @@ export function updateWellWashRecord(id,data){
 		data
 	})
 }
-
+// 删除
+export function delWellWashRecordDetail(id){
+	return request({
+		url:`/api/project/WellWashRecord/${id}`,
+		method:'delete'
+	})
+}
 // 水样记录---------------------
 // 获取列表
 export function getWaterSampleList(data){
@@ -251,5 +305,12 @@ export function updateWaterSample(id,data){
 		url:`/api/project/WaterSample/${id}`,
 		method:'put',
 		data
+	})
+}
+// 删除
+export function delWaterSampleDetail(id){
+	return request({
+		url:`/api/project/WaterSample/${id}`,
+		method:'delete'
 	})
 }

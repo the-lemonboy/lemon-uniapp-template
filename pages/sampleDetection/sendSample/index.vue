@@ -12,22 +12,33 @@
 					<text @click="goSelectSend()" type="primary" class="submit" style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 				</view>
 				<view class="search-box">
-					<u-search placeholder="搜索" v-model="keyword"></u-search>
+					<u-search placeholder="搜索批次号" v-model="searchKeyWord" @search="getList()"></u-search>
 				</view>
-				<!-- <uni-navigator url="{{url}}"></uni-navigator> -->
-				<view class="item-box" v-for="item in dataList" :key="item.id">
-					<view class="left-item">
-						<!-- 使用动态的 URL -->
-						<view class="title" @click="goSelectSend(item.id)">送样批次号：{{ item.transNo }}</view>
-						<view class="center-zone">
-							<text class="area">送样总数/收样总数&nbsp &nbsp{{ item.sendCount }}/{{item.receivedCount}}</text>
-						</view>
-						<text class="time">{{item.transTime}}</text>
-					</view>
-			
-					<view class="right-box">
-					</view>
+				<view class="content-box">
+					<uni-swipe-action ref="swipeAction" v-if="dataList.length">
+								<uni-swipe-action-item
+								class="swipe-item items-box"
+								v-for="item of dataList" :key="item.id"
+								    :right-options="swiperOptions"
+								    @change="swipeChange($event)"
+								    @click="swipeClick($event,content,item.id)"
+								>
+									<view class="item-box" @click="goSelectSend(item.id)">
+										<view class="left-item">
+											<view class="title">批次号：{{ item.transNo }}</view>
+											<view class="center-zone">
+												<text class="area">项目号：{{ item.projectName }}</text>
+												<text class="project">{{item.typetext}}</text>
+											</view>
+											<text class="time">{{item.registertime}}</text>
+										</view>
+									</view>
+								</uni-swipe-action-item>
+							</uni-swipe-action>
+				<u-empty style="margin-top: 40px;" v-else text="暂无数据" mode="list"></u-empty>
+							
 				</view>
+	
 			</view>
 	</view>
 	<selectSend ref='selectSendRef' @emitVisible='(val)=>mainVisible=val'></selectSend>
@@ -35,11 +46,12 @@
 
 <script setup>
 	import { ref,reactive } from 'vue'
-	import {onLoad} from '@dcloudio/uni-app'
-	import { getSendSampleList,getSendsampleDetail } from '@/api/sample/sendSample.js'
-	import {getMenuId,getRouteId} from '@/utils/index.js'
+	import {onLoad,onPullDownRefresh} from '@dcloudio/uni-app'
+	import { getSendSampleList,delSendsampleDetail } from '@/api/sample/sendSample.js'
+	import {getMenuId} from '@/utils/index.js'
 	import selectSend from './selectSend.vue'
 	const dataList = ref([])
+	const searchKeyWord = ref()
 	function getList(){
 		const menuId = getMenuId('项目列表')
 		const projectId = uni.getStorageSync('projectId')
@@ -50,9 +62,10 @@
 			        sidx: '',
 					menuId:menuId,
 					projectId : projectId,
+					transNo:searchKeyWord.value,
 		}
 		 return	getSendSampleList(query).then(res=>{
-			 dataList.value = res.data.list
+			 dataList.value = res.data.list.filter(item=>item.transState == '0')
 			dataList.value.receivedCount = res.data.list.reduce((count, item) => {
 			  return count + item.detailList.filter(val => val.received === 1).length;
 			}, 0);
@@ -68,24 +81,43 @@
 			selectSendRef.value.selectVisible = true
 			mainVisible.value = false
 			selectSendRef.value.sendId = id
-			selectSendRef.value.getSendDetail()
+			// selectSendRef.value.getSendDetail()
 	}
-	// function goAddOrEditorData(addFlag){
-	// 	 uni.setStorageSync('addFlag', addFlag)
-	// 		uni.navigateTo({
-	// 			url: `/pages/sampleDetection/sampling/monitorPoint/addOrEditor`,
-	// 		})
-	// }
-
 	function goToBack(){
 		uni.navigateBack({delta:1})
 	}
-	onLoad(async()=>{
-		await getList()
-		// await sendDetail()
+	const swiperOptions = ref([{
+			            text: '删除',
+			            style: {
+			                backgroundColor: '#dd524d'
+			            }
+			        }
+		])
+	function swipeClick(e,ctx,id){
+		uni.showModal({
+			title: '提示',
+			content: '您确定要删除此项吗？',
+			success: res => {
+				if (res.confirm) {
+					delSendsampleDetail(id).then(res=>{
+						getList()
+					})
+					uni.showToast({
+						title: '移除成功',
+						icon: 'none'
+					});
+				}
+			}
+		});
+	}
+	onLoad(()=>{
+		getList()
+			
 	})
-
-	
+	onPullDownRefresh(async () => {
+		await getList()
+		uni.stopPullDownRefresh();
+	})
 </script> 
 
 <style scoped lang="scss">
@@ -108,29 +140,18 @@
 				flex-direction: row;
 			}
 		}
-
-		.content-box {
-			display: flex;
-			flex-direction: column;
-		}
-
-		.item-box {
-			width: 90%;
-			height: 80px;
+.items-box {
+			width: 95%;
 			margin: 10px auto;
-			padding: 0 10px;
 			border: 1px solid #e6e6e6;
 			border-radius: 5px;
 			box-shadow: 5px 5px 18px #ebebeb, -5px -5px 18px #fff;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
+			// display: flex;
+			// justify-content: space-between;
+			// align-items: center;
 
 			.left-item {
-				height: 100%;
-				display: flex;
-				flex-direction: column;
-
+				margin: 10px;
 				.title {
 					font-size: $uni-font-size-base;
 					margin: $uni-spacing-col-sm 0;

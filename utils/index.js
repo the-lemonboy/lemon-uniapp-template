@@ -60,3 +60,26 @@ export function getCurrentTime() {
     const currentTime = `${year}-${month}-${day} ${hours}:${minutes}`;
     return currentTime;
 }
+// 深拷贝
+export function deepCopy(obj) {
+  // 如果传入的是基本类型，则直接返回
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+
+  // 根据传入对象的类型，创建一个空对象或者数组
+  const result = Array.isArray(obj) ? [] : {};
+
+  // 遍历传入对象的所有属性或者元素
+  for (let key in obj) {
+    // 如果属性是对象或者数组，则递归调用深拷贝函数
+    if (typeof obj[key] === 'object' && obj[key] !== null) {
+      result[key] = deepCopy(obj[key]);
+    } else {
+      // 如果是基本类型，则直接复制给新对象或数组
+      result[key] = obj[key];
+    }
+  }
+
+  return result;
+}

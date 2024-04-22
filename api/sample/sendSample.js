@@ -32,3 +32,29 @@ export function updateSendsample(id,data){
 		data
 	})
 }
+// 删除
+export function delSendsampleDetail(id){
+	return request({
+		url:`/api/project/Transport/${id}`,
+		method:'delete'
+	})
+}
+
+// 可送样列表
+export function initSendList(data){
+	return request({
+		url:`/api/sample/Transport/initDetailList`,
+		method: 'post',
+		data
+	})
+}
+
+
+// 收样
+export function receiveSample(id,data){
+	return request({
+		url:`/api/sample/Transport/receive/${id}`,
+		method: 'post',
+		data
+	})
+}

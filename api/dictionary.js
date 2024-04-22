@@ -141,3 +141,21 @@ export function exportData(id) {
     method: 'GET'
   })
 }
+
+// 获取分析指标
+export function getFactorTreeList(id, data) {
+  return request({
+    url: `/api/analysis/Factor/getListTree/${id}`,
+    method: 'post',
+    data
+  })
+}
+
+// 获取XRF配置
+export function getXRFConf(data) {
+  return request({
+    url: `/api/project/SoilSampleXRFConf/getList`,
+    method: 'post',
+    data
+  })
+}

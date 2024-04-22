@@ -13,10 +13,9 @@
 			<text @click="addOrUpdateData()" type="primary" class="submit"
 				style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 		</view>
-		<u-toast ref="uToast" />
 		<u-form :model="dataForm" ref="Form" style="margin: 10px;">
-			<u-form-item label-width='100px' label="监测井编号" prop="startDepth"><u-input type='number'
-					v-model="dataForm.startDepth" /></u-form-item>
+			<u-form-item label-width='100px' label="监测井编号" prop="wellNo"><u-input type='number'
+					v-model="dataForm.wellNo" /></u-form-item>
 			<u-form-item label-width='100px' label="监测井类型" prop="wellType"><u-input v-model="wellTypeOptions.current.label"
 					type="select" @click="wellTypeOptions.show=true" /></u-form-item>
 			<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
@@ -50,7 +49,7 @@
 			<u-form-item label-width='100px' label="底部深度" prop="filterLayerBottomDepth"><u-number-box
 					v-model="dataForm.filterLayerBottomDepth"></u-number-box></u-form-item>
 			<u-form-item label-width='100px' label="上传图片" prop="file">
-				<!-- <upload :value="dataForm.files" @input="handleInput"></upload> -->
+				<upload :watermark='true' @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files"></upload>
 			</u-form-item>
 		</u-form>
 		<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
@@ -76,9 +75,9 @@
 		getCurrentTime
 	} from '@/utils/index.js';
 	import {
-		addHoleRecord,
-		updateHoleRecord,
-		getHoleRecordDetail
+		addWellBase,
+		updateWellBase,
+		getWellBaseDetail
 	} from '@/api/sample.js'
 	import {
 		getDictionaryDataSelector,
@@ -95,7 +94,7 @@ function getwellTypeOptions() {
 			wellTypeOptions.list = res.data.list
 		})
 	}
-	function onwellTypeOptions(arr) {
+	function onWellTypeOptions(arr) {
 		let current = arr[0];
 		wellTypeOptions.current = current;
 		dataForm.wellType = current.label;
@@ -111,12 +110,10 @@ function getwellTypeOptions() {
 	})
 	const curTimeKey = ref(null)
 	const selectTimeVisible = ref(false)
-
 	function showPickerDate(value) {
 		curTimeKey.value = value,
 			selectTimeVisible.value = true
 	}
-
 	function getTime(e) {
 		if (curTimeKey.value === 'startTime') dataForm.startTime =
 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
@@ -131,26 +128,21 @@ function getwellTypeOptions() {
 		        wellType: '',
 		        startTime: '',
 		        endTime: '',
-		        wellDepth: '',
-		        wellDiameter: '',
-		        wellElevation: '',
-		        swaterLevelDepth: '',
-		        sieveTubeSlitSize: '',
-		        sieveTubeTopDepth: '',
-		        sieveTubeBottomDepth: '',
+		        wellDepth: 0,
+		        wellDiameter: 0,
+		        wellElevation: 0,
+		        swaterLevelDepth: 0,
+		        sieveTubeSlitSize: 0,
+		        sieveTubeTopDepth: 0,
+		        sieveTubeBottomDepth: 0,
 		        filterLayerType: '',
-		        filterLayerTopDepth: '',
-		        filterLayerBottomDepth: '',
+		        filterLayerTopDepth: 0,
+		        filterLayerBottomDepth: 0,
 		        waterBarrierType: '',
-		        waterBarrierTopDepth: '',
-		        waterBarrierBottomDepth: '',
+		        waterBarrierTopDepth: 0,
+		        waterBarrierBottomDepth: 0,
 		        files: []
 	})
-	watch(dataForm, (newVal, oldVal) => {
-		console.log(newVal, oldVal);
-	}, {
-		deep: true
-	});
 	function parseData(data) {
 		var _data = JSON.parse(JSON.stringify(data))
 		if (_data.files) {
@@ -169,23 +161,37 @@ function getwellTypeOptions() {
 		// dataForm = (dataForm)
 		dataForm = parseData(dataForm)
 		if (!dataForm.id) {
-			addHoleRecord(dataForm).then(res => console.log('success!'))
+			addWellBase(dataForm).then(res => ToastFn('创建成功'))
 		} else {
-			updateHoleRecord(dataForm.id, dataForm)
+			updateWellBase(dataForm.id, dataForm).then(res=> ToastFn('修改成功'))
 		}
 	}
-
+function ToastFn(text){
+		goToBack()
+		uni.showToast({
+			title: text,
+			duration: 2000
+		});
+	}
+	function dataInfo(dataAll) {
+	      let _dataAll = dataAll
+	      if (_dataAll.files) {
+	        _dataAll.files = JSON.parse(_dataAll.files)
+	      } else {
+	        _dataAll.files = []
+	      }
+	      dataForm = _dataAll
+	    }
 	function initData() {
 		const id = uni.getStorageSync('wellBaseId')
 		if (id) {
-			getHoleRecordDetail(id).then(res => {
-				// Object.assign(dataForm,res.data)
+			getWellBaseDetail(id).then(res => {
 				dataInfo(res.data)
 			})
 		}
 	}
-	onLoad(async () => {
-		// await initData()
+	onLoad( () => {
+		 initData()
 		getwellTypeOptions()
 	})
 
@@ -194,16 +200,6 @@ function getwellTypeOptions() {
 		uni.navigateBack({
 			delta: 1
 		})
-	}
-
-	function dataInfo(dataAll) {
-		let _dataAll = dataAll
-		if (_dataAll.files) {
-			_dataAll.files = JSON.parse(_dataAll.files)
-		} else {
-			_dataAll.files = []
-		}
-		dataForm = _dataAll
 	}
 </script>
 

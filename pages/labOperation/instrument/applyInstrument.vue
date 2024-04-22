@@ -12,10 +12,10 @@
 				<text class="title"
 					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
 				<text @click="addOrUpdateData()" type="primary" class="submit"
-					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
+					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">新增</text>
 			</view>
 			<u-toast ref="uToast" />
-			<text class="form-title">基本信息</text>
+			<text class="form-title" style="margin-left: 20px; font-weight: bold;">基本信息</text>
 			<driver></driver>
 			<u-form :model="dataForm" ref="Form" style="margin: 10px;">
 				<!-- <u-form-item label-width='100px' label="记录编号" prop="startDepth"><u-input  v-model="dataForm.startDepth" /></u-form-item> -->
@@ -40,13 +40,13 @@
 			<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 				:default-time='getCurrentTime()'></u-picker>
 			<view class="stock-title">
-				<text class="form-title">物料库存</text>
+				<text class="form-title" style="margin-left: 20px; font-weight: bold;">物料库存</text>
 				<u-button type="success" class="add-btn" size="mini" @click="addInstrument">新增</u-button>
 			</view>
 			<driver></driver>
 			<view class="stock-box" v-for="(item,index) of InstrumentList">
 				<view class="stock-Header">
-					<text class="title">新增一条</text>
+					<text class="title" style="margin-left: 20px; font-weight: bold;">新增一条</text>
 					<u-button type="error" class="delete-btn" size="mini" @click="removeInstrument(index)">删除</u-button>
 				</view>
 				<u-form :model="InstrumentList[index]" ref="Form" style="margin: 10px;">
@@ -117,7 +117,7 @@
 	const useStarTime = ref(null)
 	const useOverTime = ref(null)
 	let dataForm = reactive({
-		applyType: 'Use',
+		applyType: 'Rec',
 		domain: 'equip',
 		applyCode: '',
 		applyUserId: '',
@@ -126,7 +126,8 @@
 		useRangArray: [],
 		remark: '',
 		detailList: [],
-		organizeId: ''
+		organizeId: '',
+		useState: 9,
 	})
 	const curTimeKey = ref(null)
 	const curTimeType = ref(0)
@@ -275,13 +276,17 @@
 			useRang: null
 			}
 			InstrumentList.value.push(newMaterie)
+			uni.showToast({
+				title: '新增一条记录',
+				icon: 'none'
+			});
 		}
 		function removeInstrument(idx){
 			InstrumentList.value = InstrumentList.value.filter((item,index)=>index !== idx)
 		}
 		// 新增或者更新
 		function addOrUpdateData(){
-			dataForm.applyUserId = uni.getStorageSync('userInfo').id
+			dataForm.applyUserId = uni.getStorageSync('userInfo').userId
 			dataForm.organizeId = uni.getStorageSync('userInfo').organizeId
 			dataForm.detailList = InstrumentList.value
 			dataForm.useRang = `${useStarTime.value}-${useOverTime.value}`

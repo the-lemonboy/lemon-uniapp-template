@@ -128,6 +128,11 @@
 				type: Boolean,
 				default: false
 			},
+			propsInitId:{
+				type:Array,
+				default: ()=> []
+			}
+				
 		},
 		data() {
 			return {
@@ -147,27 +152,18 @@
 				this._hide()
 				this.$emit("cancel", '');
 			},
-			_confirm() { //多选
-				let selectedList = []; //如果子集全部选中，只返回父级 id
-				let selectedNames;
-				let currentLevel = -1;
-				this.treeList.forEach((item, index) => {
-					if (currentLevel >= 0 && item.level > currentLevel) {
-
-					} else {
-						if (item.checkStatus === 2) {
-							currentLevel = item.level;
-							selectedList.push(item.id);
-							selectedNames = selectedNames ? selectedNames + ' / ' + item.name : item.name;
-						} else {
-							currentLevel = -1;
-						}
-					}
-				})
-				//console.log('_confirm', selectedList);
-				this._hide()
-				this.$emit("select-change", selectedList, selectedNames);
-			},
+			        _confirm() { //多选
+			            let selectedList = [];
+			            let selectedNames;
+			            this.treeList.forEach((item, index) => {
+			                if (item.checkStatus === 2 && item.isLastLevel) {
+			                    selectedList.push(item.id);
+			                    selectedNames = selectedNames ? selectedNames + ' / ' + item.name : item.name;
+			                }
+			            })
+			            this._hide()
+			            this.$emit("select-change", selectedList, selectedNames);
+			        },
 			//格式化原数据（原数据为tree结构）
 			_formatTreeData(list = [], level = 0, parentItem, isShowChild = true) {
 				let nextIndex = 0;
@@ -221,7 +217,7 @@
 			// 节点打开、关闭切换
 			_onItemSwitch(item, index) {
 				// console.log(item)
-				//console.log('_itemSwitch')
+				// console.log('_itemSwitch')
 				if (item.isLastLevel === true) {
 					return;
 				}
@@ -258,11 +254,9 @@
 			},
 			// 节点选中、取消选中
 			_onItemSelect(item, index) {
-				//console.log('_onItemSelect')
-				//console.log(item)
+				// console.log(index)
 				if (!this.multiple) { //单选
 					item.checkStatus = item.checkStatus == 0 ? 2 : 0;
-
 					this.treeList.forEach((v, i) => {
 						if (i != index) {
 							this.treeList[i].checkStatus = 0
@@ -270,7 +264,7 @@
 							this.treeList[i].checkStatus = 2
 						}
 					})
-
+					// ifCallBack
 					let selectedList = [];
 					let selectedNames;
 					selectedList.push(item.id);
@@ -364,9 +358,34 @@
 					this.treeList[i].checkStatus = v.orCheckStatus
 				})
 			},
+			initData(){
+				this.treeList.forEach((item,index)=>{
+					this.findSelected(item)
+				})
+			},
+			findSelected(node){
+				
+			if(this.propsInitId.length >0 && this.propsInitId){
+				this.propsInitId.forEach((id)=>{
+					if(id === node.id){
+						let oldCheckStatus = node.checkStatus;
+						node.checkStatus = 2;
+						node.childCheckCount = node.childCount;
+						node.childCheckPCount = 0;
+					}
+				})
+			}
+				if (!node.children || node.children.length === 0) return
+				else {
+					node.children.forEach((child)=>{
+						this.findSelected(child)
+					})
+				}
+			},
 			_initTree() {
 				this.treeList = []; 
 				this._formatTreeData(this.localdata);
+				
 			}
 		},
 		watch: {
@@ -375,10 +394,23 @@
 			},
 			localTreeList() {
 				this.treeList = this.localTreeList;
+				this.initData() 
+	
+			},
+			treeList:{
+				handler(val){
+						this.$nextTick(()=>{
+							this.initData() 
+						})
+				},
+				deep:true
 			}
+			
 		},
 		mounted() {
 			this._initTree();
+			
+			
 		}
 	}
 </script>

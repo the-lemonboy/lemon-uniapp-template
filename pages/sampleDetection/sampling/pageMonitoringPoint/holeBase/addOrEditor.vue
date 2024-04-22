@@ -24,11 +24,11 @@
 					v-model="dataForm.startTime" /></u-form-item>
 			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input @click="showPickerDate('endTime')"
 					v-model="dataForm.endTime" /></u-form-item>
-			<u-form-item label-width='100px' label="钻孔直径" prop="diameter"><u-number-box
+			<u-form-item label-width='100px' label="钻孔直径" prop="diameter"><u-number-box :positive-integer="false"
 					v-model="dataForm.diameter"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="初见水位埋深" prop="sWaterLevel"><u-number-box
+			<u-form-item label-width='100px' label="初见水位埋深" prop="sWaterLevel"><u-number-box :positive-integer="false"
 					v-model="dataForm.sWaterLevel"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="地面高程" prop="elevation"><u-number-box v-model="dataForm.elevation"
+			<u-form-item label-width='100px' label="地面高程" prop="elevation"><u-number-box :positive-integer="false" v-model="dataForm.elevation"
 					 ></u-number-box></u-form-item>
 			<u-form-item label-width='100px' label="参考高程来源" prop="reevlResouce"><u-input
 					v-model="dataForm.reevlResouce" /></u-form-item>
@@ -38,7 +38,7 @@
 				<!-- <upload :value="dataForm.files" @input="handleInput"></upload> -->
 			</u-form-item>
 		</u-form>
-		<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
+		<u-picker v-model="selectTimeVisible"  mode="time" :params="timeParams" @confirm="getTime"
 			:default-time='getCurrentTime()'></u-picker>
 		<u-select v-model="wellTypeOptions.show" value-name="enCode" label-name="fullName" :list="wellTypeOptions.list"
 			@confirm="onWellTypeOptions"></u-select>
@@ -173,7 +173,7 @@ function getwellTypeOptions() {
 			delta: 1
 		})
 	}
-
+	const files = ref([])
 	function dataInfo(dataAll) {
 		let _dataAll = dataAll
 		if (_dataAll.files) {
@@ -181,6 +181,7 @@ function getwellTypeOptions() {
 		} else {
 			_dataAll.files = []
 		}
+		files.value = _dataAll.files
 		dataForm = _dataAll
 	}
 </script>

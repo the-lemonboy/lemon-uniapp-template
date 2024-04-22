@@ -23,6 +23,8 @@
 			<u-form-item label-width='100px' label="质控样品类型" prop="sampleType"><u-input
 					v-model="sampleTypeOptions.current.label" type="select"
 					@click="sampleTypeOptions.show=true" /></u-form-item>
+			<u-form-item label-width="100px" label="分析指标"><u-input
+					v-model="selectName" @click="showPicker"/></u-form-item>
 			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input @click="showPickerDate('startTime')"
 					v-model="dataForm.startTime" /></u-form-item>
 			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input @click="showPickerDate('endTime')"
@@ -30,9 +32,11 @@
 			<u-form-item label-width='100px' label="备注" prop="remark"><u-input
 					v-model="dataForm.remark" /></u-form-item>
 			<u-form-item label-width='100px' label="上传图片" prop="file">
-				<!-- <upload :value="dataForm.files" @input="handleInput"></upload> -->
+				<upload :watermark='true' @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files"></upload>
 			</u-form-item>
 		</u-form>
+		<ba-tree-picker ref="treePicker" :multiple='true' @select-change="selectChange" title="选择分析指标"
+		    :localdata="factorTreeList" valueKey="id" textKey="factorName" childrenKey="children" />
 		<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 			:default-time='getCurrentTime()'></u-picker>
 		<u-select v-model="sampleNoOptions.show" value-name="sampleNo" label-name="sampleNo"
@@ -67,6 +71,29 @@
 		getDictionaryDataSelector,
 		getDictionaryDataSelectorCascade
 	} from '@/api/dictionary'
+	// 分析指标
+	// 显示选择器
+	const factorTreeList = ref([]) 
+	const treePicker = ref()
+	const selectName = ref([])
+	function getfactorTypeOptions(){
+		const _query = {}
+		const id = '505417419548805189'
+		getFactorTreeList(id,_query).then(res=>{
+			factorTreeList.value = res.data.list
+		})
+	}
+	function showPicker() {
+	     treePicker.value._show();
+	 }
+	 //监听选择（ids为数组）
+	function selectChange(ids, names) {
+			dataForm.analysisFactorIds = ids
+			selectName.value = names
+	 }
+	 onLoad(()=>{
+		 getfactorTypeOptions()
+	 })
 	// 样品编号
 	const sampleNoOptions = reactive({
 		show: false,

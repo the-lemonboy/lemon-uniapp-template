@@ -1,23 +1,24 @@
 <template>
 	<view class="pr-container">
 		<u-form :model="dataForm" ref="Form" style="margin: 10px;">
-			<u-form-item label-width='100px' label="项目编号" prop="encode"><u-input
+			<u-form-item label-width='100px' label="项目编号" prop="encode"><u-input placeholder=""
 					v-model="dataForm.encode" :disabled='true'/></u-form-item>
-			<u-form-item label-width='100px' label="项目类型" prop="typeid"><u-input
+			<u-form-item label-width='100px' label="项目类型" prop="typeid"><u-input placeholder=""
 					v-model="dataForm.typeName" :disabled='true'/></u-form-item>
-			<u-form-item label-width='100px' label="启动时间" prop="registertime"><u-input
+			<u-form-item label-width='100px' label="启动时间" prop="registertime"><u-input placeholder=""
 					v-model="dataForm.registertime" :disabled='true'/></u-form-item>
-			<u-form-item label-width='100px' label="计划工期" prop="planworkload"><u-input
+			<u-form-item label-width='100px' label="计划工期" prop="planworkload"><u-input placeholder=""
 					v-model="dataForm.planworkload" :disabled='true'/></u-form-item>
-			<u-form-item label-width='100px' label="运行时长" prop="workData"><u-input
+			<u-form-item label-width='100px' label="运行时长" prop="workData"><u-input placeholder=""
 					v-model="dataForm.workData" :disabled='true'/></u-form-item>
-			<u-form-item label-width='100px' label="项目地址" prop="address"><u-input
+			<u-form-item label-width='100px' label="项目地址" prop="address"><u-input placeholder=""
 					v-model="dataForm.address" :disabled='true'/></u-form-item>
-			<u-form-item label-width='100px' label="项目业主" prop="customid" ><u-input
+			<u-form-item label-width='100px' label="项目业主" prop="customid" ><u-input placeholder=""
 					v-model="dataForm.customid" :disabled='true'/></u-form-item>
-			<u-form-item label-width='100px' label="备注" prop="remark" ><u-input
+			<u-form-item label-width='100px' label="备注" prop="remark" ><u-input placeholder=""
 					v-model="dataForm.remark" :disabled='true'/></u-form-item>
 		</u-form>
+		<!-- <map></map> -->
 	</view>
 
 </template>
@@ -45,7 +46,6 @@
 		return getProjectDetail(projectId).then(res => {
 			// dataForm = res.data
 			Object.assign(dataForm, res.data);
-			console.log(dataForm)
 		})
 
 	}

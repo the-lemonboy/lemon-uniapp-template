@@ -27,11 +27,15 @@
 </template>
 
 <script setup>
+	import {onPullDownRefresh} from '@dcloudio/uni-app'
 	function goDetail(path){
 		uni.navigateTo({
 			url: path,
 		})
 	}
+	onPullDownRefresh( () => {
+		uni.stopPullDownRefresh();
+	})
 </script>
 <style lang="scss" scoped>
 	 /* #ifdef APP-PLUS */
@@ -42,10 +46,10 @@
 		box-sizing: border-box;
 		display: grid;
 		grid-template-row: repeat(3,1fr);
+		grid-row-gap: 10px;
 	}
 	/* #endif */
-	
-	/* #ifndef APP-PLUS  */ 
+	/* #ifdef H5 */
 	.lo-container{
 		padding: 0;
 		margin: 0;
