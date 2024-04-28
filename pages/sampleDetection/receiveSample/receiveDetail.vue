@@ -6,10 +6,12 @@
 	</view>  
 	<!-- #endif -->
 <view class="content-box">
-
-				<view class="nav-bar" style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+				<view class="nav-container" style="height: 44px;">
+					<view class="nav-bar"
+						style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 					<uni-icons @click="goToBack()"  type="left" size="30" style="line-height: 44px;"></uni-icons>
 					<text class="title" style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
+				</view>
 				</view>
 				<view class="send-info-box">
 					<view class="left-box">
@@ -70,7 +72,15 @@
 	function submitSend(){
 		const data = toRaw(dataList.value)
 		const id = sendId.value
-		updateSendsample(id,data).then(res=>{console.log('succeed')})
+		updateSendsample(id,data).then(res=>{ToastFn('采样成功！')})
+	}
+	function ToastFn(text) {
+		uni.$emit('refresh')
+		goToBack()
+		uni.showToast({
+			title: text,
+			duration: 2000
+		});
 	}
 	function goToBack(){
 		sendDetailVisible.value = false

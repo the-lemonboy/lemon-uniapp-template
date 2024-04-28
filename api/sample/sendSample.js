@@ -35,7 +35,7 @@ export function updateSendsample(id,data){
 // 删除
 export function delSendsampleDetail(id){
 	return request({
-		url:`/api/project/Transport/${id}`,
+		url:`/api/sample/Transport/${id}`,
 		method:'delete'
 	})
 }

@@ -6,10 +6,13 @@
 	</view>  
 	<!-- #endif -->
 	<view class="m-container">
-		<view class="nav-bar" style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+		<view class="nav-container" style="height: 44px;">
+			<view class="nav-bar"
+				style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 			<uni-icons @click="goToBack()"  type="left" size="30" style="line-height: 44px;"></uni-icons>
 			<text class="title" style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">物料库存详细</text>
-			<text @click="goToAdd()" type="primary" class="submit" style="color:blue; line-height: 44px; margin-right: 10px; float:right;">新增</text>
+		<uni-icons @click="goToAdd()" class="add" type="plus-filled" size="30" style="color:#2160FF; line-height: 44px; margin-right: 10px; float:right;"></uni-icons>
+		</view>
 		</view>
 		<view class="search-box">
 			<u-search placeholder="请输入物料名称" v-model="searchKeyWord"></u-search>
@@ -40,10 +43,12 @@
 	} from 'vue';
 	import {
 		onLoad,
-		onPullDownRefresh
+		onPullDownRefresh,
+		onReachBottom
 	} from "@dcloudio/uni-app"
 	import {
 		getMaterielList,
+		getMaterielListPage
 	} from '@/api/lab/labOperation.js'
 	import {
 		getMenuId,searchId
@@ -51,8 +56,21 @@
 	import addMateriel from './addMateriel.vue';
 	const searchKeyWord = ref()
 	const tableData = ref([])
-	async function getMenuList() {
+	const listQuery = reactive({
+		currentPage: 1,
+		pageSize: 20,
+		sort: "asc",
+		sidx: "encode",
+	})
+	const reachBottomFlag = ref(false)
+	async function getList() {
+		uni.showLoading({
+			title: '加载中'
+		});
 		const menuId = getMenuId('库存管理')
+		if(!reachBottomFlag.value){
+			listQuery.currentPage = 1
+		}
 		let queryData = {
 			 currentPage: 1,
 			 materialName: searchKeyWord.value,
@@ -61,14 +79,19 @@
 			 supplierId: '',
 			 materialModel: '',
 			 domain: 'material',
-			// pageSize: 0,
-			sort: "asc",
-			sidx: "encode",
-			menuId: menuId
+			 menuId: menuId,
+			 ...listQuery
 		}
-		getMaterielList(queryData).then(res => {
-			tableData.value = res.data.list;
-			console.log(tableData.value)
+		await getMaterielListPage(queryData).then(res => {
+			if(reachBottomFlag.value){
+				tableData.value = [...tableData.value, ...res.data.list]
+				listQuery.currentPage++
+			}else{
+				tableData.value = res.data.list
+			}
+			
+			
+			uni.hideLoading();
 		})
 	}
 	function goToBack(){
@@ -80,15 +103,30 @@
 	   addRef.value.addVisible = true
 	   mainVisible.value = false
 	}
-	// getMenuList()
 	onLoad(() => {
-		getMenuList()
-		console.log(searchId('484411573868167301'))
+		reachBottomFlag.value = false
+		getList()
+		uni.$on('refresh', () => {
+		   getList()
+		})	
+	})
+	onReachBottom(()=>{
+		reachBottomFlag.value = true
+		getList()
 	})
 	onPullDownRefresh(async () => {
-		await getMenuList()
+		try {
+		    reachBottomFlag.value = false
+		    await getList();
+		} catch (error) {
+		    uni.showToast({
+		    	title: '加载失败',
+				icon:'error',
+		    	duration: 2000
+		    });
+		}
 		uni.stopPullDownRefresh();
-	})
+	})	
 </script>
 
 <style scoped lang="scss">
@@ -115,10 +153,11 @@
 		.content-box {
 			display: flex;
 			flex-direction: column;
+			margin-top: 10px;
 		}
 
 		.item-box {
-			width: 90%;
+			width: 95%;
 			height: 80px;
 			margin: 5px auto;
 			padding: 0 10px;

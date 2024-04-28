@@ -10,9 +10,9 @@
 						>
 							<view class="item-box" @click="goAddOrEditor(item.id)">
 								<view class="left-item">
-									<view class="title">监测点位编号：{{ item.holeNo }}</view>
+									<view class="title">样品编号：{{ item.sampleNo }}</view>
 									<view class="center-zone">
-										<text class="area">采样类型：{{ item.holeType }}</text>
+										<text class="area">采样名称：{{ item.sampleName }}</text>
 										<text class="project">{{item.typetext}}</text>
 									</view>
 									<text class="time">{{item.registertime}}</text>
@@ -31,7 +31,10 @@
 	import { getSoilRecordList,delSoilRecordDetail } from '@/api/sample.js'
 	import {getMenuId} from '@/utils/index.js'
 	const dataList = ref([])
-	function getList(){
+	async function getList(){
+		uni.showLoading({
+			title: '加载中'
+		});
 		let menuId = getMenuId('项目列表')
 		const projectId = uni.getStorageSync('projectId')
 		const holeId = uni.getStorageSync('holeId')
@@ -44,8 +47,9 @@
 					projectId : projectId,
 					holeId:holeId
 		}
-			getSoilRecordList(query).then(res=>{
+			await getSoilRecordList(query).then(res=>{
 				dataList.value = res.data.list
+				uni.hideLoading();
 			})	
 	}
 	function goAddOrEditor(id){
@@ -80,15 +84,22 @@
 	}
 	onShow(()=>{
 		getList()
-			
+		uni.$on('refresh', () => {
+		   getList()
+		})	
 	})
 	onPullDownRefresh(async () => {
-		await getList()
+		try {
+		    await getList();
+		} catch (error) {
+		    uni.showToast({
+		    	title: '加载失败',
+				icon:'error',
+		    	duration: 2000
+		    });
+		}
 		uni.stopPullDownRefresh();
 	})
-	
-
-	
 </script> 
 <style lang="scss" scoped>
 .items-box {

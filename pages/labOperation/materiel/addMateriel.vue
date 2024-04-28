@@ -6,26 +6,24 @@
 		</view>
 		<!-- #endif -->
 		<view class="qc-container">
-			<view class="nav-bar"
-				style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+			<view class="nav-container" style="height: 44px;">
+				<view class="nav-bar"
+					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 				<text class="title"
 					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">盘点物料库存</text>
-				<text @click="addOrUpdateData()" type="primary" class="submit"
+				<text @click="addData()" type="primary" class="submit"
 					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
+			</view>
 			</view>
 			<u-toast ref="uToast" />
 			<text class="form-title"  style="margin-left: 20px; font-weight: bold;">基本信息</text>
 			<driver></driver>
-			<u-form :model="dataForm" ref="Form" style="margin: 10px;">
+			<u-form :model="dataForm" ref="form" rules="rules" style="margin: auto; width: 90%;">
 				<!-- <u-form-item label-width='100px' label="记录编号" prop="startDepth"><u-input  v-model="dataForm.startDepth" /></u-form-item> -->
-				<u-form-item label-width='100px' label="选择项目" prop="checkTime"><u-input
+				<u-form-item label-width='100px' label="选择项目" prop="projectId"><u-input
 						v-model="projectOptions.current.label" type="select"
 						@click="projectOptions.show=true" /></u-form-item>
-				<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
-				<!-- <u-form-item label-width='100px' label="检查人" prop="checkUserId"><u-input v-model="dataForm.solumColor" /></u-form-item> -->
-				<u-form-item label-width='100px' label="申请人" prop="weather"><u-input
-						v-model="dataForm.weather" /></u-form-item>
 				<u-form-item label-width='100px' label="申请时间" prop="applyTime"><u-input
 						@click="selectTimeVisible = true" v-model="dataForm.applyTime" /></u-form-item>
 				<u-form-item label-width='100px' label="申请事由" prop="weather"><u-input
@@ -33,17 +31,17 @@
 			</u-form>
 			<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 				:default-time='getCurrentTime()'></u-picker>
-			<view class="stock-title">
+			<view class="stock-title" style="margin: 10px 0;">
 				<text class="form-title"  style="margin-left: 20px; font-weight: bold;">物料库存</text>
-				<u-button type="success" class="add-btn" size="mini" @click="addMateriel">新增</u-button>
+				<u-button type="success" class="add-btn" size="mini" @click="addMaterielList">新增</u-button>
 			</view>
-			<driver></driver>
+			<driver style="margin: 10px auto;"></driver>
 			<view class="stock-box" v-for="(item,index) of materielList">
 				<view class="stock-Header">
 					<text class="title">新增一条</text>
 					<u-button type="error" class="delete-btn" size="mini">删除</u-button>
 				</view>
-				<u-form :model="materielList[index]" ref="Form" style="margin: 10px;">
+				<u-form :model="materielList[index]" ref="Form" style="margin: auto; width: 90%;">
 					<u-form-item label-width='100px' label="物料" prop="startDepth"><u-input
 							v-model="materielList[index].materialName" type="select"
 							@click="currentMateriel(index)" /></u-form-item>
@@ -51,13 +49,11 @@
 							v-model="materielList[index].materialModel" /></u-form-item>
 					<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
 					<!-- <u-form-item label-width='100px' label="检查人" prop="checkUserId"><u-input v-model="dataForm.solumColor" /></u-form-item> -->
-					<u-form-item label-width='100px' label="盘点数量" prop="currStockCount"><u-number-box :positive-integer="false" v-model="value"
-							@change="valChange"></u-number-box></u-form-item>
+					<u-form-item label-width='100px' label="盘点数量" prop="applyCount"><u-number-box  v-model="item.applyCount"></u-number-box></u-form-item>
 					<u-form-item label-width='100px' label="盘存说明" prop="temperature"><u-input
 							v-model="dataForm.temperature" /></u-form-item>
 				</u-form>
 				</view>
-				<u-top-tips ref="uTips"></u-top-tips>
 				<u-select v-model="projectOptions.show" value-name="id" label-name="name" :list="projectOptions.list"
 					@confirm="onProjectOptions"></u-select>
 				<u-select v-model="materielOptions.show" value-name="materialId" label-name="materialName"
@@ -78,7 +74,8 @@
 	} from 'vue'
 	import {
 		onLoad,
-		onReady
+		onReady,
+		onBackPress
 	} from '@dcloudio/uni-app'
 	import {
 		getMenuId,
@@ -93,8 +90,26 @@
 		getProjectBaseList
 	} from '@/api/sample.js'
 	import {
-		getMaterielList
+		getMaterielList,
+		addMateriel
 	} from '@/api/lab/labOperation.js'
+import { apply } from 'ol/transform';
+	const form = ref(null)
+	const rules = reactive({
+		applyTime: [{
+			required: true,
+			message: '请输入申请时间',
+			trigger: 'blur',
+		}],
+		projectId: [{
+			required: true,
+			message: '请输入项目名称',
+			trigger: 'blur',
+		}]
+	})
+	onReady(() => {
+		form.value.setRules(rules);
+	})
 	const emits = defineEmits(['emitVisible'])
 	// 选择时间
 	const selectTimeVisible = ref(false)
@@ -130,7 +145,7 @@
 		let current = arr[0];
 		projectOptions.current = current;
 		dataForm.projectId = current.value;
-		getMateriel() //现在了项目才加载
+		getMateriel()
 	}
 	const projectOptions = reactive({
 		show: false,
@@ -147,14 +162,47 @@
 		}
 		getProjectBaseList(params).then(res => {
 			projectOptions.list = res.data
-			console.log('liebiao', projectOptions)
 		})
 	}
-
 	function addData() {
+		form.value.validate(valid => {
+			if (valid) {
 		dataForm.applyUserId = uni.getStorageSync('userInfo').userId
 		dataForm.organizeId = uni.getStorageSync('userInfo').organizeId
-
+		materielList.value.forEach(item=>{
+			item.applyCount = item.currStockCount - item.lastStockCount
+		})
+		dataForm.detailList = materielList.value
+		addMateriel(dataForm).then(res=>{
+			dataForm = clearData(dataForm)
+			materielList.value =  []
+			materielOptions.list = []
+			ToastFn('创建成功')
+		})
+		}
+		});
+	}
+	function ToastFn(text) {
+		uni.$emit('refresh')
+		goToBack()
+		uni.showToast({
+			title: text,
+			duration: 2000
+		});
+	}
+	function clearData(data) {
+		for (let key in data) {
+			if (Array.isArray(data[key])) {
+				data[key] = []
+			} else if (Object.prototype.toString.call(data[key]) === '[object Object]') {
+				data[key] = {}
+			} else if (typeof data[key] === 'number') {
+				data[key] = 0
+			} else {
+				data[key] = null
+			}
+		}
+		return data
 	}
 	// 获取物料列表
 	const materielOptions = reactive({
@@ -170,26 +218,24 @@
 		for(let val of materielOptions.list){
 			if(val.materialId === current.value){
 				currentData = val
-				console.log(currentData)
-				return
+				break
 			}
 		}
 		let selectMaterie = {
-			applyCount: 0,
+			applyCount: currentData.currStockCount-currentData.lastStockCount,
 			applyType: dataForm.applyType,
 			// currStockCount: current.currStockCount,
 			id: generateUUID(),
 			isHazchem: currentData.isHazchem,   
-			lastStockCount: currentData.lastStockCount,  //现有库存
+			lastStockCount: currentData.lastStockCount,  //
 			materialId: currentData.materialId,
 			materialModel: currentData.materialModel,
 			materialName: currentData.materialName,
 			materialPrice: currentData.materialPrice,
-			currStockCount: 0,  //盘点数量
-			storeState: currentData.currStockCount
+			currStockCount: currentData.currStockCount,  //盘点数量
+			storeState: currentData.storeState
 		}
 		materielList.value[materielIdx.value] = selectMaterie
-		// console.log("====",selectMaterie)
 	}
 	const materielIdx = ref(0)
 	function currentMateriel(idx){
@@ -197,7 +243,6 @@
 		materielOptions.show = true
 	}
 	const materielList = ref([])
-	let uTips = ref(null)
 	function getMateriel() {
 		if (dataForm.projectId) {
 			const params = {
@@ -210,22 +255,22 @@
 				materielOptions.list = res.data.list
 			})
 		} else {
-			uTips.value.show({
-				title: '请先选择项目!',
-				type: 'error',
-				duration: '2300'
-			})
+			uni.showToast({
+				title: '请先选择项目！',
+				icon:'fail',
+				duration: 2000
+			});
 		}
 	}
 
-	function addMateriel() {
+	function addMaterielList() {
 		let newMaterie = {
 			applyCount: null,
 			applyType: null,
-			currStockCount: null,
+			currStockCount: 0,
 			id: generateUUID(),
-			isHazchem: null,
-			lastStockCount: null,
+			isHazchem: 0,
+			lastStockCount: 0,
 			materialId: null,
 			materialModel: null,
 			materialName: null,
@@ -234,15 +279,7 @@
 		}
 		materielList.value.push(newMaterie)
 	}
-	
-	function addOrUpdateData(){
-		
-	}
 	onLoad(() => {
-		// getMateriel()
-		// setTimeout(()=>{
-		// 	getMateriel()
-		// },2000)
 		getProjectList()
 
 	})
@@ -257,11 +294,6 @@
 	}
 	// 质控内容
 	const checkType = ref("1")
-	// watch(itemId, (val)=>{
-	//  if(val){
-	//   getQCCheckConfList()
-	//  }
-	// })
 	function dataInfo(dataAll) {
 		let _dataAll = dataAll
 		if (_dataAll.files) {
@@ -271,6 +303,12 @@
 		}
 		dataForm = _dataAll
 	}
+	onBackPress((e) => {
+		if (e.from === "backbutton" && addVisible.value) {
+			goToBack()
+			return true
+		}
+	})
 	defineExpose({
 		addVisible,
 		dataForm,
@@ -307,10 +345,11 @@
 				color: $uni-text-color-grey;
 			}
 		}
-
 		.stock-Header {
-
-			// marg
+			.title{
+				font-weight: bold;
+				margin-left: 20px;
+			}
 			.delete-btn {
 				float: right;
 				margin-right: 10px;

@@ -38,7 +38,6 @@
 		}
 		getMember(query).then(res => {
 			dataList.value = res.data.list
-			console.log(dataList.value)
 		})
 	}
 	onLoad(() => {

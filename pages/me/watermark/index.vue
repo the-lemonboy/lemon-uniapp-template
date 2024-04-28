@@ -6,11 +6,13 @@
 	</view>
 	<!-- #endif -->
 	<view class="detail-container">
-		<view class="nav-bar"
-			style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+		<view class="nav-container" style="height: 44px;">
+			<view class="nav-bar"
+				style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 			<text class="title"
 				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">设置</text>
+		</view>
 		</view>
 		<view class="content-box">
 			<view class="control-main">
@@ -19,7 +21,7 @@
 			</view>
 			<view class="control-check">
 				<text class="check-title">水印显示内容</text>
-				<u-checkbox-group shape="circle">
+				<u-checkbox-group shape="circle" class="check-box">
 							<view class="check-item" v-for="(item, index) in checkList" :key="index" >
 								<text>{{item.name}}</text>
 								<u-checkbox
@@ -27,7 +29,7 @@
 									v-model="item.checked" 
 									:name="item.name"
 								></u-checkbox>
-							</view>
+							</view>	
 						</u-checkbox-group>
 			</view>
 		</view>
@@ -37,7 +39,8 @@
 
 <script setup>
 	import {ref,defineEmits} from 'vue'
-	import {onLoad} from '@dcloudio/uni-app'
+	import {onLoad,onPullDownRefresh} from '@dcloudio/uni-app'
+	import driver from '@/components/driver.vue'
 	const emits = defineEmits('visible')
 	function goToBack(){
 		emits('visible',false)
@@ -88,25 +91,45 @@ const checkList = ref([
 			})
 			uni.setStorageSync('watermarkValue',watermarkValue)
 			}
+			onPullDownRefresh( () => {
+				uni.stopPullDownRefresh();
+			})
 </script>
 
 <style lang="scss" scoped>
+	 /* #ifndef H5 */
 	.detail-container{
 		background-color: $uni-bg-color-grey;
-		height: 100vh;
+		height: calc(100vh - 50rpx);
+		background-color: #E4E7EB;
+			}
+	/* #endif */
+	/* #ifdef H5 */
+	.detail-container{
+		background-color: $uni-bg-color-grey;
+		height: calc(100vh - 50px);
+		background-color: #E4E7EB;
+			}
+	/* #endif */
 		.control-main{
 			margin-top: 20px;
-			height: 80px;
+			height: 60px;
 			display: flex;
 			justify-content: space-between;
+			align-items: center;
 			padding: 0 20px;
 			font-size: $uni-font-size-lg;
 			font-weight: bold;
+			background-color: white;
+			margin-bottom:20px ;
 		}
 		.check-title{
 			font-size: $uni-font-size-lg;
 			font-weight: bold;
-			margin: 0 20px;
+			margin: 0 20px 20px 20px;
+		}
+		.check-box{
+			margin-top: 10px;
 		}
 		.check-item{
 			display: flex;
@@ -116,7 +139,6 @@ const checkList = ref([
 			height: 60px;
 			align-items: center;
 			font-size: $uni-font-size-base;
-			font-weight: bold;
+			background-color: white;
 		}
-	}
 </style>

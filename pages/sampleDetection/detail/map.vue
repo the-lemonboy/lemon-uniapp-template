@@ -2,8 +2,8 @@
 <template>
   <div class="Cityk-common-layout-center" style="height:560px">
 	  <div id="map_hole" style="width: 100%;height: 100% ;"></div>
-	    <div style="position: absolute;top: 20px;left: 20px;"> <el-button type="primary"
-	                 @click="showImg()">{{btName}}</el-button></div>
+<!-- 	    <div style="position: absolute;top: 20px;left: 20px;"> <el-button type="primary"
+	                 @click="showImg()">{{btName}}</el-button></div> -->
 	  </div>
 </template>
 
@@ -48,14 +48,14 @@ export default {
       drawLineFeature: null //绘制的线feature
     }
   },
-  computed: {
-    menuId() {
-      return this.$route.meta.modelId || ''
-    },
-    globalFilter() {
-      return this.cityk.getGlobalFilter()
-    }
-  },
+  // computed: {
+  //   menuId() {
+  //     return this.$route.meta.modelId || ''
+  //   },
+  //   globalFilter() {
+  //     return this.cityk.getGlobalFilter()
+  //   }
+  // },
   mounted() {
 	this.initMap()
 	this.getHoleList()
@@ -231,34 +231,34 @@ export default {
         //minResolution: 0.5971642834779395,
       })
     },
-    showImg() {
-      if (!this.drawLineSelectHolesStatus) {
-        this.drawLineSelectHolesStatus = true
-        this.btName = '绘制'
-      } else {
-        if (this.selectedHoleArray.length >= 2) {
-          var ids = ''
-          for (var id in this.selectedHoleArray) {
-            if (id != 'length') {
-              ids += id + ','
-            }
-          }
-          ids = ids.substring(0, ids.length - 1)
-          this.showHoleProfile = true
-          if (this.holeids != ids) {
-            this.dialogLoading = true
-          }
-          this.holeids = ids
-        } else {
-          alert('至少选择两个钻孔！')
-        }
-      }
+    // showImg() {
+    //   if (!this.drawLineSelectHolesStatus) {
+    //     this.drawLineSelectHolesStatus = true
+    //     this.btName = '绘制'
+    //   } else {
+    //     if (this.selectedHoleArray.length >= 2) {
+    //       var ids = ''
+    //       for (var id in this.selectedHoleArray) {
+    //         if (id != 'length') {
+    //           ids += id + ','
+    //         }
+    //       }
+    //       ids = ids.substring(0, ids.length - 1)
+    //       this.showHoleProfile = true
+    //       if (this.holeids != ids) {
+    //         this.dialogLoading = true
+    //       }
+    //       this.holeids = ids
+    //     } else {
+    //       alert('至少选择两个钻孔！')
+    //     }
+    //   }
 
-      // this.drillVisible = true;
-      // this.$nextTick(()=>{
-      //   this.$refs.drillDialog.init()
-      // })
-    },
+    //   // this.drillVisible = true;
+    //   // this.$nextTick(()=>{
+    //   //   this.$refs.drillDialog.init()
+    //   // })
+    // },
     //获取钻孔数据
     getHoleList() {
       let _query = {

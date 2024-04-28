@@ -5,31 +5,34 @@
 	</view>
 	<!-- #endif -->
 	<view class="mo-container">
-		<view class="nav-bar"
-			style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+		<view class="nav-container" style="height: 44px;">
+			<view class="nav-bar"
+				style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 			<text class="title"
 				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">建井信息</text>
 			<text @click="addOrUpdateData()" type="primary" class="submit"
 				style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 		</view>
+		</view>
 		<u-toast ref="uToast" />
 		<u-form :model="dataForm" ref="Form" style="margin: 10px;">
 			<u-form-item label-width='100px' label="钻孔编号" prop="holeNo"><u-input
 					v-model="dataForm.holeNo" /></u-form-item>
-			<u-form-item label-width='100px' label="采样类型" prop="holeType"><u-input v-model="holeTypeOptions.current.label"
-					type="select" @click="holeTypeOptions.show=true" /></u-form-item>
+			<u-form-item label-width='100px' label="采样类型" prop="holeType"><u-input
+					v-model="holeTypeOptions.current.label" type="select"
+					@click="holeTypeOptions.show=true" /></u-form-item>
 			<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
-			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input @click="showPickerDate('startTime')"
-					v-model="dataForm.startTime" /></u-form-item>
-			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input @click="showPickerDate('endTime')"
-					v-model="dataForm.endTime" /></u-form-item>
+			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input type="select"
+					@click="showPickerDate('startTime')" v-model="dataForm.startTime" /></u-form-item>
+			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select"
+					@click="showPickerDate('endTime')" v-model="dataForm.endTime" /></u-form-item>
 			<u-form-item label-width='100px' label="钻孔直径" prop="diameter"><u-number-box :positive-integer="false"
 					v-model="dataForm.diameter"></u-number-box></u-form-item>
 			<u-form-item label-width='100px' label="初见水位埋深" prop="sWaterLevel"><u-number-box :positive-integer="false"
 					v-model="dataForm.sWaterLevel"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="地面高程" prop="elevation"><u-number-box :positive-integer="false" v-model="dataForm.elevation"
-					 ></u-number-box></u-form-item>
+			<u-form-item label-width='100px' label="地面高程" prop="elevation"><u-number-box :positive-integer="false"
+					v-model="dataForm.elevation"></u-number-box></u-form-item>
 			<u-form-item label-width='100px' label="参考高程来源" prop="reevlResouce"><u-input
 					v-model="dataForm.reevlResouce" /></u-form-item>
 			<u-form-item label-width='100px' label="备注" prop="remark"><u-input
@@ -38,7 +41,7 @@
 				<!-- <upload :value="dataForm.files" @input="handleInput"></upload> -->
 			</u-form-item>
 		</u-form>
-		<u-picker v-model="selectTimeVisible"  mode="time" :params="timeParams" @confirm="getTime"
+		<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 			:default-time='getCurrentTime()'></u-picker>
 		<u-select v-model="wellTypeOptions.show" value-name="enCode" label-name="fullName" :list="wellTypeOptions.list"
 			@confirm="onWellTypeOptions"></u-select>
@@ -49,8 +52,7 @@
 	import {
 		reactive,
 		ref,
-		nextTick,
-		watch
+		nextTick
 	} from 'vue'
 	import {
 		onLoad
@@ -69,17 +71,19 @@
 		getDictionaryDataSelector,
 		getDictionaryDataSelectorCascade
 	} from '@/api/dictionary'
-// 监测井类型
-const wellTypeOptions = reactive({
+	// 监测井类型
+	const wellTypeOptions = reactive({
 		show: false,
 		current: {},
 		list: []
 	})
-function getwellTypeOptions() {
+
+	function getwellTypeOptions() {
 		getDictionaryDataSelector('497335660487647813').then(res => {
 			wellTypeOptions.list = res.data.list
 		})
 	}
+
 	function onwellTypeOptions(arr) {
 		let current = arr[0];
 		wellTypeOptions.current = current;
@@ -110,25 +114,21 @@ function getwellTypeOptions() {
 	}
 
 	let dataForm = reactive({
-		                projectId: '',
-		                holeNo: '',
-		                holeType: '',
-		                startTime: '',
-		                endTime: '',
-		                longitude: '',
-		                latitude: '',
-		                diameter: '',
-		                sWaterLevel: '',
-		                elevation: '',
-		                reevlResouce: '',
-		                remark: '',
-		                files: []
+		projectId: '',
+		holeNo: '',
+		holeType: '',
+		startTime: '',
+		endTime: '',
+		longitude: '',
+		latitude: '',
+		diameter: '',
+		sWaterLevel: '',
+		elevation: '',
+		reevlResouce: '',
+		remark: '',
+		files: []
 	})
-	watch(dataForm, (newVal, oldVal) => {
-		console.log(newVal, oldVal);
-	}, {
-		deep: true
-	});
+
 	function parseData(data) {
 		var _data = JSON.parse(JSON.stringify(data))
 		if (_data.files) {
@@ -151,6 +151,7 @@ function getwellTypeOptions() {
 		} else {
 			updateHoleRecord(dataForm.id, dataForm)
 		}
+		uni.$emit('refresh')
 	}
 
 	function initData() {
@@ -174,6 +175,7 @@ function getwellTypeOptions() {
 		})
 	}
 	const files = ref([])
+
 	function dataInfo(dataAll) {
 		let _dataAll = dataAll
 		if (_dataAll.files) {

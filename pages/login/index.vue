@@ -5,17 +5,10 @@
 	</view>  
 	<!-- #endif -->
 	<view class="logo-v">
-	<!-- 	<view class="login-bg">
-			<image src="/static/login-bg.png" mode="widthFix"></image>
-		</view> -->
 		<view class="logo-hd u-flex-col">
 			<view class="logoImg">
-				<image src="@/static/images/logo.jpg" mode="widthFix"></image>
+				<image src="@/static/images/logo.png" mode="widthFix"></image>
 			</view>
-			<!-- <view class="u-flex-col introduce u-m-t-30">
-				<text class="u-font-36 text-one">{{sysName}}</text>
-				<text class="u-font-24 text-two">低代码，企业数字化好帮手</text>
-			</view> -->
 			<view class="loginSwitch u-flex-col">
 				<view class="loginInputBox u-flex-col">
 					<u-form :model="formData" :rules="rules" ref="form" :errorType="['toast']" label-position="left"
@@ -45,7 +38,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="copyright">{{copyright}}</view>
+		<view class="copyright">Copyright 上海城勘信息科技有限公司</view>
 	</view>
 </template>
 
@@ -93,7 +86,6 @@
 	    const sysConfigInfo = reactive({})
 		const appIcon = ref('')	
 		const sysName = ref('')
-		const copyRight = ref('')
 		const form = ref()
 		const store = useStore()
 		function onFocus(e) {
@@ -270,5 +262,6 @@
 		left: 50%;
 		transform: translateX(-50%);
 		 white-space: nowrap;
+		color: #41abaf;
 	}
 </style>

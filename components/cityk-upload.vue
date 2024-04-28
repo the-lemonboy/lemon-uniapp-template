@@ -1,18 +1,31 @@
 <template>
 	<view class="jnpf-upload">
-	
-	<u-upload ref="uploadRef" :before-upload="handleListChanged" :file-list="lists" :action="comUploadUrl+type" :header="uploadHeaders" @on-success="onSuccess" @on-remove="onRemove"
-	></u-upload>
-	<view style='width:0px;height:0px;overflow:hidden;'>
-				<canvas canvas-id="cid" :style="{height:`${cvHeight}px`,width:`${cvWidth}px`}"></canvas>
-			</view>
+
+		<u-upload ref="uploadRef" :before-upload="handleListChanged" :file-list="lists" :action="comUploadUrl+type"
+			:header="uploadHeaders" @on-success="onSuccess" @on-remove="onRemove"></u-upload>
+		<view style='width:0px;height:0px;overflow:hidden;'>
+			<canvas canvas-id="cid" :style="{height:`${cvHeight}px`,width:`${cvWidth}px`}"></canvas>
+		</view>
 	</view>
 </template>
 
 <script setup>
-	import { inject, ref, defineEmits, defineProps,watch,nextTick,onMounted } from 'vue'
-	import{onLoad,onReady} from '@dcloudio/uni-app'
-	import {getCurrentTime} from '@/utils/index.js'
+	import {
+		inject,
+		ref,
+		defineEmits,
+		defineProps,
+		watch,
+		nextTick,
+		onMounted
+	} from 'vue'
+	import {
+		onLoad,
+		onReady
+	} from '@dcloudio/uni-app'
+	import {
+		getCurrentTime
+	} from '@/utils/index.js'
 	const props = defineProps({
 		value: {
 			type: Array,
@@ -22,13 +35,13 @@
 			type: Boolean,
 			default: false
 		},
-		watermark:{
-			type:Boolean,
-			default:false
+		watermark: {
+			type: Boolean,
+			default: false
 		},
-		watermarkContent:{
-			type:Array,
-			default:()=>[]
+		watermarkContent: {
+			type: Array,
+			default: () => []
 		}
 	})
 	const lists = ref([])
@@ -40,113 +53,113 @@
 	const uploadHeaders = {
 		Authorization: uni.getStorageSync('token')
 	}
-	onMounted(()=>{
-			setTimeout(()=>{
+	onMounted(() => {
+		if(props.value){
+			setTimeout(() => {
 				fileList.value = props.value
-				console.log(fileList.value,"update")
-				 lists.value = fileList.value.map(item=>{
-					let temp = {url:baseURL + item.url}
+				lists.value = fileList.value.map(item => {
+					let temp = {
+						url: baseURL + item.url
+					}
 					return temp
 				})
-			},500)
+			}, 500)
+		}
 	})
 	const syUrl = ref()
 	const cvHeight = ref()
 	const cvWidth = ref()
-async function handleListChanged(index, list) {
-	console.log(list,index)
-    if(props.watermark && uni.getStorageSync('watermarkFlag')){
-		let fn = new Promise(resolve => {
-		 // #ifdef H5
-		 const img = new Image();
-		 img.src = list[index].url;
-		 console.log(list[index].url,"!!!!!!!!")
-		 const timer1 = setTimeout(() => {
-		     cvHeight.value = img.height;
-		     cvWidth.value = img.width;
-		     const timer2 = setTimeout(() => {
-		         imgToCanvas(list[index].url, img.width, img.height, props.watermarkContent);
-		         const timer3 = setTimeout(() => {
-		             console.log();
-		             const base64Img = syUrl.value;
-		             list[index].url = syUrl.value;
-		             console.log(list);
-		             resolve();
-		             clearTimeout(timer3);
-		         }, 100);
-		         clearTimeout(timer2);
-		     }, 100);
-		     clearTimeout(timer1);
-		 }, 100);
-		 // #endif
-			// #ifndef H5
-			uni.getImageInfo({
-			        src: list[index].url,
-			    success: function (img) {
-			            const timer1 = setTimeout(() => {
-			                cvHeight.value = img.height;
-			                cvWidth.value = img.width;
-			                const timer2 = setTimeout(() => {
-			                    imgToCanvas(list[index].url, img.width, img.height, props.watermarkContent);
-			                    const timer3 = setTimeout(() => {
-			                        console.log();
-			                        const base64Img = syUrl.value;
-			                        list[index].url = syUrl.value;
-			                        console.log('====this',list[index].url);
-			                        resolve();
-			                        clearTimeout(timer3);
-			                    }, 100);
-			                    clearTimeout(timer2);
-			                }, 100);
-			                clearTimeout(timer1);
-			            }, 100);
-			    }
-			});
+	async function handleListChanged(index, list) {
+		if(uni.getStorageSync('watermarkFlag') && props.watermark){
+			// #ifdef H5
+			await getImgSize(list[index].url)
+			await imgToCanvas(list[index].url, cvWidth.value, cvHeight.value).then(res => {
+				list[index].url = res
+			})
 			// #endif
-		});
-		await fn;
+			// #ifdef APP-PLUS
+			await getImgSize(list[index].url)
+			await imgToCanvas(list[index].url, cvWidth.value, cvHeight.value).then(res => {
+				list[index].url = res
+			})
+			// #endif
+		}
 	}
-}
 
-	function imgToCanvas(url, width, height, textArr) {
-					const ctx = uni.createCanvasContext('cid')
-					ctx.font = '30px Arial';
-					ctx.fillStyle = '#adb5bd'
-					ctx.drawImage(url, 0, 0,width,height)
-					const watermarkValue = uni.getStorageSync('watermarkValue')
-					watermarkValue.forEach(item=>{
-						if(item.name === '项目名称'){
-							item.value = uni.getStorageSync('projectName')
-						}else if(item.name === '日期'){
-							item.value = getCurrentTime()
-						}else if(item.name === '经纬度'){
-							item.value = uni.getStorageSync('latAndLon')
-						}else if(item.name === '人员'){
-							item.value = uni.getStorageSync('userInfo').userName
-						}
-					})
-					uni.setStorageSync('watermarkValue',watermarkValue)
-					let tempIdx = 0
-					watermarkValue.forEach(item=>{
-						if(item.flag){
-						ctx.fillText(`${item.name}:${item.value}`, 30, height - 50 - tempIdx*40)
-							++tempIdx
-						}
-					})
-					//绘制到canvas上
-					ctx.draw()
-					const timer4 = setTimeout(() => {
-						uni.canvasToTempFilePath({
-							canvasId: 'cid',
-							fileType: 'jpg',
-							success: (res) => {
-								syUrl.value = res.tempFilePath
-								console.log(res)
-						 }
-						}, this)
-						clearTimeout(timer4)
-					}, 100)
+	function getImgSize(url) {
+		const self = this
+		// #ifdef H5
+		return new Promise(resolve => {
+			setTimeout(() => {
+				const img = new Image();
+				img.src = url;
+				cvHeight.value = img.height;
+				cvWidth.value = img.width;
+				resolve();
+			},100)
+		})
+		// #endif
+		// #ifndef H5
+		return new Promise(resolve => {
+			setTimeout(() => {
+				uni.getImageInfo({
+					src: url,
+					success: function(img) {
+						cvHeight.value = img.height;
+						cvWidth.value = img.width;
+						resolve()
+					}
+				});
+			},100)
+		})
+		// #endif
+	}
+
+	function imgToCanvas(url, width, height) {
+		return new Promise(resolve => {
+		setTimeout(()=>{
+			const ctx = uni.createCanvasContext('cid');
+			
+			ctx.drawImage(url, 0, 0, width, height);
+			ctx.font = '30px Arial';
+			ctx.fillStyle = '#adb5bd';
+			const watermarkValue = uni.getStorageSync('watermarkValue');
+			watermarkValue.forEach(item => {
+				if (item.name === '项目名称') {
+					item.value = uni.getStorageSync('projectName');
+				} else if (item.name === '日期') {
+					item.value = getCurrentTime();
+				} else if (item.name === '经纬度') {
+					item.value = uni.getStorageSync('latAndLon');
+				} else if (item.name === '人员') {
+					item.value = uni.getStorageSync('userInfo').userName;
 				}
+			});
+			
+			uni.setStorageSync('watermarkValue', watermarkValue);
+			
+			let tempIdx = 0;
+			watermarkValue.forEach(item => {
+				if (item.flag) {
+					ctx.fillText(`${item.name}:${item.value}`, 30, height - 50 - tempIdx * 40);
+					++tempIdx;
+				}
+			});
+			
+			//绘制到canvas上
+			ctx.draw(false, () => {
+				uni.canvasToTempFilePath({
+					canvasId: 'cid',
+					fileType: 'jpg',
+					success: (res) => {
+						resolve(res.tempFilePath);
+					}
+				});
+			});
+		},100)
+		});
+	}
+
 	function onSuccess(data, index, _lists, name) {
 		if (data.code == 200) {
 			fileList.value.push({
@@ -173,46 +186,47 @@ async function handleListChanged(index, list) {
 			// 处理请求失败的逻辑
 		}
 	}
-function onListChange(res, index, lists, name){
-	fileList.value = lists
-}
+
+	function onListChange(res, index, lists, name) {
+		fileList.value = lists
+	}
 	const uploadRef = ref(null)
-function deleteItem(index) {
-				uni.showModal({
-					title: '提示',
-					content: '您确定要删除此项吗？',
-					success: res => {
-						if (res.confirm) {
-							uploadRef.value.remove(index);
-							fileList.value.splice(index, 1)
-							emits('update:value', fileList.value)
-							uni.showToast({
-								title: '移除成功',
-								icon: 'none'
-							});
-						}
-					}
-				});
+
+	function deleteItem(index) {
+		uni.showModal({
+			title: '提示',
+			content: '您确定要删除此项吗？',
+			success: res => {
+				if (res.confirm) {
+					uploadRef.value.remove(index);
+					fileList.value.splice(index, 1)
+					emits('update:value', fileList.value)
+					uni.showToast({
+						title: '移除成功',
+						icon: 'none'
+					});
+				}
 			}
+		});
+	}
+
 	function doPreviewImage(url) {
-				const images = fileList.value.map(item => baseURL + item.url);
-				uni.previewImage({
-					urls: images,
-					current: url,
-					success: () => {},
-					fail: () => {
-						uni.showToast({
-							title: '预览图片失败',
-							icon: 'none'
-						});
-					}
+		const images = fileList.value.map(item => baseURL + item.url);
+		uni.previewImage({
+			urls: images,
+			current: url,
+			success: () => {},
+			fail: () => {
+				uni.showToast({
+					title: '预览图片失败',
+					icon: 'none'
 				});
 			}
+		});
+	}
+
 	function onRemove(index, lists) {
-		console.log(index)
-		// uploadRef.value.remove(index);
 		fileList.value.splice(index, 1)
-		// lists.value.splice(index,1)
 		emits('update:value', fileList.value) // 触发 update:value 事件，并传递更新后的 fileList 的值
 	}
 </script>
@@ -246,7 +260,8 @@ function deleteItem(index) {
 				width: 100px;
 				border-radius: 10rpx;
 			}
-			::v-deep .u-image__image{
+
+			::v-deep .u-image__image {
 				width: 100%;
 				height: 100%
 			}

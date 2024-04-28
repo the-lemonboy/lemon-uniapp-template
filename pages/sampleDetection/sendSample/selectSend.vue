@@ -6,20 +6,22 @@
 		</view>
 		<!-- #endif -->
 		<view class="content-box">
-			<view class="nav-bar"
-				style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+			<view class="nav-container" style="height: 44px;">
+				<view class="nav-bar"
+					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 				<text class="title"
-					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
-				<text @click="addOrUpdateData()" type="primary" class="submit"
-					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
+					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">送样信息</text>
+				<!-- <text @click="addOrUpdateData()" type="primary" class="submit"
+					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text> -->
+			</view>
 			</view>
 			<view class="form-box">
-				<u-form :model="dataForm" ref="Form" style="margin: 10px;">
+				<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
 					<u-form-item label-width='100px' label="批次编号" prop="transNo"><u-input
 							v-model="dataForm.transNo" /></u-form-item>
-					<u-form-item label-width='100px' label="开始时间" prop="transTime"><u-input
-							@click="showPickerDate('transTime')" v-model="dataForm.transTime" /></u-form-item>
+					<u-form-item label-width='100px' label="送样时间" prop="transTime"><u-input
+						type="select"	@click="showPickerDate('transTime')" v-model="dataForm.transTime" /></u-form-item>
 				</u-form>
 				<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 					:default-time='getCurrentTime()'></u-picker>
@@ -28,12 +30,11 @@
 				<view class="item-box">
 					<u-checkbox @change="checkboxChange" v-model="item.send" shape="circle" :name="item.id"></u-checkbox>
 					<view class="left-item">
-						<view class="title" @click="goToDeatil(item.id)">{{ item.sampleNo }}</view>
+						<view class="title">采样名称：{{ item.sampleName }}</view>
 						<view class="center-zone">
-							<text class="area">{{ item.createTime }}</text>
-							<text class="project">{{item.typetext}}</text>
+							<text class="area">分析指标：{{ item.analysisFactorNames }}</text>
 						</view>
-						<text class="time">{{item.registertime}}</text>
+						<text class="time">采样时间：{{item.createTime}}</text>
 					</view>
 				</view>
 			</view>
@@ -56,7 +57,7 @@
 			</view>
 		</view>
 	</view>
-	<sendDetail ref="sendDetailRef" @emitVisible="(val)=>selectVisible = val" :sendId="sendId"></sendDetail>
+	<sendDetail ref="sendDetailRef" @submitVisibleFlag="submitVisibleFlag()" @emitVisible="(val)=>selectVisible = val" :sendId="sendId"></sendDetail>
 </template>
 
 <script setup>
@@ -75,13 +76,34 @@
 	} from '@/api/sample/sendSample.js'
 	import {getProjectDetail} from '@/api/sample.js'
 	import {
-		onLoad
+		onLoad,
+		onReady
 	} from '@dcloudio/uni-app'
 	import sendDetail from './sendDetail.vue';
 	import {
 		getCurrentTime
 	} from '@/utils/index.js'
 	const emits = defineEmits(['emitVisible'])
+	const form = ref(null)
+	const rules = reactive({
+		transNo: [{
+			required: true,
+			message: '请输入批次编号',
+			trigger: 'blur',
+		}],
+		transTime: [{
+			required: true,
+			message: '请输入送样时间',
+			trigger: 'blur',
+		}]
+	})
+	onReady(() => {
+		form.value.setRules(rules);
+	})
+	function submitVisibleFlag(val){
+		emits('emitVisible',true)
+		selectVisible.value = false
+	}
 	const selectVisible = ref(false)
 	// 选择时间
 	const timeParams = reactive({
@@ -97,29 +119,27 @@
 
 	function showPickerDate(value) {
 		curTimeKey.value = value,
-			selectTimeVisible.value = true
+		selectTimeVisible.value = true
 	}
 
 	function getTime(e) {
-		if (curTimeKey.value === 'transTime') dataForm.transTime =
+		if (curTimeKey.value === 'transTime') dataForm.value.transTime =
 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
-		else if (curTimeKey.value === 'endTime') dataForm.endTime =
+		else if (curTimeKey.value === 'endTime') dataForm.value.endTime =
 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
 	}
-	const dataForm = reactive({
+	const dataForm = ref({
 				id:'',
 				domain: 'sample',
-		        location: '',
+		        // location: '',
 		        organizeId: '',
 		        projectId: '',
-		        projection: '',
-		        receiveCount: 0,
-		        receiveTime: '',
-		        receiveUserId: '',
+		        // projection: '',
+		        // receiveCount: 0,
 		        remark: '',
 		        transCount: 0,
 		        transNo: '',
-		        transState: '',
+		        // transState: '',
 		        transTime: '',
 		        transUserId: '',
 				projectEnCode:'',
@@ -137,15 +157,37 @@
 	// 	}
 	// }
 	const unSendList = ref([])
-
 	function getUnsendList() {
-		const id = {
-			projectId: uni.getStorageSync('projectId')
-		}
-		initSendList(id).then(res => {
-			unSendList.value = res.data.list
-			console.log(unSendList.value)
+		return new Promise(resolve=>{
+			const id = {
+				projectId:uni.getStorageSync('projectId')
+			}
+			initSendList(id).then(res => {
+				let result = res.data.list.filter(item=>item.analysisFactorNames)
+				if(sendId.value){
+				unSendList.value = dataForm.value.detailList.concat(result)
+				}else{
+					unSendList.value = result
+					// dataForm.value = clearData(dataForm.value)
+					// dataForm.value.domain = 'sample'
+				}
+				resolve()
+			})
 		})
+	}
+	function clearData(data){
+		for(let key in data){
+			if(Array.isArray(data[key])){
+				data[key] = []
+			}else if (Object.prototype.toString.call(data[key]) === '[object Object]'){
+				data[key] = {}
+			}else if(typeof data[key] === 'number'){
+				data[key] = 0
+			}else{
+				data[key] = null
+			}
+		}
+		return data
 	}
 	// 送样和收样详细
 	
@@ -180,23 +222,18 @@
 	function getProjectEncode(){
 		const id = uni.getStorageSync('projectId')
 		getProjectDetail(id).then(res=>{
-			dataForm.projectEnCode = res.data.encode
-			console.log(res.data)
+			dataForm.value.projectEnCode = res.data.encode
 		})
 	}
 	const addFlag = ref(false)
 	const sendDetailRef = ref(null)
 	const sendId = ref(null)
-	// function goSendDetail(){
-	// 	sendDetailRef.value.sendDetailVisible = true
-	// 	sendDetailRef.value.sendDetailId = dataList.value
-	// 	sendDetailRef.value.unSendDetailList = unSendList.value
-	// 	console.log(sendDetailRef.value.unSendDetailList)
-	// }
 	function goSendDetail() {
-		dataForm.projectId = uni.getStorageSync('projectId')
-		dataForm.transUserId = uni.getStorageSync('userInfo').id
-		dataForm.organizeId = uni.getStorageSync('userInfo').organizeId
+		form.value.validate(valid => {
+			if (valid) {
+		dataForm.value.projectId = uni.getStorageSync('projectId')
+		dataForm.value.transUserId = uni.getStorageSync('userInfo').userId
+		dataForm.value.organizeId = uni.getStorageSync('userInfo').organizeId
 		detailList: [] // 详细列表
 	    const detailList = unSendList.value
 	        .filter(item => item.send)
@@ -204,9 +241,9 @@
 	            analysisFactorIds: item.analysisFactorIds,
 	            analysisFactorNames: item.analysisFactorNames,
 	            classify: item.classify,
-	            dropped: item.dropped,
+	            // dropped: item.dropped,
 	            files: item.files,
-	            received: item.received,
+	            // received: item.received,
 	            remark: item.remark,
 	            sampleAmount: item.sampleAmount,
 	            sampleId: item.sampleId,
@@ -216,33 +253,42 @@
 	            sampleType: item.sampleType,
 	            sampleUnit: item.sampleUnit,
 	            transId: item.transId,
-	            useLocId: item.useLocId,
-	            useLocType: item.useLocType,
-	            useLocation: item.useLocation
+	            // useLocId: item.useLocId,
+	            // useLocType: item.useLocType,
+	            // useLocation: item.useLocation,
+				sampleTypeText:item.sampleTypeText
 	        }));
-			dataForm.transCount = detailList.length
-			dataForm.detailList = detailList
+			// console.log(detailList)
+			dataForm.value.transCount = detailList.length
+			dataForm.value.detailList = detailList
 			selectVisible.value = false
 			sendDetailRef.value.sendDetailVisible = true
-			// sendDetailRef.value.sendDetailId = dataList.value
-			// sendDetailRef.value.unSendDetailList = unSendList.value
-			sendDetailRef.value.sendData = dataForm
-			console.log(dataForm)
+			sendDetailRef.value.sendData = dataForm.value
+			}
+			});
 	}
 
-
+	function initData(){
+		return new Promise(resolve=>{
+			const id = sendId.value
+			getSendsampleDetail(id).then(res=>{
+				dataForm.value = res.data
+				dataForm.value.detailList.forEach(item=>{
+					item.send = true
+				})
+				resolve()
+			})
+		})
+	}
 	function goToBack() {
 		selectVisible.value = false
 		emits('emitVisible', true)
 	}
 
 	function checkboxChange(e) {
-		console.log(unSendList.value)
-		console.log(e)
 	}
 	const selectValue = ref({name: '全选',disabled: false})
 	function selectAll(e){
-		console.log(e)
 		if(e.value){
 			unSendList.value.forEach(item=>{
 				item.send = true
@@ -254,17 +300,14 @@
 		}
 	}
 	onLoad(() => {
-		// sendDetail()
-		getUnsendList()
 		getProjectEncode()
 	})
 	defineExpose({
 		selectVisible,
 		addFlag,
-		sendId
-		// getSendDetail,
-		// sendId
-
+		sendId,
+		getUnsendList,
+		initData
 	})
 </script>
 

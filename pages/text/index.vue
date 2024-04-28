@@ -38,7 +38,6 @@
 	            //监听选择（ids为数组）
 	           function selectChange(ids, names) {
 				   treeValue.value = ids
-	                console.log(ids, names)
 	            }
 </script>
 

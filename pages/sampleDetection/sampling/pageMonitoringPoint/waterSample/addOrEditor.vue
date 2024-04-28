@@ -5,23 +5,25 @@
 	</view>
 	<!-- #endif -->
 	<view class="mo-container">
-		<view class="nav-bar"
-			style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+		<view class="nav-container" style="height: 44px;">
+			<view class="nav-bar"
+				style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 			<text class="title"
 				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">水样记录</text>
 			<text @click="addOrUpdateData()" type="primary" class="submit"
 				style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 		</view>
+		</view>
 		<u-toast ref="uToast" />
-		<u-form :model="dataForm" ref="Form" style="margin: 10px;">
+		<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
 			<u-form-item label-width='100px' label="监测井编号" prop="wellId"><u-input v-model="dataForm.wellId"
 					type="select" @click="wellIdOptions.show=true" /></u-form-item>
-			<u-form-item label-width='100px' label="样品名称(采样)" prop="sampleName"><u-input
+			<u-form-item label-width='100px' label="样品名称" prop="sampleName"><u-input
 					v-model="dataForm.sampleName" /></u-form-item>
-			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input disabled @click="showPickerDate('startTime')"
+			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input type="select" @click="showPickerDate('startTime')"
 					v-model="dataForm.startTime" /></u-form-item>
-			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input disabled @click="showPickerDate('endTime')"
+			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select" @click="showPickerDate('endTime')"
 					v-model="dataForm.endTime" /></u-form-item>
 			<u-form-item label-width="150" label="是否送检" prop="isInspection">
 				<u-radio-group v-model="dataForm.isInspection">
@@ -32,22 +34,19 @@
 			<u-form-item label-width='100px' label="样品编号" prop="sampleNo"><u-input
 					v-model="dataForm.sampleNo" type="select"
 					@click="sampleNoOptions.show=true" /></u-form-item>
-			<u-form-item label-width="150" label="是否添加平行样" prop="hasParallelSample">
+			<u-form-item label-width="120px" label="添加平行样" prop="hasParallelSample">
 				<u-radio-group v-model="dataForm.hasParallelSample">
 					<u-radio :name="val.value" :disabled="val.disabled" v-for="(val,index) of hasParallelSampleRadio"
 						:key="index">{{val.name}}</u-radio>
 				</u-radio-group>
 			</u-form-item>
-			<u-form-item label-width='100px' label="平行样样品编号" prop="relationSampleId"><u-input
+			<u-form-item label-width='120px' label="平行样样品编号" prop="relationSampleId"><u-input
 					v-model="relationSampleIdOptions.current.label" type="select"
 					@click="relationSampleIdOptions.show=true" /></u-form-item>
 			<u-form-item label-width='100px' label="样品保存方式" prop="storageMethod"><u-input type='number'
 					v-model="dataForm.storageMethod" /></u-form-item>
-		<!-- 	<u-form-item label-width='100px' label="采样设备" prop="deviceIdOptions"><u-input
-					v-model="deviceIdOptions.current.label" type="select"
-					@click="deviceIdOptions.show=true" /></u-form-item> -->
 	<u-form-item label-width="100px" label="分析指标"><u-input
-			v-model="selectName" @click="showPicker"/></u-form-item>
+			type="select" v-model="selectName" @click="showPicker"/></u-form-item>
 			<u-form-item label-width='100px' label="井深" prop="waterTemperature"><u-number-box :positive-integer="false"
 					v-model="dataForm.waterTemperature"></u-number-box></u-form-item>
 			<u-form-item label-width='100px' label="pH值" prop="waterPh"><u-number-box :positive-integer="false"
@@ -94,7 +93,8 @@
 		onMounted
 	} from 'vue'
 	import {
-		onLoad
+		onLoad,
+		onReady
 	} from '@dcloudio/uni-app'
 	import upload from '@/components/cityk-upload.vue';
 	import {
@@ -106,13 +106,72 @@
 		updateWaterSample,
 		getWaterSampleDetail,
 		getWellBaseList,
-		getSampleBase
+		getSampleBase,
+		getWaterSampleList
 	} from '@/api/sample.js'
 	import {
 		getDictionaryDataSelector,
 		getDictionaryDataSelectorCascade,
 		getFactorTreeList
 	} from '@/api/dictionary'
+	const form = ref(null)
+	const rules = reactive({
+				wellId: [{
+					required: true,
+					message: '请输入监测井编号',
+					trigger: 'blur',
+				}],
+				sampleName: [{
+						validator: (rule, value, callback) => {
+							if (curSampleNameList.value.includes(value)) {
+								callback(new Error('该样品名称已存在'))
+								// console.log(value)
+								// return false
+							} else {
+								callback()
+								// return true
+							}
+						},
+						message: '请确保样品名称唯一',
+						trigger: ['change', 'blur'],
+					},
+					{
+						required: true,
+						message: '请输入样品名称',
+						trigger: 'blur',
+					}
+				],
+				startTime: [{
+					required: true,
+					message: '请输入开始时间',
+					trigger: 'blur',
+				}],
+				endTime: [{
+					required: true,
+					message: '请输入结束深度',
+					trigger: 'blur',
+				}]
+			})
+			onReady(()=>{
+				form.value.setRules(rules);
+			})
+	const curSampleNameList = ref([])
+	
+	function getCurSampleNameList() {
+		let _query = {
+			currentPage: 1,
+			projectId: uni.getStorageSync('projectId'),
+			holeId: uni.getStorageSync('holeId'),
+			sort: 'desc',
+			sidx: '',
+			menuId: getMenuId('项目列表')
+		}
+		getWaterSampleList(_query).then(res => {
+			curSampleNameList.value = res.data.list.map(item => {
+			          return item.sampleName
+			        })
+		})
+	}
 	// 分析指标
 	// 显示选择器
 	const factorTreeList = ref([]) 
@@ -130,8 +189,10 @@
 	 }
 	 //监听选择（ids为数组）
 	function selectChange(ids, names) {
-			dataForm.value.analysisFactorIds = ids
-			selectName.value = names
+			let resulteIds = ids.map(item => BigInt(item))
+			 resulteIds = resulteIds.join(',')
+			 dataForm.value.analysisFactorIds = resulteIds
+			 selectName.value = names
 	 }
 	 onLoad(()=>{
 		 getfactorTypeOptions()
@@ -205,7 +266,7 @@ const relationSampleIdOptions = reactive({
 
 	function showPickerDate(value) {
 		curTimeKey.value = value,
-			selectTimeVisible.value = true
+		selectTimeVisible.value = true
 	}
 
 	function getTime(e) {
@@ -289,16 +350,19 @@ const relationSampleIdOptions = reactive({
 	}
 
 	function addOrUpdateData() {
-		// dataForm.files = parseFiles(dataForm.files)
-		// dataForm = (dataForm)
+		form.value.validate(valid => {
+			if (valid) {
 		dataForm.value = parseData(dataForm.value)
 		if (!dataForm.id) {
 			addWaterSample(dataForm.value).then(res => ToastFn('创建成功'))
 		} else {
 			updateWaterSample(dataForm.value.id, dataForm.value).then(res=>ToastFn('修改成功'))
 		}
+		}
+		});
 	}
 function ToastFn(text){
+	uni.$emit('refresh')
 		goToBack()
 		uni.showToast({
 			title: text,
@@ -306,21 +370,21 @@ function ToastFn(text){
 		});
 	}
 	function initData() {
-		console.log('water',uni.getStorageSync('waterSampleId'))
 		const id = uni.getStorageSync('waterSampleId')
 		if (id) {
 			getWaterSampleDetail(id).then(res => {
 				dataInfo(res.data)	
+				curSampleNameList.value = curSampleNameList.value.filter(item => {
+					return item !== dataForm.value.sampleName
+				})
 			})
 		}
 	}
 	onLoad(() => {
-		nextTick(()=>{
-			
-		})
 		initData()
 		getWellIdOptions()
 		getSampleNoOptions()
+		getCurSampleNameList()
 	})
 
 	function goToBack() {
@@ -337,9 +401,10 @@ function ToastFn(text){
 		} else {
 			_dataAll.files = []
 		}
+		_dataAll.hasParallelSample = _dataAll.hasParallelSample == "true" ? "1": "0"
+		_dataAll.isInspection = _dataAll.isInspection == "true" ? "1": "0"
+		_dataAll.hasNapl = _dataAll.hasNapl == "true" ? "1" : "0"
 		dataForm.value = _dataAll
-		// Object.assign(dataForm,_dataAll)
-		// dataForm = _dataAll
 	}
 </script>
 

@@ -6,10 +6,13 @@
 		</view>  
 		<!-- #endif -->
 		<view class="sa-container">
-			<view class="nav-bar" style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+			<view class="nav-container" style="height: 44px;">
+				<view class="nav-bar"
+					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 				<text class="title" style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
-				<uni-icons @click="goAddOrEditorData()" class="add" type="plus-filled" size="30" style="color:blue; line-height: 44px; margin-right: 10px; float:right;"></uni-icons>
+				<uni-icons @click="goAddOrEditorData()" class="add" type="plus-filled" size="30" style="color:#2160FF; line-height: 44px; margin-right: 10px; float:right;"></uni-icons>
+			</view>
 			</view>
 			<view class="tab-box">
 				 <u-tabs :list="tabOptions" :is-scroll="true" v-model="tabCurent" @change="change"></u-tabs>
@@ -54,14 +57,7 @@
 	const tabCurent = ref(0)
 	function change(index) {
 		tabCurent.value = index
-				console.log("index", index);
-			}
-		function addOrEditor(id){
-			// 新增
-			if(!id){
-				
-			}
-		}	
+			}	
 </script>
 
 <style lang="scss" scoped>

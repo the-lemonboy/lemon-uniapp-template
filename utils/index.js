@@ -35,7 +35,6 @@ export function searchId(id){
 	let menuList = uni.getStorageSync('permissionList')
 	for(let val of menuList){
 		if(val.modelId === id){
-			console.log(val.moduleName)
 			return 
 		}
 	}

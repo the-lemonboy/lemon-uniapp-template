@@ -5,29 +5,31 @@
 	</view>
 	<!-- #endif -->
 	<view class="mo-container">
-		<view class="nav-bar"
-			style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+		<view class="nav-container" style="height: 44px;">
+			<view class="nav-bar"
+				style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 			<text class="title"
-				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">建井信息</text>
+				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">质控样品</text>
 			<text @click="addOrUpdateData()" type="primary" class="submit"
 				style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 		</view>
+		</view>
 		<u-toast ref="uToast" />
-		<u-form :model="dataForm" ref="Form" style="margin: 10px;">
+		<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
 			<u-form-item label-width='100px' label="样品编号" prop="sampleNo"><u-input
-					v-model="sampleNoOptions.current.label" type="select"
+					v-model="dataForm.sampleNo" type="select"
 					@click="sampleNoOptions.show=true" /></u-form-item>
 			<u-form-item label-width='100px' label="样品名称" prop="sampleName"><u-input
 					v-model="dataForm.sampleName" /></u-form-item>
 			<u-form-item label-width='100px' label="质控样品类型" prop="sampleType"><u-input
-					v-model="sampleTypeOptions.current.label" type="select"
+					v-model="dataForm.sampleType" type="select"
 					@click="sampleTypeOptions.show=true" /></u-form-item>
-			<u-form-item label-width="100px" label="分析指标"><u-input
+			<u-form-item label-width="100px" label="分析指标"><u-input type="select"
 					v-model="selectName" @click="showPicker"/></u-form-item>
-			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input @click="showPickerDate('startTime')"
+			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input type="select" @click="showPickerDate('startTime')"
 					v-model="dataForm.startTime" /></u-form-item>
-			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input @click="showPickerDate('endTime')"
+			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select" @click="showPickerDate('endTime')"
 					v-model="dataForm.endTime" /></u-form-item>
 			<u-form-item label-width='100px' label="备注" prop="remark"><u-input
 					v-model="dataForm.remark" /></u-form-item>
@@ -54,7 +56,8 @@
 		watch
 	} from 'vue'
 	import {
-		onLoad
+		onLoad,
+		onReady
 	} from '@dcloudio/uni-app'
 	import upload from '@/components/cityk-upload.vue';
 	import {
@@ -62,15 +65,38 @@
 		getCurrentTime
 	} from '@/utils/index.js';
 	import {
-		addHoleRecord,
-		updateHoleRecord,
-		getHoleRecordDetail,
-		getProjectBaseList
+		getQCSampleDetail,
+		addQCSample,
+		updateQCSample,
+		getSampleBase
 	} from '@/api/sample.js'
 	import {
 		getDictionaryDataSelector,
-		getDictionaryDataSelectorCascade
+		getDictionaryDataSelectorCascade,
+		getFactorTreeList
 	} from '@/api/dictionary'
+	
+	const form = ref(null)
+	const rules = reactive({
+		sampleNo: [{
+			required: true,
+			message: '请输入样品编号',
+			trigger: 'blur',
+		}],
+		startTime: [{
+			required: true,
+			message: '请输入开始时间',
+			trigger: 'blur',
+		}],
+		endTime: [{
+			required: true,
+			message: '请输入结束时间',
+			trigger: 'blur',
+		}]
+	})
+	onReady(() => {
+		form.value.setRules(rules);
+	})
 	// 分析指标
 	// 显示选择器
 	const factorTreeList = ref([]) 
@@ -88,8 +114,10 @@
 	 }
 	 //监听选择（ids为数组）
 	function selectChange(ids, names) {
-			dataForm.analysisFactorIds = ids
-			selectName.value = names
+		     let resulteIds = ids.map(item => BigInt(item))
+		      resulteIds = resulteIds.join(',')
+		      dataForm.value.analysisFactorIds = resulteIds
+			  selectName.value = names
 	 }
 	 onLoad(()=>{
 		 getfactorTypeOptions()
@@ -106,15 +134,15 @@
 			projectId: uni.getStorageSync('projectId'),
 			sampleType: '3'
 		}
-		getProjectBaseList(_query).then(res => {
+		getSampleBase(_query).then(res => {
 			sampleNoOptions.list = res.data.list
 		})
 	}
 
 	function onSampleNoOptions(arr) {
 		let current = arr[0];
-		wellTypeOptions.current = current;
-		dataForm.holeType = current.label;
+		sampleNoOptions.current = current;
+		dataForm.value.sampleNo = current.value;
 	}
 	// 质控样品类型
 	const sampleTypeOptions = reactive({
@@ -131,8 +159,8 @@
 
 	function onSampleTypeOptions(arr) {
 		let current = arr[0];
-		wellTypeOptions.current = current;
-		dataForm.holeType = current.label;
+		sampleTypeOptions.current = current;
+		dataForm.value.sampleType = current.label;
 	}
 	// 选择时间
 	const timeParams = reactive({
@@ -152,13 +180,13 @@
 	}
 
 	function getTime(e) {
-		if (curTimeKey.value === 'startTime') dataForm.startTime =
+		if (curTimeKey.value === 'startTime') dataForm.value.startTime =
 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
-		else if (curTimeKey.value === 'endTime') dataForm.endTime =
+		else if (curTimeKey.value === 'endTime') dataForm.value.endTime =
 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
 	}
 
-	let dataForm = reactive({
+	let dataForm = ref({
 		projectId: '',
 		sampleId: '',
 		sampleNo: '',
@@ -170,7 +198,7 @@
 		endTime: '',
 		remark: '',
 		files: [],
-		analysisFactorIds: []
+		analysisFactorIds: ''
 	})
 
 	function parseData(data) {
@@ -186,18 +214,29 @@
 	}
 
 	function addOrUpdateData() {
-		dataForm = parseData(dataForm)
-		if (!dataForm.id) {
-			addHoleRecord(dataForm).then(res => console.log('success!'))
+		form.value.validate(valid => {
+			if (valid) {
+		dataForm.value = parseData(dataForm.value)
+		if (!dataForm.value.id) {
+			addQCSample(dataForm.value).then(res =>ToastFn('创建成功'))
 		} else {
-			updateHoleRecord(dataForm.id, dataForm)
+			updateQCSample(dataForm.value.id, dataForm.value).then(res=>ToastFn('修改成功'))
 		}
+		}
+		});
 	}
-
+function ToastFn(text){
+	uni.$emit('refresh')
+		goToBack()
+		uni.showToast({
+			title: text,
+			duration: 2000
+		});
+	}
 	function initData() {
 		const id = uni.getStorageSync('QCSampleId')
 		if (id) {
-			getHoleRecordDetail(id).then(res => {
+			getQCSampleDetail(id).then(res => {
 				dataInfo(res.data)
 			})
 		}
@@ -222,7 +261,7 @@
 		} else {
 			_dataAll.files = []
 		}
-		dataForm = _dataAll
+		dataForm.value = _dataAll
 	}
 </script>
 

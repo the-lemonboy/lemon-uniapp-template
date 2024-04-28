@@ -6,10 +6,15 @@
 	</view>  
 	<!-- #endif -->
 	<view class="m-container">
-		<view class="nav-bar" style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+		<view class="nav-container" style="height: 44px;">
+			<view class="nav-bar"
+				style="position: fixed; z-index: 99; background-color: white;box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 			<uni-icons @click="goToBack()"  type="left" size="30" style="line-height: 44px;"></uni-icons>
 			<text class="title" style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">仪器使用记录</text>
-			<text @click="goToAdd()" type="primary" class="submit" style="color:blue; line-height: 44px; margin-right: 10px; float:right;">新增</text>
+		<uni-icons @click="goAddOrEditorData()" class="add" type="plus-filled" size="30" style="color:#2160FF; line-height: 44px; margin-right: 10px; float:right;"></uni-icons>		
+		<text @click="scanQRcode()" type="primary" class="submit"
+			style="color:blue; line-height: 44px; margin-right: 10px; float:right;"><uni-icons type="scan" size="30"></uni-icons></text>
+		</view>
 		</view>
 	<view class="search-box">
 		<u-search placeholder="搜索申请单号" v-model="searchKeyWord" @search="getMenuList()"></u-search>
@@ -20,10 +25,9 @@
 					class="swipe-item items-box"
 					v-for="item in tableData" :key="item.id"
 					    :right-options="swiperOptions"
-					    @change="swipeChange($event)"
 					    @click="swipeClick($event,content,item.id)"
 					>
-						<view class="item-box">
+						<view class="item-box" @click="goAddOrEditorData(item.id)">
 							<view class="left-item">
 								<view class="title">申请单号：{{ item.applyCode }}</view>
 								<view class="center-zone">
@@ -32,13 +36,6 @@
 								</view>
 								<text class="time">申请时间：{{item.applyTime}}</text>
 							</view>
-							
-						<!-- 	<view class="right-box">
-								<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-								<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-								<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-								<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-							</view> -->
 						</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
@@ -46,6 +43,7 @@
 		</view>
 	</view>
 	</view>
+	<equipmentDetail ref="detailRef" @emitVisible="(val)=>mainVisible = val"></equipmentDetail>
 	<applyInstrument ref="addRef" @emitVisible="(val)=>mainVisible = val"></applyInstrument>
 </template>
 
@@ -57,70 +55,129 @@
 	} from 'vue';
 	import {
 		onLoad,
-		onPullDownRefresh
+		onPullDownRefresh,
+		onReachBottom
 	} from "@dcloudio/uni-app"
 	import {
-		getApplyEquipmentList
+		getApplyEquipmentListPage,
+		delEquipment
 	} from '@/api/lab/labOperation.js'
 	import {
 		getMenuId,searchId
 	} from '@/utils/getMenuId.js'
 	import applyInstrument from './applyInstrument.vue';
-	function swipeClick(e,ctx,id){
-		uni.showModal({
-			title: '提示',
-			content: '您确定要删除此项吗？',
-			success: res => {
-				if (res.confirm) {
-					delProjectDetail(id).then(res=>{
-						getMenuList()
-					})
-					uni.showToast({
-						title: '移除成功',
-						icon: 'none'
-					});
-				}
-			}
-		});
-	}
+	import equipmentDetail from './equipmentDetail.vue';
 	const tableData = ref([])
 	// 搜索
 	const searchKeyWord = ref()
-	async function getMenuList() {
+	const listQuery = reactive({
+		currentPage: 1,
+		pageSize: 20,
+		sort: "asc",
+		sidx: "encode",
+	})
+	const reachBottomFlag = ref(false)
+	async function getList() {
+		uni.showLoading({
+			title: '加载中'
+		});
 		const menuId = getMenuId('仪器使用')
+		if(!reachBottomFlag.value){
+			listQuery.currentPage = 1
+		}
 		let queryData = {
-			 currentPage: 1,
 			 applyType:['Rec'],
 			 domain: 'equip',
-			 sort: "asc",
-			 sidx: "applyCode",
 			 menuId: menuId,
-			 applyCode:searchKeyWord.value
+			 applyCode:searchKeyWord.value,
+			 ...listQuery
 		}
-		getApplyEquipmentList(queryData).then(res => {
+		await getApplyEquipmentListPage(queryData).then(res => {
+			if(reachBottomFlag.value){
+				tableData.value = [...tableData.value, ...res.data.list]
+			}else{
+				tableData.value = res.data.list
+			}
+			listQuery.currentPage++
+			uni.hideLoading();
 			
-			tableData.value = res.data.list;
-			console.log(tableData.value)
 		})
 	}
+	const swiperOptions = ref([{
+				            text: '删除',
+				            style: {
+				                backgroundColor: '#dd524d'
+				            }
+				        }
+			])
+		function swipeClick(e,ctx,id){
+			uni.showModal({
+				title: '提示',
+				content: '您确定要删除此项吗？',
+				success: res => {
+					if (res.confirm) {
+						delEquipment(id).then(res=>{
+							getList()
+						})
+						uni.showToast({
+							title: '移除成功',
+							icon: 'none'
+						});
+					}
+				}
+			});
+		}
 	function goToBack(){
 		uni.navigateBack({delta:1})
 	}
 	const addRef = ref(null)
 	const mainVisible = ref(true)
-	function goToAdd() {
+	function goAddOrEditorData(id) {
 	   addRef.value.addVisible = true
+	   addRef.value.id = id
+	   addRef.value.initData()
 	   mainVisible.value = false
 	}
-	// getMenuList()
+	const detailRef = ref(null)
+	function scanQRcode(){
+		uni.scanCode({
+			success: function (res) {
+				detailRef.value.detailVisible = true
+				detailRef.value.equipid = res.result
+				detailRef.value.getEquipBase()
+				detailRef.value.getEquipUseList()
+				mainVisible.value = false
+			},
+			error:function(res){
+				uni.showToast({
+					title: '无效二维码',
+					duration: 2000
+				});
+			}
+		});
+	}
+
 	onLoad(() => {
-		getMenuList()
-		console.log(searchId('484709504437452997'))
+		getList()
+		uni.$on('refresh', () => {
+		   getList()
+		})	
+	})
+	onReachBottom(()=>{
+		getList()
 	})
 	onPullDownRefresh(async () => {
-		await getMenuList()
+		try {
+		    await getList();
+		} catch (error) {
+		    uni.showToast({
+		    	title: '加载失败',
+				icon:'error',
+		    	duration: 2000
+		    });
+		}
 		uni.stopPullDownRefresh();
-	})
+	})	
 </script>
 
 <style scoped lang="scss">
@@ -132,7 +189,9 @@
 
 		.search-box {
 			width: 90%;
-			margin: auto;
+			margin:0 auto;
+			display: flex;
+			justify-content: center;
 		}
 
 		.sort-box {

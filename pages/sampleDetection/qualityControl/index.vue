@@ -6,19 +6,20 @@
 		</view>
 		<!-- #endif -->
 		<view class="qc-container">
-			<view class="nav-bar"
-				style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+			<view class="nav-container" style="height: 44px;">
+				<view class="nav-bar"
+					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 				<text class="title"
-					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
-				<uni-icons @click="goAddOrEditorData()" class="add" type="plus-filled" size="30"
-					style="color:blue; line-height: 44px; margin-right: 10px; float:right;"></uni-icons>
+					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">质控</text>
+			<uni-icons @click="goAddOrEditorData()" class="add" type="plus-filled" size="30" style="color:#2160FF; line-height: 44px; margin-right: 10px; float:right;"></uni-icons>
+			</view>
 			</view>
 			<view class="tab-box">
 				<u-tabs :list="tabOptions" :is-scroll="true" v-model="tabCurent" @change="change"></u-tabs>
 			</view>
 			<view class="search-box">
-				<u-search placeholder="搜索." v-model="keyword"></u-search>
+				<u-search placeholder="请输入项目编号" v-model="searchKeyWord" @search="getList()"></u-search>
 			</view>
 			<view class="content-box">
 				<uni-swipe-action ref="swipeAction" v-if="dataList.length">
@@ -81,10 +82,9 @@
 		EditorRef.value.visible = true
 		mainVisible.value = false
 		if (id) {
-			console.log(id)
 			EditorRef.value.itemId = id
 		} else {
-			EditorRef.value.checkType = `${tabCurent.value++}`
+			EditorRef.value.checkType = `${++tabCurent.value}`
 		}
 		EditorRef.value.initData()
 	}
@@ -100,10 +100,14 @@
 		recorderId: '',
 		recordTime: ''
 	})
-
-	function getList() {
+	// 搜索
+	const searchKeyWord = ref()
+	async function getList() {
 		let menuId = getMenuId('项目列表')
 		const projectId = uni.getStorageSync('projectId')
+		uni.showLoading({
+			title: '加载中'
+		});
 		let initQuery = {
 			currentPage: 1,
 			pageSize: 0,
@@ -112,9 +116,10 @@
 			menuId: menuId,
 			projectId: projectId,
 			holeId: '',
+			id:searchKeyWord.value
 		}
 		Object.assign(initQuery, query)
-		getQCCheckBaseList(initQuery).then(res => {
+		await getQCCheckBaseList(initQuery).then(res => {
 			let list = null
 			if (tabCurent.value == 0) {
 				list = res.data.list.filter(item => item.checkType == '1')
@@ -122,10 +127,10 @@
 				list = res.data.list.filter(item => item.checkType == '2')
 			}
 			dataList.value = list
+			uni.hideLoading();
 		})
 	}
 	const tabCurent = ref(0)
-
 	function change(index) {
 		getList()
 	}
@@ -155,10 +160,24 @@
 	}
 	onLoad(() => {
 		getList()
+		uni.$on('refresh',(val)=>{
+			tabCurent.value = val
+			getList()
+		})
 	})
 	onPullDownRefresh(async () => {
-		await getMenuList()
-		uni.stopPullDownRefresh();
+		onPullDownRefresh(async () => {
+			try {
+			    await getList();
+			} catch (error) {
+			    uni.showToast({
+			    	title: '加载失败',
+					icon:'error',
+			    	duration: 2000
+			    });
+			}
+			uni.stopPullDownRefresh();
+		})
 	})
 </script>
 

@@ -9,6 +9,14 @@ export function getMaterielList(data){
 		data
 	})
 }
+// 获取列表分页
+export function getMaterielListPage(data){
+	return request({
+		url:`/api/material/Stock/getListPage`,
+		method: 'post',
+		data
+	})
+}
 // 获取详细
 export function getSoilRecordDetail(id){
 	return request({
@@ -19,7 +27,7 @@ export function getSoilRecordDetail(id){
 // 新增
 export function addMateriel(data){
 	return request({
-		url:`api/material/Apply/stockCheck`,
+		url:`/api/material/Apply/stockCheck`,
 		method: 'post',
 		data
 	})
@@ -34,6 +42,14 @@ export function getApplyEquipmentList (data){
 		data
 	})
 }
+// 获取列表分页
+export function getApplyEquipmentListPage (data){
+	return request({
+		url:`/api/equipment/Apply/getListPage`,
+		method: 'post',
+		data
+	})
+}
 
 export function getEquipmentList(data){
 	return request(({
@@ -43,6 +59,13 @@ export function getEquipmentList(data){
 	}))
 }
 
+// 获取详细
+export function getEquipmentDetail(id){
+	return request(({
+		url:`/api/equipment/Apply/${id}`,
+		method:'get'
+	}))
+}
 // 新增
 export function addEquipment(data){
 	return request(({
@@ -59,8 +82,30 @@ export function updateEquipment(id,data){
 		data
 	})
 }
+// 删除
+export function delEquipment(id){
+	return request({
+		url:`/api/equipment/Apply/${id}`,
+		method:'delete'
+	})
+}
 
+// 使用详细
+export function getEquipmentUseDetail(data){
+	return request(({
+		url:`/api/equipment/ApplyDetail/getList`,
+		method:'post',
+		data
+	}))
+}
 
+// 设备详细
+export function getEquipmentBaseDetail(id){
+	return request({
+		url:`/api/equipment/Base/detail/${id}`,
+		method:'get'
+	})
+}
 // 获取详细
 // export function getSoilRecordDetail(id){
 // 	return request({

@@ -6,10 +6,12 @@
 	</view>  
 	<!-- #endif -->
 <view class="content-box">
-
-				<view class="nav-bar" style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+		<view class="nav-container" style="height: 44px;">
+			<view class="nav-bar"
+				style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 					<uni-icons @click="goToBack()"  type="left" size="30" style="line-height: 44px;"></uni-icons>
 					<text class="title" style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
+				</view>
 				</view>
 				<view class="send-info-box">
 					<view class="left-box">
@@ -17,7 +19,12 @@
 						<text>联系电话：{{mobilePhone}}</text>
 						<text>送样时间：{{sendData.transTime}}</text>
 					</view>
+					<view class="right-box">
+						<uni-icons type="checkbox" size="50" style="color:white"></uni-icons>
+						<text>确认中</text>
+					</view>
 				</view>
+				<view class="content" v-if="sendData.detailList.length">
 				<view class="send-box-item" v-for="item of sendData.detailList" :key="item.id">
 					<view class="item-box">
 						<view class="left-item">
@@ -30,10 +37,12 @@
 						</view>
 					</view>
 				</view>
+				</view>
+				<u-empty v-else style="margin-top: 40px;" text="未选择样品" mode="list"></u-empty>
 	<view class="select-footer">
 		<view class="right-box">
 				<!-- <text class="count">共计： {{unSendList.length}}个</text> -->
-				<u-button type="primary" @click="submitSend">选择送样</u-button>
+				<u-button type="primary" @click="submitSend">确认送样</u-button>
 		</view>
 	</view>	
 	</view>
@@ -44,7 +53,7 @@
 	import {ref,defineExpose,defineEmits,reactive,defineProps} from 'vue'
 	import {updateSendsample,addSendsample} from '@/api/sample/sendSample.js'
 	import {onLoad} from '@dcloudio/uni-app'
-	const emits = defineEmits(['emitVisible'])
+	const emits = defineEmits(['emitVisible','submitVisibleFlag'])
 	const props = defineProps({
 		sendId:{type:String,default:null}
 	})
@@ -60,30 +69,29 @@
 	// 送样和收样详细
 	const sendDetailId = ref(null)
 	const sendDetailList = ref([])
-	const unSendDetailList = ref([])   //未送的样品
+	// const unSendDetailList = ref([])   //未送的样品
 	const sendData = ref()
-	function handleData(oldData,newData){
-		oldData.detailList.forEach((oldItem,oldIndex)=>{
-			newData.forEach(newItem=>{
-				if(oldItem.id === newItem.id){
-					oldItem[oldIndex] = newItem
-				}
-			})
-		})
-		oldData.detailList.forEach(item=>{
-			if(item.received === true){
-				item.received = 1
-			}else if(item.received === false){
-				item.received = 0
-			}	
-		})
-		return oldData
-	}
 	function submitSend(){
-		const data = dataList.value
-		const id = sendId.value
-		updateSendsample(id,data).then(res=>{console.log('succeed')})
+		const data = sendData.value
+		const id = sendDetailId.value
+		ToastFn()
+		// addSendsample.addSendsample
+		if(sendData.value.id){
+			updateSendsample(sendData.value.id,data).then(res=>ToastFn('修改成功！'))
+		}else{
+			addSendsample(data).then(res=>ToastFn('送样成功！'))
+		}
+		
+		// updateSendsample(id,data).then(res=>ToastFn('送样成功！'))
 	}
+	function ToastFn(text){
+			sendDetailVisible.value = false
+			emits('submitVisibleFlag',false)
+			uni.showToast({
+				title: text,
+				duration: 2000
+			});
+		}
 	function goToBack(){
 		sendDetailVisible.value = false
 		emits('emitVisible',true)
@@ -92,12 +100,10 @@
 	let userName = ref(uni.getStorageSync('userInfo').userName)
 	onLoad(()=>{
 		// sendDetail()
-		console.log(uni.getStorageSync('userInfo'))
 	})
 	defineExpose({
 		sendDetailVisible,
 		sendDetailId,
-		unSendDetailList,
 		sendData
 		
 	})
@@ -114,16 +120,30 @@
 		top: 0;
 		background-color: white;
 		.send-info-box{
-			height: 80px;
-			background-color: blue;
-			padding: 10px;
+			height: 120px;
+			background-color: #2160FF;
+			// padding: 10px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
 		.left-box{
-			height: 100%;
+			height: 70%;
 			display: flex;
 			flex-direction: column;
 			color: white;
 			justify-content: space-between;
-		}	
+			margin-left: 10px;
+		}
+		.right-box{
+			display: flex;
+			flex-direction: column;
+			margin-right: 20px;
+			text{
+				font-size: $uni-font-size-lg;
+				font-weight: bold;
+				color: #fff;
+			}
+		}
 		}
 		.item-box {
 			width: 90%;

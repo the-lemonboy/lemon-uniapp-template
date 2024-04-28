@@ -31,7 +31,10 @@
 	import { getWellWashRecordList,delWellWashRecordDetail } from '@/api/sample.js'
 	import {getMenuId} from '@/utils/index.js'
 	const dataList = ref([])
-	function getList(){
+	async  function getList(){
+		uni.showLoading({
+			title: '加载中'
+		});
 		let menuId = getMenuId('项目列表')
 		const projectId = uni.getStorageSync('projectId')
 		const holeId = uni.getStorageSync('holeId')
@@ -44,8 +47,9 @@
 					projectId : projectId,
 					holeId:holeId
 		}
-			getWellWashRecordList(query).then(res=>{
+			await getWellWashRecordList(query).then(res=>{
 				dataList.value = res.data.list
+				uni.hideLoading();
 			})	
 	}
 function goAddOrEditor(id){
@@ -79,10 +83,20 @@ const swiperOptions = ref([{
 	}
 	onLoad(()=>{
 		getList()
-			
+		uni.$on('refresh', () => {
+		   getList()
+		})	
 	})
 	onPullDownRefresh(async () => {
-		await getList()
+		try {
+		    await getList();
+		} catch (error) {
+		    uni.showToast({
+		    	title: '加载失败',
+				icon:'error',
+		    	duration: 2000
+		    });
+		}
 		uni.stopPullDownRefresh();
 	})
 	
@@ -95,10 +109,6 @@ const swiperOptions = ref([{
 			border: 1px solid #e6e6e6;
 			border-radius: 5px;
 			box-shadow: 5px 5px 18px #ebebeb, -5px -5px 18px #fff;
-			// display: flex;
-			// justify-content: space-between;
-			// align-items: center;
-
 			.left-item {
 				margin: 10px;
 				.title {

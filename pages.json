@@ -85,14 +85,12 @@
 			    "path": "monitorPoint/addOrEditor",
 			    "style": {
 			        "navigationBarTitleText": "新增",
-			        "enablePullDownRefresh": true,
 					"navigationStyle": "custom"
 			    }
 			}, {
 			    "path": "qualitySample/addOrEditor",
 			    "style": {
 			        "navigationBarTitleText": "新增",
-			        "enablePullDownRefresh": true,
 					"navigationStyle": "custom"
 			    }
 			},
@@ -108,7 +106,6 @@
 			    "path": "pageMonitoringPoint/holeRecord/addOrEditor",
 			    "style": {
 			        "navigationBarTitleText": "钻孔记录",
-			        "enablePullDownRefresh": true,
 					"navigationStyle": "custom"
 			    }
 			},
@@ -116,7 +113,6 @@
 			    "path": "pageMonitoringPoint/soilSample/addOrEditor",
 			    "style": {
 			        "navigationBarTitleText": "土样记录",
-			        "enablePullDownRefresh": true,
 					"navigationStyle": "custom"
 			    }
 			},
@@ -124,7 +120,6 @@
 			    "path": "pageMonitoringPoint/wellBase/addOrEditor",
 			    "style": {
 			        "navigationBarTitleText": "建井信息",
-			        "enablePullDownRefresh": true,
 					"navigationStyle": "custom"
 			    }
 			},
@@ -132,14 +127,12 @@
 			    "path": "pageMonitoringPoint/wellWashRecord/addOrEditor",
 			    "style": {
 			        "navigationBarTitleText": "洗井记录",
-			        "enablePullDownRefresh": true,
 					"navigationStyle": "custom"
 			    }
 			},{
 			    "path": "pageMonitoringPoint/waterSample/addOrEditor",
 			    "style": {
 			        "navigationBarTitleText": "水样记录",
-			        "enablePullDownRefresh": true,
 					"navigationStyle": "custom"
 			    }
 			}]
@@ -151,6 +144,7 @@
 		        "style": {
 		            "navigationBarTitleText": "物料库存详细",
 		            "enablePullDownRefresh": true,
+					"onReachBottomDistance":100,
 					"navigationStyle": "custom"
 		        }
 		    },
@@ -159,6 +153,7 @@
 			    "style": {
 			        "navigationBarTitleText": "仪器使用记录",
 			        "enablePullDownRefresh": true,
+					"onReachBottomDistance":100,
 					"navigationStyle": "custom"
 			    }
 			},
@@ -178,7 +173,9 @@
 		        "path": "/message/index",
 		        "style": {
 		            "navigationBarTitleText": "消息中心",
-		            "enablePullDownRefresh": true
+		            "enablePullDownRefresh": true,
+					"onReachBottomDistance":100,
+					"navigationStyle": "custom"
 		        }
 		    }
 			]
@@ -195,20 +192,20 @@
 			"color": "#000",
 			"selectedColor": "#0050FF",
 			"list": [{
-					"iconPath": "/static/tabbar-icons/index.png",
-					"selectedIconPath": "/static/tabbar-icons/index_s.png",
+					"iconPath": "/static/tabbar-icons/sample.png",
+					"selectedIconPath": "/static/tabbar-icons/sample_s.png",
 					"text": "采样检测",
 					"pagePath": "pages/sampleDetection/index"
 				},
 				{
-						"iconPath": "/static/tabbar-icons/index.png",
-						"selectedIconPath": "/static/tabbar-icons/index_s.png",
+						"iconPath": "/static/tabbar-icons/lab.png",
+						"selectedIconPath": "/static/tabbar-icons/lab_s.png",
 						"text": "实验室运维",
 						"pagePath": "pages/labOperation/index"
 					},
 				{
-					"iconPath": "/static/tabbar-icons/feeds.png",
-					"selectedIconPath": "/static/tabbar-icons/feeds_s.png",
+					"iconPath": "/static/tabbar-icons/me.png",
+					"selectedIconPath": "/static/tabbar-icons/me_s.png",
 					"text": "关于我",
 					"pagePath": "pages/me/index"
 				}

@@ -6,34 +6,35 @@
 		</view>
 		<!-- #endif -->
 		<view class="content-box">
-			<view class="nav-bar"
-				style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+			<view class="nav-container" style="height: 44px;">
+				<view class="nav-bar"
+					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 				<text class="title"
 					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
 				<text @click="addOrUpdateData()" type="primary" class="submit"
 					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 			</view>
+			</view>
 			<view class="form-box">
-				<u-form :model="dataForm" ref="Form" style="margin: 10px;">
+				<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
 					<u-form-item label-width='100px' label="批次编号" prop="transNo"><u-input
-							v-model="dataForm.transNo" /></u-form-item>
+						disabled="true"	v-model="dataForm.transNo" /></u-form-item>
 					<u-form-item label-width='100px' label="收样时间" prop="receiveTime"><u-input
 							@click="showPickerDate('receiveTime')" v-model="dataForm.receiveTime" /></u-form-item>
 				</u-form>
 				<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 					:default-time='getCurrentTime()'></u-picker>
 			</view>
-			<view class="send-box-item" v-for="item of dataForm.detailList" :key="item.id">
+			<view class="send-box-item" v-for="(item,index) of dataForm.detailList" :key="index">
 				<view class="item-box">
 					<u-checkbox @change="checkboxChange" v-model="item.send" shape="circle" :name="item.id"></u-checkbox>
 					<view class="left-item">
-						<view class="title" @click="goToDeatil(item.id)">{{ item.sampleNo }}</view>
+						<view class="title">采样名称:{{ item.sampleNo }}</view>
 						<view class="center-zone">
-							<text class="area">{{ item.createTime }}</text>
-							<text class="project">{{item.typetext}}</text>
+							<text class="area">分析指标:{{ item.analysisFactorNames }}</text>
 						</view>
-						<text class="time">{{item.registertime}}</text>
+						<text class="time">采样时间:{{item.createTime}}</text>
 					</view>
 				</view>
 			</view>
@@ -76,11 +77,23 @@
 	} from '@/api/sample/sendSample.js'
 	import {getProjectDetail} from '@/api/sample.js'
 	import {
-		onLoad
+		onLoad,
+		onReady
 	} from '@dcloudio/uni-app'
 	import {
 		getCurrentTime
 	} from '@/utils/index.js'
+	const form = ref(null)
+	const rules = reactive({
+		receiveTime: [{
+			required: true,
+			message: '请输入收样时间',
+			trigger: 'blur',
+		}]
+	})
+	onReady(() => {
+		form.value.setRules(rules);
+	})
 	const emits = defineEmits(['emitVisible'])
 	const selectVisible = ref(false)
 	// 选择时间
@@ -96,21 +109,35 @@
 	const selectTimeVisible = ref(false)
 
 	function showPickerDate(value) {
-		curTimeKey.value = value,
+			curTimeKey.value = value,
 			selectTimeVisible.value = true
 	}
 
 	function getTime(e) {
-		if (curTimeKey.value === 'receiveTime') dataForm.receiveTime =
-			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
-		else if (curTimeKey.value === 'endTime') dataForm.endTime =
+		if (curTimeKey.value === 'receiveTime') dataForm.value.receiveTime =
 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
 	}
-	const dataForm = ref()
+	const dataForm = ref({
+		id:'',
+		domain: 'sample',
+		location: '',
+		organizeId: '',
+		projectId: '',
+		projection: '',
+		receiveCount: 0,
+		remark: '',
+		transCount: 0,
+		transNo: '',
+		transState: '',
+		transTime: '',
+		transUserId: '',
+		projectEnCode:'',
+		detailList:[],
+		receiveTime:''
+	})
 	function initData(id){
 		getSendsampleDetail(id).then(res=>{
 			dataForm.value = res.data
-			console.log(res.data,'=-=--')
 		})
 	}
 	// 获取项目编号
@@ -125,8 +152,10 @@
 	const sendDetailRef = ref(null)
 	const receiveId = ref(null)
 	function submitData() {
+		form.value.validate(valid => {
+			if (valid) {
 		dataForm.value.projectId = uni.getStorageSync('projectId')
-		dataForm.value.transUserId = uni.getStorageSync('userInfo').userId
+		dataForm.value.receiveUserId = uni.getStorageSync('userInfo').userId
 		dataForm.value.receiveUserName = uni.getStorageSync('userInfo').userName
 		dataForm.value.transState = "1"
 		// detailList: [] // 详细列表
@@ -139,14 +168,22 @@
 			}
 			delete item.send
 		})
-		console.log(uni.getStorageSync('userInfo'))
 		if(dataForm.value.detailList.length > 0){
 			receiveSample(receiveId.value,dataForm.value).then(res=>{
-				console.log('success!')
+				ToastFn('收样成功！')
 			})
 		}
+		}
+		});
 	}
-
+function ToastFn(text){
+			emits('emitVisible',false)
+			selectVisible.value = false
+			uni.showToast({
+				title: text,
+				duration: 2000
+			});
+		}
 
 	function goToBack() {
 		selectVisible.value = false
@@ -154,11 +191,9 @@
 	}
 
 	function checkboxChange(e) {
-		console.log(e)
 	}
 	const selectValue = ref({name: '全选',disabled: false})
 	function selectAll(e){
-		console.log(e)
 		if(e.value){
 			dataForm.value.detailList.forEach(item=>{
 				item.send = true
@@ -169,10 +204,6 @@
 			})
 		}
 	}
-	onLoad(() => {
-		// sendDetail()
-		// getProjectEncode()
-	})
 	defineExpose({
 		addFlag,
 		initData,

@@ -4,7 +4,7 @@
     "iPhone",
     "iPad"
   ],
-  "id": "",
+  "id": "__UNI__111EFBA",
   "name": "cityk-app",
   "version": {
     "name": "1.0.0",
@@ -20,6 +20,10 @@
     "Geolocation": {},
     "Camera": {},
     "Barcode": {},
+    "Push": {},
+    "VideoPlayer": {},
+    "Contacts": {},
+    "Bluetooth": {},
     "UniNView": {
       "description": "UniNView原生渲染"
     }
@@ -62,7 +66,9 @@
           "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
         ]
       },
-      "apple": {},
+      "apple": {
+        "dSYMs": false
+      },
       "plugins": {
         "geolocation": {
           "system": {
@@ -77,6 +83,13 @@
             "name": "amapCuSxwF1IC",
             "appkey_ios": "",
             "appkey_android": "f83e7b7709681ecbb84f9de0d50e5cb2"
+          }
+        },
+        "ad": {},
+        "push": {
+          "unipush": {
+            "version": "2",
+            "offline": false
           }
         },
         "audio": {

@@ -108,7 +108,6 @@ export default {
 			showMore.value = !unref(showMore)
 		}
 		function searchFunc(val?) {
-			console.log("搜索的关键字：", val)
 			uni.showLoading({
 				title: '请稍后...',
 				icon: 'none'
@@ -131,7 +130,6 @@ export default {
 			}, 1000)
 		}
 		function changeCallback(item) {
-			console.log("选中的item：", item)
 		}
 		searchFunc()
 		return {

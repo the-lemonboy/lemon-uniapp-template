@@ -31,7 +31,10 @@
 	import { getHoleBaseList,delHoleBaseDetail } from '@/api/sample.js'
 	import {getMenuId} from '@/utils/index.js'
 	const dataList = ref([])
-	function getList(){
+	async function getList(){
+		uni.showLoading({
+			title: '加载中'
+		});
 		let menuId = getMenuId('项目列表')
 		let projectId = uni.getStorageSync('projectId')
 		let query = {
@@ -42,8 +45,9 @@
 					menuId:menuId,
 					projectId : projectId
 		}
-			getHoleBaseList(query).then(res=>{
+			await getHoleBaseList(query).then(res=>{
 				dataList.value = res.data.list
+				uni.hideLoading();
 			})	
 	}
 	function goHoleBase(holeId,lat,lon){
@@ -82,10 +86,17 @@
 			
 	})
 	onPullDownRefresh(async () => {
-		await getList()
+		try {
+		    await getList();
+		} catch (error) {
+		    uni.showToast({
+		    	title: '加载失败',
+				icon:'error',
+		    	duration: 2000
+		    });
+		}
 		uni.stopPullDownRefresh();
 	})
-	
 </script> 
 
 <style lang="scss" scoped>

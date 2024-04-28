@@ -6,13 +6,15 @@
 		</view>
 		<!-- #endif -->
 		<view class="container">
-			<view class="nav-bar"
-				style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+			<view class="nav-container" style="height: 44px;">
+				<view class="nav-bar"
+					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 				<text class="title"
 					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">建井信息</text>
 				<text @click="submitXrf()" type="primary" class="submit"
 					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
+			</view>
 			</view>
 			<u-form :model="curXrfConf" ref="formRef" style="margin: 20px;">
 				<u-form-item label-width='50px' :label="item.elementName" prop="index"
@@ -58,9 +60,8 @@
 	const xrfRef = ref(null)
 
 	function goToBack() {
-		uni.navigateBack({
-			delta: 1
-		})
+		emits('emitVisible', true)
+		xrfConfVisible.value = false
 	}
 	const popupShow = ref(false)
 	const newConf = ref({
@@ -85,7 +86,6 @@
 				newConf.value.elementName = newConf.value.elementCode
 				const temp = deepCopy(newConf.value)
 				curXrfConf.value.push(temp)
-				console.log(curXrfConf.value)
 				for (let key in newConf.value) {
 					newConf.value[key] = null
 				}
@@ -105,9 +105,7 @@
 	// 删除
 	function delConf(index) {
 		let tempData = deepCopy(curXrfConf.value)
-			console.log(index,curXrfConfLength.value)
 		if (index > curXrfConfLength.value) {
-			console.log(index,curXrfConfLength.value)
 			for (let i = index; i < tempData.length; i++) {
 				tempData[index - 1] = tempData[index]
 				tempData[index - 1].elementSort = i.toString()
@@ -119,10 +117,12 @@
 	onReady(() => {
 		popRef.value.setRules(popupRules)
 	})
-	const emits = defineEmits(['curConfData'])
+	const emits = defineEmits(['curConfData','emitVisible'])
 
 	function submitXrf() {
-		emits('defineEmits', curXrfConf.value)
+		emits('curConfData', curXrfConf.value)
+		emits('emitVisible', true)
+		xrfConfVisible.value = false
 	}
 	defineExpose({
 		xrfConfVisible,

@@ -13,10 +13,8 @@
 							<view class="left-item">
 								<view class="title">土层类型：{{ item.solumType }}</view>
 								<view class="center-zone">
-									<text class="area">采样类型：{{ item.holeType }}</text>
-									<text class="project">{{item.typetext}}</text>
+									<text class="area">颜色：{{ item.solumColor }}</text>
 								</view>
-								<text class="time">{{item.registertime}}</text>
 							</view>
 						</view>
 					</uni-swipe-action-item>
@@ -32,7 +30,10 @@
 	import { getHoleRecordList,delHoleRecordDetail } from '@/api/sample.js'
 	import {getMenuId} from '@/utils/index.js'
 	const dataList = ref([])
-	function getList(){
+	async function getList(){
+		uni.showLoading({
+			title: '加载中'
+		});
 		let menuId = getMenuId('项目列表')
 		const projectId = uni.getStorageSync('projectId')
 		const holeId = uni.getStorageSync('holeId')
@@ -45,8 +46,9 @@
 					projectId : projectId,
 					holeId:holeId
 		}
-			getHoleRecordList(query).then(res=>{
+			await getHoleRecordList(query).then(res=>{
 				dataList.value = res.data.list
+				uni.hideLoading();
 			})	
 	}
 	function goAddOrEditor(id){
@@ -81,13 +83,22 @@
 	}
 	onLoad(()=>{
 		getList()
-			
+		uni.$on('refresh', () => {
+		   getList()
+		})	
 	})
 	onPullDownRefresh(async () => {
-		await getList()
+		try {
+		    await getList();
+		} catch (error) {
+		    uni.showToast({
+		    	title: '加载失败',
+				icon:'error',
+		    	duration: 2000
+		    });
+		}
 		uni.stopPullDownRefresh();
 	})
-	
 </script> 
 
 <style lang="scss" scoped>

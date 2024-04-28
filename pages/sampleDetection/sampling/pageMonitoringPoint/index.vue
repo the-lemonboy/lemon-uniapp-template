@@ -5,13 +5,15 @@
 	</view>
 	<!-- #endif -->
 	<view class="detail-container">
-		<view class="nav-bar"
-			style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+		<view class="nav-container" style="height: 44px;">
+			<view class="nav-bar"
+				style="position: fixed; z-index: 99; background-color: white;box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 			<text class="title"
 				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
 			<text @click="scanQRcode" type="primary" class="submit"
 				style="color:blue; line-height: 44px; margin-right: 10px; float:right;"><uni-icons type="scan" size="30"></uni-icons></text>
+		</view>
 		</view>
 		<view class="link-container">
 			<view @click="goToSampling(item.routerUrl)" class="link-box" v-for='item of linkOptions' :key='item.id'>
@@ -121,8 +123,6 @@
 
 	function change(index) {
 		tabCurent.value = index
-		console.log("index", index);
-		console.log(typeof index);
 	}
 
 	// 接口获取的表单数据
@@ -142,10 +142,7 @@
 	function scanQRcode(){
 		uni.scanCode({
 			success: function (res) {
-				console.log('条码类型：' + res.scanType);
-				console.log('条码内容：' + res.result);
 				const result = JSON.parse(res.result)
-				console.log(result.type)
 				if(result.type === 'soilSample'){
 					uni.setStorageSync('soilSampleId', result.id)
 					uni.navigateTo({
@@ -169,7 +166,7 @@
 
 <style lang="scss" scoped>
 	.detail-container {
-		padding: 0;
+		padding-bottom: 20rpx;
 		margin: 0;
 		box-sizing: border-box;
 	}

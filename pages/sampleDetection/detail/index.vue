@@ -5,11 +5,13 @@
 	</view>
 	<!-- #endif -->
 	<view class="detail-container">
-		<view class="nav-bar"
-			style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+		<view class="nav-container" style="height: 44px;">
+			<view class="nav-bar"
+				style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 			<text class="title"
 				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样检测详细</text>
+		</view>
 		</view>
 		<view class="link-container">
 
@@ -77,7 +79,6 @@
 	const tabCurent = ref(0)
 
 	function change(index) {
-		console.log("index", index);
 	}
 
 	// 接口获取的表单数据

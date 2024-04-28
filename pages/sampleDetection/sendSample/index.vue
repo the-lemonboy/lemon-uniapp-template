@@ -6,10 +6,13 @@
 		</view>  
 		<!-- #endif -->
 			<view class="content-box">
-				<view class="nav-bar" style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+				<view class="nav-container" style="height: 44px;">
+					<view class="nav-bar"
+						style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 					<uni-icons @click="goToBack()"  type="left" size="30" style="line-height: 44px;"></uni-icons>
 					<text class="title" style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
-					<text @click="goSelectSend()" type="primary" class="submit" style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
+				<uni-icons @click="goSelectSend()" class="add" type="plus-filled" size="30" style="color:#2160FF; line-height: 44px; margin-right: 10px; float:right;"></uni-icons>
+				</view>
 				</view>
 				<view class="search-box">
 					<u-search placeholder="搜索批次号" v-model="searchKeyWord" @search="getList()"></u-search>
@@ -41,7 +44,7 @@
 	
 			</view>
 	</view>
-	<selectSend ref='selectSendRef' @emitVisible='(val)=>mainVisible=val'></selectSend>
+	<selectSend ref='selectSendRef' @emitVisible='emitVisible'></selectSend>
 </template>
 
 <script setup>
@@ -53,6 +56,9 @@
 	const dataList = ref([])
 	const searchKeyWord = ref()
 	function getList(){
+		uni.showLoading({
+			title: '加载中'
+		});
 		const menuId = getMenuId('项目列表')
 		const projectId = uni.getStorageSync('projectId')
 		let query = {
@@ -73,14 +79,27 @@
 				item.sendCount = item.detailList.filter(val => val.received == 0).length
 				item.receivedCount = item.detailList.filter(val => val.received == 1).length
 			})
+			uni.hideLoading();
 			})	
+	}
+	function emitVisible(){
+		mainVisible.value = true
+		getList()
 	}
 		const selectSendRef = ref(null)
 		const mainVisible = ref(true)
-	function goSelectSend(id){
+	async function goSelectSend(id){
 			selectSendRef.value.selectVisible = true
 			mainVisible.value = false
 			selectSendRef.value.sendId = id
+			if(id){
+				// debugger
+				await selectSendRef.value.initData()
+				await selectSendRef.value.getUnsendList()
+			}else{
+				// debugger
+				selectSendRef.value.getUnsendList()
+			}
 			// selectSendRef.value.getSendDetail()
 	}
 	function goToBack(){
@@ -124,7 +143,7 @@
 	.sd-container {
 		width: 100%;
 		margin: 0;
-		padding: 0;
+		padding-bottom: 20rpx;
 		box-sizing: border-box;
 
 		.search-box {

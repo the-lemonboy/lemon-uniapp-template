@@ -38,11 +38,11 @@
 	})
 </script>
 <style lang="scss" scoped>
-	 /* #ifdef APP-PLUS */
+	 /* #ifndef H5 */
 	.lo-container{
 		padding: 0;
 		margin: 0;
-		height: calc(100vh - 50px);
+		height: calc(100vh - 50rpx);
 		box-sizing: border-box;
 		display: grid;
 		grid-template-row: repeat(3,1fr);

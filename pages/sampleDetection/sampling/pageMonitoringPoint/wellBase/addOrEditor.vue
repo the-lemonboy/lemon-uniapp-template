@@ -5,23 +5,25 @@
 	</view>
 	<!-- #endif -->
 	<view class="mo-container">
-		<view class="nav-bar"
-			style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+		<view class="nav-container" style="height: 44px;">
+			<view class="nav-bar"
+				style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 			<text class="title"
 				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">建井信息</text>
 			<text @click="addOrUpdateData()" type="primary" class="submit"
 				style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 		</view>
-		<u-form :model="dataForm" ref="Form" style="margin: 10px;">
-			<u-form-item label-width='100px' label="监测井编号" prop="wellNo"><u-input type='number'
+		</view>
+		<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
+			<u-form-item label-width='100px' label="监测井编号" prop="wellNo"><u-input
 					v-model="dataForm.wellNo" /></u-form-item>
-			<u-form-item label-width='100px' label="监测井类型" prop="wellType"><u-input v-model="wellTypeOptions.current.label"
+			<u-form-item label-width='100px' label="监测井类型" prop="wellType"><u-input v-model="dataForm.wellType"
 					type="select" @click="wellTypeOptions.show=true" /></u-form-item>
 			<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
-			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input @click="showPickerDate('startTime')"
+			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input type="select"  @click="showPickerDate('startTime')"
 					v-model="dataForm.startTime" /></u-form-item>
-			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input @click="showPickerDate('endTime')"
+			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select"  @click="showPickerDate('endTime')"
 					v-model="dataForm.endTime" /></u-form-item>
 			<u-form-item label-width='100px' label="井深" prop="wellDepth"><u-number-box
 					v-model="dataForm.wellDepth"></u-number-box></u-form-item>
@@ -67,7 +69,7 @@
 		watch
 	} from 'vue'
 	import {
-		onLoad
+		onLoad,onReady
 	} from '@dcloudio/uni-app'
 	import upload from '@/components/cityk-upload.vue';
 	import {
@@ -83,6 +85,27 @@
 		getDictionaryDataSelector,
 		getDictionaryDataSelectorCascade
 	} from '@/api/dictionary'
+	const form = ref(null)
+	const rules = reactive({
+				wellNo: [{
+					required: true,
+					message: '请输入监测井编号',
+					trigger: 'blur',
+				}],
+				startTime: [{
+					required: true,
+					message: '请输入开始时间',
+					trigger: 'blur',
+				}],
+				endTime: [{
+					required: true,
+					message: '请输入结束时间',
+					trigger: 'blur',
+				}]
+			})
+			onReady(()=>{
+				form.value.setRules(rules);
+			})
 // 监测井类型
 const wellTypeOptions = reactive({
 		show: false,
@@ -97,7 +120,7 @@ function getwellTypeOptions() {
 	function onWellTypeOptions(arr) {
 		let current = arr[0];
 		wellTypeOptions.current = current;
-		dataForm.wellType = current.label;
+		dataForm.value.wellType = current.label;
 	}
 	// 选择时间
 	const timeParams = reactive({
@@ -115,13 +138,13 @@ function getwellTypeOptions() {
 			selectTimeVisible.value = true
 	}
 	function getTime(e) {
-		if (curTimeKey.value === 'startTime') dataForm.startTime =
+		if (curTimeKey.value === 'startTime') dataForm.value.startTime =
 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
-		else if (curTimeKey.value === 'endTime') dataForm.endTime =
+		else if (curTimeKey.value === 'endTime') dataForm.value.endTime =
 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
 	}
 
-	let dataForm = reactive({
+	let dataForm = ref({
 		        projectId: '',
 		        holeId: '',
 		        wellNo: '',
@@ -157,16 +180,19 @@ function getwellTypeOptions() {
 	}
 
 	function addOrUpdateData() {
-		// dataForm.files = parseFiles(dataForm.files)
-		// dataForm = (dataForm)
-		dataForm = parseData(dataForm)
-		if (!dataForm.id) {
-			addWellBase(dataForm).then(res => ToastFn('创建成功'))
+		form.value.validate(valid => {
+			if (valid) {
+		dataForm.value = parseData(dataForm.value)
+		if (!dataForm.value.id) {
+			addWellBase(dataForm.value).then(res => ToastFn('创建成功'))
 		} else {
-			updateWellBase(dataForm.id, dataForm).then(res=> ToastFn('修改成功'))
+			updateWellBase(dataForm.value.id, dataForm.value).then(res=> ToastFn('修改成功'))
 		}
+		}
+		});
 	}
 function ToastFn(text){
+	uni.$emit('refresh')
 		goToBack()
 		uni.showToast({
 			title: text,
@@ -180,7 +206,7 @@ function ToastFn(text){
 	      } else {
 	        _dataAll.files = []
 	      }
-	      dataForm = _dataAll
+	      dataForm.value = _dataAll
 	    }
 	function initData() {
 		const id = uni.getStorageSync('wellBaseId')

@@ -2789,7 +2789,10 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
+.mo-container[data-v-26e8eeda] {
+  padding-bottom: 10px;
+}
 .xrf-btn[data-v-26e8eeda] {
   width: 100px;
-  margin-bottom: 20px;
+  margin: 10px auto;
 }

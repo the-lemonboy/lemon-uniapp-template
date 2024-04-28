@@ -1,8 +1,8 @@
 <template>
 	<!-- #ifdef APP-PLUS -->
-	<view class="status_bar">  
-	    <view class="top_view"></view>  
-	</view>  
+	<view class="status_bar">
+		<view class="top_view"></view>
+	</view>
 	<!-- #endif -->
 	<view class="sp-container">
 		<view class="search-box">
@@ -10,40 +10,34 @@
 		</view>
 		<view class="sort-box">
 			<u-dropdown ref="dropdown1" @open="open" @close="close">
-				<u-dropdown-item v-model="selectedItem" title="行政区域" :options="dropdownZone"></u-dropdown-item>
-				<u-dropdown-item v-model="selectedItem" title="项目状态" :options="dropdownStatus"></u-dropdown-item>
-				<u-dropdown-item v-model="selectedItem" title="项目类型" :options="dropdownType"></u-dropdown-item>
+				<u-dropdown-item v-for="(item,index) of dropdownValue" :key="index" :title="item.title" :options="item.options" @change="dropChange"></u-dropdown-item>
 			</u-dropdown>
 		</view>
 		<view class="content-box">
 			<uni-swipe-action ref="swipeAction" v-if="tableData.length">
-						<uni-swipe-action-item
-						class="swipe-item items-box"
-						v-for="item in tableData" :key="item.id"
-						    :right-options="swiperOptions"
-						    @change="swipeChange($event)"
-						    @click="swipeClick($event,content,item.id)"
-						>
-							<view class="item-box" @click="goToDeatil(item.id,item.name)">
-								<view class="left-item">
-									<view class="title">{{ item.name }}</view>
-									<view class="center-zone">
-										<text class="area">{{ item.organizetext }}</text>
-										<text class="project">{{item.typetext}}</text>
-									</view>
-									<text class="time">{{item.registertime}}</text>
-								</view>
-								
-							<!-- 	<view class="right-box">
+				<uni-swipe-action-item class="swipe-item items-box" v-for="item in tableData" :key="item.id"
+					:right-options="swiperOptions" @change="swipeChange($event)"
+					@click="swipeClick($event,content,item.id)">
+					<view class="item-box" @click="goToDeatil(item.id,item.name)">
+						<view class="left-item">
+							<view class="title">{{ item.name }}</view>
+							<view class="center-zone">
+								<text class="area">{{ item.organizetext }}</text>
+								<text class="project">{{item.typetext}}</text>
+							</view>
+							<text class="time">{{item.registertime}}</text>
+						</view>
+
+						<!-- 	<view class="right-box">
 									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
 									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
 									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
 									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
 								</view> -->
-							</view>
-						</uni-swipe-action-item>
-					</uni-swipe-action>
-					<u-empty style="margin-top: 40px;" v-else text="暂无数据" mode="list"></u-empty>
+					</view>
+				</uni-swipe-action-item>
+			</uni-swipe-action>
+			<u-empty style="margin-top: 40px;" v-else text="暂无数据" mode="list"></u-empty>
 		</view>
 	</view>
 </template>
@@ -65,94 +59,108 @@
 	import {
 		getMenuId
 	} from '@/utils/getMenuId.js'
-	import { useStore } from 'vuex'
+	import {
+		useStore
+	} from 'vuex'
 	const store = useStore()
-	// 全局变量
-	const dropdownZone = reactive([{
-			label: '默认排序',
-			value: 1,
-		},
-		{
-			label: '生序',
-			value: 2,
-		},
-		{
-			label: '降序',
-			value: 3,
-		}
-	])
-	const dropdownStatus = reactive([{
-		label: '默认排序',
-			value: 1,
-		},
-		{
-			label: '生序',
-			value: 2,
-		},
-		{
-			label: '降序',
-			value: 3,
-		}
-	])
-	const dropdownType = reactive([{
-		label: '默认排序',
-			value: 1,
-		},
-		{
-			label: '生序',
-			value: 2,
-		},
-		{
-			label: '降序',
-			value: 3,
-		}
-	])
+	const dropdownValue = ref([
+	  {
+	    title: "行政区域",
+	    options: [
+	      {
+	        label: '生序',
+	        value: {type:"provincetext",value:'asc'}
+	      },
+	      {
+	        label: '降序',
+	        value: {type:"provincetext",value:'desc'}
+	      }
+	    ]
+	  },
+	  {
+	    title: "项目状态",
+	    options: [
+			{
+	        label: '生序',
+	        value: {type:"segment",value:'asc'}
+	      },
+	      {
+	        label: '降序',
+	         value: {type:"segment",value:'desc'}
+	      }
+	    ]
+	  },
+	  {
+	    title: "项目类型",
+	    options: [
+	      {
+	        label: '生序',
+	         value: {type:"typetext",value:'asc'}
+	      },
+	      {
+	        label: '降序',
+	        value: {type:"typetext",value:'desc'},
+	      }
+	    ]
+	  }
+	]);
+
 	const swiperOptions = ref([{
-		            text: '删除',
-		            style: {
-		                backgroundColor: '#dd524d'
-		            }
-		        }
-	])
-// 搜索
-const searchKeyWord = ref()
-function swipeClick(e,ctx,id){
-	uni.showModal({
-		title: '提示',
-		content: '您确定要删除此项吗？',
-		success: res => {
-			if (res.confirm) {
-				delProjectDetail(id).then(res=>{
-					getMenuList()
-				})
-				uni.showToast({
-					title: '移除成功',
-					icon: 'none'
-				});
-			}
+		text: '删除',
+		style: {
+			backgroundColor: '#dd524d'
 		}
-	});
-}
+	}])
+
+	function dropChange(val) {
+		listQuery.sidx = val.type
+		listQuery.sort = val.value
+		getMenuList()
+	}
+	// 搜索
+	const searchKeyWord = ref()
+
+	function swipeClick(e, ctx, id) {
+		uni.showModal({
+			title: '提示',
+			content: '您确定要删除此项吗？',
+			success: res => {
+				if (res.confirm) {
+					delProjectDetail(id).then(res => {
+						getMenuList()
+					})
+					uni.showToast({
+						title: '移除成功',
+						icon: 'none'
+					});
+				}
+			}
+		});
+	}
 	const tableData = ref([])
+	const listQuery =  reactive({
+		sort: "asc",
+		sidx: "encode"
+	})
 	async function getMenuList(name) {
+		// return new Promise(resolve=>{
 		const menuId = getMenuId('项目列表')
 		let queryData = {
-			currentPage: 1,
 			// pageSize: 0,
-			sort: "asc",
-			sidx: "encode",
+			currentPage: 1,
 			menuId: menuId,
-			name:searchKeyWord.value
+			name: searchKeyWord.value,
+			...listQuery
 		}
-		getProjectBaseList(queryData).then(res => {
+
+		await getProjectBaseList(queryData).then(res => {
 			tableData.value = res.data;
 		})
 	}
 	// 项目id传给子孙组件
-	function goToDeatil(id,name) {
-	     uni.setStorageSync('projectId', id)
-		 uni.setStorageSync('projectName',name)
-		 console.log(name)
+	function goToDeatil(id, name) {
+		uni.setStorageSync('projectId', id)
+		uni.setStorageSync('projectName', name)
 		uni.navigateTo({
 			url: `/pages/sampleDetection/detail/index?id=${id}`,
 		})
@@ -163,7 +171,15 @@ function swipeClick(e,ctx,id){
 		getMenuList()
 	})
 	onPullDownRefresh(async () => {
-		await getMenuList()
+		try {
+			await getMenuList();
+		} catch (error) {
+			uni.showToast({
+				title: '加载失败',
+				icon: 'error',
+				duration: 2000
+			});
+		}
 		uni.stopPullDownRefresh();
 	})
 </script>
@@ -172,8 +188,7 @@ function swipeClick(e,ctx,id){
 	.sp-container {
 		width: 100%;
 		margin: 0;
-		padding: 0;
-		padding: 20rpx;
+		padding:20rpx 0;
 		box-sizing: border-box;
 
 		.search-box {
@@ -183,7 +198,6 @@ function swipeClick(e,ctx,id){
 
 		.sort-box {
 			width: 100%;
-
 			::v-deep .u-flex {
 				display: flex;
 				flex-direction: row;
@@ -194,6 +208,7 @@ function swipeClick(e,ctx,id){
 			display: flex;
 			flex-direction: column;
 		}
+
 		.items-box {
 			width: 95%;
 			margin: 10px auto;
@@ -206,6 +221,7 @@ function swipeClick(e,ctx,id){
 
 			.left-item {
 				margin: 10px;
+
 				.title {
 					font-size: $uni-font-size-base;
 					margin: $uni-spacing-col-sm 0;

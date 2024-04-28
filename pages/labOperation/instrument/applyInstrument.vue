@@ -6,69 +6,63 @@
 		</view>
 		<!-- #endif -->
 		<view class="qc-container">
-			<view class="nav-bar"
-				style="position: relative; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
-				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
-				<text class="title"
-					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
-				<text @click="addOrUpdateData()" type="primary" class="submit"
-					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">新增</text>
-			</view>
-			<u-toast ref="uToast" />
-			<text class="form-title" style="margin-left: 20px; font-weight: bold;">基本信息</text>
-			<driver></driver>
-			<u-form :model="dataForm" ref="Form" style="margin: 10px;">
-				<!-- <u-form-item label-width='100px' label="记录编号" prop="startDepth"><u-input  v-model="dataForm.startDepth" /></u-form-item> -->
-				<!-- 	<u-form-item label-width='100px' label="选择项目" prop="checkTime"><u-input
-						v-model="projectOptions.current.label" type="select"
-						@click="projectOptions.show=true" /></u-form-item> -->
-				<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
-				<!-- <u-form-item label-width='100px' label="检查人" prop="checkUserId"><u-input v-model="dataForm.solumColor" /></u-form-item> -->
-				<!-- 		<u-form-item label-width='100px' label="申请人" prop="weather"><u-input
-						v-model="dataForm.weather" /></u-form-item> -->
-				<u-form-item label-width='100px' label="申请日期" prop="applyTime"><u-input
-						@click="showPickerDate('applyTime',0)" v-model="dataForm.applyTime" /></u-form-item>
-				<u-form-item label-width='100px' label="使用日期" prop="applyTime"><u-input
-						@click="showPickerDate('useDay',0)" v-model="dataForm.useDay" /></u-form-item>
-				<u-form-item label-width='100px' label="开始使用时间" prop="useStarTime"><u-input
-						@click="showPickerDate('useStarTime',1)" v-model="useStarTime" /></u-form-item>
-				<u-form-item label-width='100px' label="使用结束时间" prop="useOverTime"><u-input
-						@click="showPickerDate('useOverTime',1)" v-model="useOverTime" /></u-form-item>
-				<u-form-item label-width='100px' label="申请事由" prop="weather"><u-input
-						v-model="dataForm.weather" /></u-form-item>
-			</u-form>
-			<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
-				:default-time='getCurrentTime()'></u-picker>
-			<view class="stock-title">
-				<text class="form-title" style="margin-left: 20px; font-weight: bold;">物料库存</text>
-				<u-button type="success" class="add-btn" size="mini" @click="addInstrument">新增</u-button>
-			</view>
-			<driver></driver>
-			<view class="stock-box" v-for="(item,index) of InstrumentList">
-				<view class="stock-Header">
-					<text class="title" style="margin-left: 20px; font-weight: bold;">新增一条</text>
-					<u-button type="error" class="delete-btn" size="mini" @click="removeInstrument(index)">删除</u-button>
+			<view class="nav-container" style="height: 44px;">
+				<view class="nav-bar"
+					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
+					<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
+					<text class="title"
+						style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
+					<text @click="addOrUpdateData()" type="primary" class="submit"
+						style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 				</view>
-				<u-form :model="InstrumentList[index]" ref="Form" style="margin: 10px;">
-					<u-form-item label-width='100px' label="仪器名称" prop="assetName"><u-input
-							v-model="InstrumentList[index].assetName" type="select"
-							@click="InstrumentMateriel(index)" /></u-form-item>
-					<u-form-item label-width='100px' label="仪器编号" prop="assetNo"><u-input
-							v-model="InstrumentList[index].assetNo" /></u-form-item>
-					<u-form-item label-width='100px' label="仪器型号" prop="assetModel"><u-input
-							v-model="InstrumentList[index].assetModel" /></u-form-item>
-					<u-form-item label-width='100px' label="仪器分类" prop="assetType"><u-input
-							v-model="InstrumentList[index].assetType" /></u-form-item>
-					<u-form-item label-width='100px' label="仪器厂家" prop="manufactor"><u-input
-							v-model="InstrumentList[index].manufactor" /></u-form-item>
-				</u-form>
 			</view>
-			<u-top-tips ref="uTips"></u-top-tips>
-			<u-select v-model="projectOptions.show" value-name="id" label-name="name" :list="projectOptions.list"
-				@confirm="onProjectOptions"></u-select>
-			<u-select v-model="InstrumentOptions.show" value-name="id" label-name="assetName"
-				:list="InstrumentOptions.list" @confirm="onInstrument"></u-select>
+			<view class="content-box">
+				<text class="form-title" style="margin-left: 20px; font-weight: bold;">基本信息</text>
+				<driver></driver>
+				<u-form :model="dataForm" ref="form" :rules="rules" style="margin: auto; width: 90%;">
+					<u-form-item label-width='100px' label="申请日期" prop="applyTime"><u-input
+							@click="showPickerDate('applyTime',0)" v-model="dataForm.applyTime" /></u-form-item>
+					<u-form-item label-width='100px' label="使用日期" prop="applyTime"><u-input
+							@click="showPickerDate('useDay',0)" v-model="dataForm.useDay" /></u-form-item>
+					<u-form-item label-width='100px' label="开始时段" prop="useStarTime"><u-input
+							@click="showPickerDate('useStarTime',1)" v-model="useStarTime" /></u-form-item>
+					<u-form-item label-width='100px' label="结束时段" prop="useOverTime"><u-input
+							@click="showPickerDate('useOverTime',1)" v-model="useOverTime" /></u-form-item>
+					<u-form-item label-width='100px' label="申请事由" prop="weather"><u-input
+							v-model="dataForm.weather" /></u-form-item>
+				</u-form>
+				<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
+					:default-time='getCurrentTime()'></u-picker>
+				<view class="stock-title" style="margin: 10px 0;">
+					<text class="form-title" style="margin-left: 20px; font-weight: bold;">仪器计划</text>
+					<u-button type="success" class="add-btn" size="mini" @click="addInstrument">新增</u-button>
+				</view>
+				<driver style="margin: 10px auto;"></driver>
+				<view class="stock-box" v-for="(item,index) of InstrumentList">
+					<view class="stock-Header">
+						<text class="title" style="margin-left: 20px; font-weight: bold;">新增一条</text>
+						<u-button type="error" class="delete-btn" size="mini"
+							@click="removeInstrument(index)">删除</u-button>
+					</view>
+					<u-form :model="item" ref="Form" style="margin: auto; width: 90%;">
+						<u-form-item label-width='100px' label="仪器名称" prop="assetName"><u-input v-model="item.assetName"
+								type="select" @click="InstrumentMateriel(index)" /></u-form-item>
+						<u-form-item label-width='100px' label="仪器编号" prop="assetNo"><u-input
+								v-model="item.assetNo" /></u-form-item>
+						<u-form-item label-width='100px' label="仪器型号" prop="assetModel"><u-input
+								v-model="item.assetModel" /></u-form-item>
+						<u-form-item label-width='100px' label="仪器分类" prop="assetType"><u-input
+								v-model="item.assetType" /></u-form-item>
+						<u-form-item label-width='100px' label="仪器厂家" prop="manufactor"><u-input
+								v-model="item.manufactor" /></u-form-item>
+					</u-form>
+				</view>
+				<u-select v-model="projectOptions.show" value-name="id" label-name="name" :list="projectOptions.list"
+					@confirm="onProjectOptions"></u-select>
+				<u-select v-model="InstrumentOptions.show" value-name="id" label-name="assetName"
+					:list="InstrumentOptions.list" @confirm="onInstrument"></u-select>
 
+			</view>
 		</view>
 	</view>
 </template>
@@ -84,7 +78,8 @@
 	} from 'vue'
 	import {
 		onLoad,
-		onReady
+		onReady,
+		onBackPress
 	} from '@dcloudio/uni-app'
 	import {
 		getMenuId,
@@ -100,12 +95,38 @@
 	} from '@/api/sample.js'
 	import {
 		getEquipmentList,
-		getApplyEquipmentList,
-		addEquipment
+		addEquipment,
+		getEquipmentDetail,
+		updateEquipment
 	} from '@/api/lab/labOperation.js'
+	const form = ref(null)
+	const rules = reactive({
+		applyTime: [{
+			required: true,
+			message: '请输入申请时间',
+			trigger: 'blur',
+		}],
+		useDay: [{
+			required: true,
+			message: '请输入使用日期',
+			trigger: 'blur',
+		}],
+		useStarTime: [{
+			required: true,
+			message: '请输入开始时段',
+			trigger: 'blur',
+		}],
+		useOverTime: [{
+			required: true,
+			message: '请输入结束时段',
+			trigger: 'blur',
+		}]
+	})
+	onReady(() => {
+		form.value.setRules(rules);
+	})
 	const emits = defineEmits(['emitVisible'])
 	// 选择时间
-
 	const timeParams = reactive({
 		year: true,
 		month: true,
@@ -116,7 +137,7 @@
 	})
 	const useStarTime = ref(null)
 	const useOverTime = ref(null)
-	let dataForm = reactive({
+	let dataForm = ref({
 		applyType: 'Rec',
 		domain: 'equip',
 		applyCode: '',
@@ -129,9 +150,55 @@
 		organizeId: '',
 		useState: 9,
 	})
+	const id = ref(null)
 	const curTimeKey = ref(null)
 	const curTimeType = ref(0)
 	const selectTimeVisible = ref(false)
+
+	function clearData(data) {
+		for (let key in data) {
+			if (Array.isArray(data[key])) {
+				data[key] = []
+			} else if (Object.prototype.toString.call(data[key]) === '[object Object]') {
+				data[key] = {}
+			} else if (typeof data[key] === 'number') {
+				data[key] = 0
+			} else {
+				data[key] = null
+			}
+		}
+		return data
+	}
+
+	function initData() {
+		dataForm.value = clearData(dataForm.value)
+		InstrumentList.value = []
+		useOverTime.value = null
+		useStarTime.value = null
+		if (id.value) {
+			getEquipmentDetail(id.value).then(res => {
+				dataForm.value = res.data
+				const timeArray = res.data.useRang.split("-");
+				useStarTime.value = timeArray[0]
+				useOverTime.value = timeArray[1]
+				InstrumentList.value = res.data.detailList.map(item => {
+					return {
+						applyType: item.applyType,
+						assetGrade: item.equipment.assetGrade,
+						assetModel: item.equipment.assetModel,
+						assetName: item.equipment.assetName,
+						assetNo: item.equipment.assetNo,
+						assetType: item.equipment.assetType,
+						equipId: item.equipment.id,
+						leadUserId: item.applyUser,
+						manufactor: item.equipment.manufactor,
+						useDay: item.useDay,
+						useState: item.useState
+					}
+				})
+			})
+		}
+	}
 
 	function showPickerDate(value, type) {
 		curTimeKey.value = value,
@@ -161,11 +228,10 @@
 	}
 
 	function getTime(e) {
-		console.log(curTimeKey.value)
 		if (curTimeType.value == 0) {
-			if (curTimeKey.value === 'applyTime') dataForm.applyTime =
+			if (curTimeKey.value === 'applyTime') dataForm.value.applyTime =
 				`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
-			else if (curTimeKey.value === 'useDay') dataForm.useDay =
+			else if (curTimeKey.value === 'useDay') dataForm.value.useDay =
 				`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
 		} else if (curTimeType.value == 1) {
 			if (curTimeKey.value === 'useStarTime') useStarTime.value = curTimeKey.value = `${e.hour}:${e.minute}`
@@ -178,7 +244,7 @@
 	function onProjectOptions(arr) {
 		let current = arr[0];
 		projectOptions.current = current;
-		dataForm.projectId = current.value;
+		dataForm.value.projectId = current.value;
 		getMateriel() //现在了项目才加载
 	}
 	const projectOptions = reactive({
@@ -200,8 +266,8 @@
 	}
 
 	function addData() {
-		dataForm.applyUserId = uni.getStorageSync('userInfo').userId
-		dataForm.organizeId = uni.getStorageSync('userInfo').organizeId
+		dataForm.value.applyUserId = uni.getStorageSync('userInfo').userId
+		dataForm.value.organizeId = uni.getStorageSync('userInfo').organizeId
 
 	}
 	// ---------------------
@@ -238,7 +304,6 @@
 			// useRang: "08:24-23:59"，
 		}
 		InstrumentList.value[InstrumentIdx.value] = selectInstrument
-		console.log("====",InstrumentList.value)
 	}
 	const InstrumentIdx = ref(0)
 
@@ -246,7 +311,6 @@
 		InstrumentIdx.value = idx
 		InstrumentOptions.show = true
 	}
-	let uTips = ref(null)
 
 	function getInstrumentList() {
 		const params = {
@@ -255,76 +319,103 @@
 			sort: 'asc',
 			sidx: 'assetName',
 			pcPermission: false,
-			}
-			getEquipmentList(params).then(res => {
-				InstrumentOptions.list = res.data.list
-			})
 		}
+		getEquipmentList(params).then(res => {
+			InstrumentOptions.list = res.data.list
+		})
+	}
 
-		function addInstrument() {
-			let newMaterie = {
-			applyType: null, 
-			assetGrade:null, 
-			assetModel: null, 
-			assetName: null, 
-			assetNo: null, 
-			assetType:null, 
-			equipId: null, 
-			leadUserId: null, 
-			manufactor: null, 
+	function addInstrument() {
+		let newMaterie = {
+			applyType: null,
+			assetGrade: null,
+			assetModel: null,
+			assetName: null,
+			assetNo: null,
+			assetType: null,
+			equipId: null,
+			leadUserId: null,
+			manufactor: null,
 			useDay: null,
 			useRang: null
-			}
-			InstrumentList.value.push(newMaterie)
-			uni.showToast({
-				title: '新增一条记录',
-				icon: 'none'
-			});
 		}
-		function removeInstrument(idx){
-			InstrumentList.value = InstrumentList.value.filter((item,index)=>index !== idx)
-		}
-		// 新增或者更新
-		function addOrUpdateData(){
-			dataForm.applyUserId = uni.getStorageSync('userInfo').userId
-			dataForm.organizeId = uni.getStorageSync('userInfo').organizeId
-			dataForm.detailList = InstrumentList.value
-			dataForm.useRang = `${useStarTime.value}-${useOverTime.value}`
-			dataForm.useRangArray.push(useStarTime.value,useOverTime.value)
-			dataForm.detailList.forEach(item=>{
-				item.useRang = `${useStarTime.value}-${useOverTime.value}`
-				item.useDay = dataForm.useDay
-			})
-			addEquipment(dataForm).then(res=> console.log('success!'))
-		}
-		onLoad(() => {
-			getInstrumentList()
-			getProjectList()
+		InstrumentList.value.push(newMaterie)
+		uni.showToast({
+			title: '新增一条记录',
+			icon: 'none'
+		});
+	}
 
+	function removeInstrument(idx) {
+		InstrumentList.value = InstrumentList.value.filter((item, index) => index !== idx)
+	}
+	// 新增或者更新
+	function addOrUpdateData() {
+		form.value.validate(valid => {
+			if (valid) {
+		dataForm.value.applyUserId = uni.getStorageSync('userInfo').userId
+		dataForm.value.organizeId = uni.getStorageSync('userInfo').organizeId
+		dataForm.value.detailList = InstrumentList.value
+		dataForm.value.useRang = `${useStarTime.value}-${useOverTime.value}`
+		// dataForm.value.useRangArray.push(useStarTime.value,useOverTime.value)
+		dataForm.value.detailList.forEach(item => {
+			item.useRang = `${useStarTime.value}-${useOverTime.value}`
+			item.useDay = dataForm.value.useDay
 		})
-		onReady(() => {
-			popup.value.open()
-		})
+		if (!id.value) {
+			addEquipment(dataForm.value).then(res => ToastFn('创建成功！'))
+		} else {
+			updateEquipment(id.value, dataForm.value).then(res => ToastFn('更新成功！'))
+		}
+		}
+		});
 
-		function goToBack() {
-			// uni.setStorageSync('holeRecordId', null)
-			addVisible.value = false
-			emits('emitVisible', true)
+	}
+
+	function ToastFn(text) {
+		uni.$emit('refresh')
+		goToBack()
+		uni.showToast({
+			title: text,
+			duration: 2000
+		});
+	}
+	onLoad(() => {
+		getInstrumentList()
+		getProjectList()
+
+	})
+	onReady(() => {
+		popup.value.open()
+	})
+	onBackPress((e) => {
+		if (e.from === "backbutton" && addVisible.value) {
+			goToBack()
+			return true
 		}
-		// 质控内容
-		function dataInfo(dataAll) {
-			let _dataAll = dataAll
-			if (_dataAll.files) {
-				_dataAll.files = JSON.parse(_dataAll.files)
-			} else {
-				_dataAll.files = []
-			}
-			dataForm = _dataAll
+	})
+
+	function goToBack() {
+		// uni.setStorageSync('holeRecordId', null)
+		id.value = null
+		addVisible.value = false
+		emits('emitVisible', true)
+	}
+	// 质控内容
+	function dataInfo(dataAll) {
+		let _dataAll = dataAll
+		if (_dataAll.files) {
+			_dataAll.files = JSON.parse(_dataAll.files)
+		} else {
+			_dataAll.files = []
 		}
-		defineExpose({
-			addVisible,
-			dataForm
-		})
+		dataForm.value = _dataAll
+	}
+	defineExpose({
+		addVisible,
+		initData,
+		id
+	})
 </script>
 
 <style lang="scss" scoped>
@@ -372,5 +463,9 @@
 				margin-right: 10px;
 			}
 		}
+	}
+
+	.content-box {
+		margin-top: 15px;
 	}
 </style>

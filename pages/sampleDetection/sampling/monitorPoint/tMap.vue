@@ -38,8 +38,6 @@
 		window.addEventListener('message', function(event) {
 			var loc = event.data;
 			if (loc && loc.module == 'locationPicker') {
-				console.log('location', loc);
-				// console.log('location', loc);
 				self.getPositon(loc, self)
 			};
 			window.isListen = true
@@ -51,7 +49,7 @@
 
 
 	function onMessage(res) {
-		console.log('app接收网页消息:', res.detail.data[0])
+		// console.log('app接收网页消息:', res.detail.data[0])
 		emits('emitLocation',res.detail.data[0])
 		emits('emitVisible',true)
 		getPositon(res.detail.data[0], this)
