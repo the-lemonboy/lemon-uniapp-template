@@ -18,7 +18,7 @@
 				<u-search placeholder="搜索批次号" v-model="searchKeyWord" @search="getList()"></u-search>
 			</view>
 			<view class="content-box">
-				<uni-swipe-action ref="swipeAction" v-if="dataList.length">
+				<uni-swipe-action ref="swipeAction">
 					<uni-swipe-action-item class="swipe-item items-box" v-for="item of dataList" :key="item.id"
 						:right-options="swiperOptions" @change="swipeChange($event)"
 						@click="swipeClick($event,content,item.id)">
@@ -34,7 +34,7 @@
 						</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
-				<u-empty style="margin-top: 40px;" v-else text="暂无数据" mode="list"></u-empty>
+				<u-empty style="margin-top: 40px;" v-if="dataList.length == 0 && loading == false" text="暂无数据" mode="list"></u-empty>
 
 			</view>
 
@@ -66,6 +66,7 @@
 		uni.showLoading({
 			title: '加载中'
 		});
+		loading.value = true
 		const menuId = getMenuId('项目列表')
 		const projectId = uni.getStorageSync('projectId')
 		let query = {
@@ -87,7 +88,9 @@
 				item.receivedCount = item.detailList.filter(val => val.received == 1).length
 			})
 			uni.hideLoading();
+			loading.value = false
 		})
+		loading.value = true
 	}
 	const selectSendRef = ref(null)
 	const mainVisible = ref(true)

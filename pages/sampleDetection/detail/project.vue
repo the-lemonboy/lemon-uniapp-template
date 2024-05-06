@@ -18,7 +18,6 @@
 			<u-form-item label-width='100px' label="备注" prop="remark" ><u-input placeholder=""
 					v-model="dataForm.remark" :disabled='true'/></u-form-item>
 		</u-form>
-		<!-- <map></map> -->
 	</view>
 
 </template>
@@ -74,5 +73,9 @@
 		})
 </script>
 
-<style>
+<style lang="scss" scoped>
+	.map-box{
+		// position: absolute;
+		// bottom: 10px;
+	}
 </style>

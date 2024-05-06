@@ -14,7 +14,6 @@
 			<web-view
 				src="https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=KMKBZ-S2R6N-RTAF4-SVH4F-6I3KJ-UUFJ4&referer=myapp"
 				@message="onMessage">
-	
 			</web-view>
 			<!--#endif-->
 		</view>

@@ -14,7 +14,7 @@
 			</u-dropdown>
 		</view>
 		<view class="content-box">
-			<uni-swipe-action ref="swipeAction" v-if="tableData.length">
+			<uni-swipe-action ref="swipeAction">
 				<uni-swipe-action-item class="swipe-item items-box" v-for="item in tableData" :key="item.id"
 					:right-options="swiperOptions" @change="swipeChange($event)"
 					@click="swipeClick($event,content,item.id)">
@@ -28,16 +28,10 @@
 							<text class="time">{{item.registertime}}</text>
 						</view>
 
-						<!-- 	<view class="right-box">
-									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-									<img style="width: 30px;" src="@/static/tabbar-icons/feeds.png" alt="" />
-								</view> -->
 					</view>
 				</uni-swipe-action-item>
 			</uni-swipe-action>
-			<u-empty style="margin-top: 40px;" v-else text="暂无数据" mode="list"></u-empty>
+			<u-empty style="margin-top: 40px;" v-if="tableData.length == 0 && loading == false"  text="暂无数据" mode="list"></u-empty>
 		</view>
 	</view>
 </template>
@@ -142,8 +136,12 @@
 		sort: "asc",
 		sidx: "encode"
 	})
-	async function getMenuList(name) {
-		// return new Promise(resolve=>{
+	const loading = ref(true)
+	 function getMenuList(name) {
+		uni.showLoading({
+			title: '加载中'
+		});
+		loading.value = true
 		const menuId = getMenuId('项目列表')
 		let queryData = {
 			// pageSize: 0,
@@ -153,9 +151,12 @@
 			...listQuery
 		}
 
-		await getProjectBaseList(queryData).then(res => {
+		 getProjectBaseList(queryData).then(res => {
 			tableData.value = res.data;
+			loading.value = false
+			uni.hideLoading();
 		})
+		loading.value = true
 	}
 	// 项目id传给子孙组件
 	function goToDeatil(id, name) {

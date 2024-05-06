@@ -27,15 +27,11 @@
 </template>
 
 <script setup>
-	import {onPullDownRefresh} from '@dcloudio/uni-app'
 	function goDetail(path){
 		uni.navigateTo({
 			url: path,
 		})
 	}
-	onPullDownRefresh( () => {
-		uni.stopPullDownRefresh();
-	})
 </script>
 <style lang="scss" scoped>
 	 /* #ifndef H5 */

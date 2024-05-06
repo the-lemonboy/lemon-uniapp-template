@@ -23,7 +23,6 @@
 			"path": "pages/labOperation/index",
 			"style": {
 				"navigationBarTitleText": "实验室运维",
-				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -31,7 +30,6 @@
 			"path": "pages/me/index",
 			"style": {
 				"navigationBarTitleText": "关于我",
-				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 			}
 		}
@@ -42,7 +40,6 @@
 		        "path": "detail/index",
 		        "style": {
 		            "navigationBarTitleText": "采样检测详细",
-		            "enablePullDownRefresh": true,
 					"navigationStyle": "custom"
 		        }
 		    }, {

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>地点选择</title>
+	</head>
+	<body>
+		
+		<div id="map-container"></div>
+		<style>
+			#map-container{
+			/* 	position: absolute;
+				left: 50%;
+				transform: translateX(-50%); */
+				/* top: 300px; */
+				height: 400px;
+				width: 80%; 
+			}
+		</style>
+		<script charset="utf-8" src="https://map.qq.com/api/gljs?v=1.exp&key=KMKBZ-S2R6N-RTAF4-SVH4F-6I3KJ-UUFJ4">
+		</script>
+		<script type="text/javascript" src="https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js">
+		</script>
+		<script type="module">
+			function getProjectDetailValue(data) {
+				return new Promise((resolve, reject) => {
+					const xhr = new XMLHttpRequest();
+
+					xhr.open('POST', `http://106.14.80.181:30019/api/project/HoleBase/getList`);
+					xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+					xhr.setRequestHeader('cityk-origin', 'app');
+					const token = localStorage.getItem('token'); // 请将 your_token_here 替换为实际的 token
+					xhr.setRequestHeader('Authorization', token);
+					xhr.onload = function() {
+						if (xhr.status === 200) {
+							resolve(JSON.parse(xhr.responseText));
+						} else {
+							reject(new Error('Request failed: ' + xhr.statusText));
+						}
+					};
+					xhr.onerror = function() {
+						reject(new Error('Request failed'));
+					};
+					xhr.send(JSON.stringify(data));
+				});
+			}
+
+			function getProject() {
+				// console.log(localStorage.getItem('token'))
+				// const id = localStorage.getItem("projectId");
+				const query = {
+					menuId: '334593359840562885',
+					projectId: localStorage.getItem("projectId")
+				}
+				getProjectDetailValue(query).then(res => {
+					console.log('this is project value', res.data)
+				})
+			}
+			getProject()
+			var center = new TMap.LatLng(39.98210863924864, 116.31310899739151);
+			var centerHeight = new TMap.LatLng(39.98210863924864, 116.31310899739151, 134);
+
+			// 初始化地图
+			var map = new TMap.Map('map-container', {
+				zoom: 17, // 设置地图缩放
+				center: new TMap.LatLng(39.98210863924864, 116.31310899739151), // 设置地图中心点坐标，
+				pitch: 0, // 俯仰度
+				rotation: 0, // 旋转角度
+			});
+
+			// MultiMarker文档地址：https://lbs.qq.com/webApi/javascriptGL/glDoc/glDocMarker
+			var marker = new TMap.MultiMarker({
+				map: map,
+				styles: {
+					// 点标记样式
+					marker: new TMap.MarkerStyle({
+						width: 20, // 样式宽
+						height: 30, // 样式高
+						anchor: {
+							x: 10,
+							y: 30
+						}, // 描点位置
+					}),
+				},
+				geometries: [
+					// 点标记数据数组
+					{
+						// 标记位置(纬度，经度，高度)
+						position: center,
+						id: 'marker',
+					},
+				],
+			});
+		</script>
+	</body>
+</html>

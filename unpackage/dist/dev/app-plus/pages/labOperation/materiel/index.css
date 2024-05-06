@@ -2422,7 +2422,7 @@
 }
 .main-container .stock-Header .title[data-v-c251e680] {
   font-weight: bold;
-  margin-left: 10px;
+  margin-left: 20px;
 }
 .main-container .stock-Header .delete-btn[data-v-c251e680] {
   float: right;
@@ -2481,7 +2481,7 @@
   margin-top: 10px;
 }
 .m-container .item-box[data-v-89a2b6f1] {
-  width: 90%;
+  width: 95%;
   height: 80px;
   margin: 5px auto;
   padding: 0 10px;

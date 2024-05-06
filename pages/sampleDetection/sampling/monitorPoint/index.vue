@@ -1,7 +1,7 @@
 <template>
 	<view class="mo-container">
 	<view class="content-box">
-		<uni-swipe-action ref="swipeAction" v-if="dataList.length">
+		<uni-swipe-action ref="swipeAction">
 					<uni-swipe-action-item
 					class="swipe-item items-box"
 					v-for="item in dataList" :key="item.id"
@@ -20,7 +20,7 @@
 						</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
-				<u-empty style="margin-top: 40px;" v-else text="暂无数据" mode="list"></u-empty>
+				<u-empty style="margin-top: 40px;" v-if="dataList.length == 0 && loading == false"  text="暂无数据" mode="list"></u-empty>
 	</view>
 	</view>
 </template>
@@ -31,10 +31,12 @@
 	import { getHoleBaseList,delHoleBaseDetail } from '@/api/sample.js'
 	import {getMenuId} from '@/utils/index.js'
 	const dataList = ref([])
-	async function getList(){
+	const loading = ref(true)
+	 function getList(){
 		uni.showLoading({
 			title: '加载中'
 		});
+		loading.value = true
 		let menuId = getMenuId('项目列表')
 		let projectId = uni.getStorageSync('projectId')
 		let query = {
@@ -45,10 +47,12 @@
 					menuId:menuId,
 					projectId : projectId
 		}
-			await getHoleBaseList(query).then(res=>{
+			 getHoleBaseList(query).then(res=>{
 				dataList.value = res.data.list
 				uni.hideLoading();
+				loading.value = false
 			})	
+			loading.value = true
 	}
 	function goHoleBase(holeId,lat,lon){
 			uni.setStorageSync('holeId', holeId)

@@ -17,13 +17,13 @@
 		</view>
 		</view>
 	<view class="search-box">
-		<u-search placeholder="搜索申请单号" v-model="searchKeyWord" @search="getMenuList()"></u-search>
+		<u-search placeholder="搜索申请单号" v-model="searchKeyWord" @search="getList()"></u-search>
 	</view>
 	<view class="content-box">
-		<uni-swipe-action ref="swipeAction" v-if="tableData.length">
+		<uni-swipe-action ref="swipeAction">
 					<uni-swipe-action-item
 					class="swipe-item items-box"
-					v-for="item in tableData" :key="item.id"
+					v-for="item in dataList" :key="item.id"
 					    :right-options="swiperOptions"
 					    @click="swipeClick($event,content,item.id)"
 					>
@@ -39,7 +39,7 @@
 						</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
-				<u-empty style="margin-top: 40px;" v-else text="暂无数据" mode="list"></u-empty>
+				<u-empty style="margin-top: 40px;" v-if="dataList.length == 0 && loading == false"  text="暂无数据" mode="list"></u-empty>
 		</view>
 	</view>
 	</view>
@@ -67,7 +67,7 @@
 	} from '@/utils/getMenuId.js'
 	import applyInstrument from './applyInstrument.vue';
 	import equipmentDetail from './equipmentDetail.vue';
-	const tableData = ref([])
+	const dataList = ref([])
 	// 搜索
 	const searchKeyWord = ref()
 	const listQuery = reactive({
@@ -77,10 +77,12 @@
 		sidx: "encode",
 	})
 	const reachBottomFlag = ref(false)
-	async function getList() {
+	const loading = ref(true)
+	 function getList() {
 		uni.showLoading({
 			title: '加载中'
 		});
+		loading.value = true
 		const menuId = getMenuId('仪器使用')
 		if(!reachBottomFlag.value){
 			listQuery.currentPage = 1
@@ -92,16 +94,17 @@
 			 applyCode:searchKeyWord.value,
 			 ...listQuery
 		}
-		await getApplyEquipmentListPage(queryData).then(res => {
+		 getApplyEquipmentListPage(queryData).then(res => {
 			if(reachBottomFlag.value){
-				tableData.value = [...tableData.value, ...res.data.list]
+				dataList.value = [...dataList.value, ...res.data.list]
 			}else{
-				tableData.value = res.data.list
+				dataList.value = res.data.list
 			}
 			listQuery.currentPage++
 			uni.hideLoading();
-			
+			loading.value = false
 		})
+		loading.value = true
 	}
 	const swiperOptions = ref([{
 				            text: '删除',

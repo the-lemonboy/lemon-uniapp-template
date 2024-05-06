@@ -24,8 +24,9 @@
 			<u-tabs :list="tabOptions" :is-scroll="true" v-model="tabCurent" @change="change"></u-tabs>
 		</view>
 			<driver></driver>
-		<project v-if="!tabCurent"></project>
-		<member v-else></member>
+		<project v-if="tabCurent == 0"></project>
+		<member v-else-if="tabCurent == 1"></member>
+		<!-- <projectMap v-else-if="tabCurent == 2"></projectMap> -->
 	</view>
 </template>
 
@@ -36,6 +37,7 @@
 	} from 'vue'
 	import project from './project.vue'
 	import member from './member.vue'
+	import projectMap from './projectMap.vue'
 	import {
 		getProjectDetail
 	} from '@/api/sample.js'
@@ -74,7 +76,10 @@
 		},
 		{
 			name: '成员'
-		}
+		},
+		// {
+		// 	name:'项目地图'
+		// }
 	])
 	const tabCurent = ref(0)
 

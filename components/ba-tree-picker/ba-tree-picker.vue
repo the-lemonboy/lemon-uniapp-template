@@ -22,7 +22,8 @@
 							show: item.isShow
 						}">
 							<view class="item-label">
-								<view class="item-icon uni-inline-item" @tap.stop="_onItemSwitch(item, index)">
+								<view :class="`item-icon uni-inline-item ca${item.id}`"
+									@tap.stop="_onItemSwitch(item, index)">
 									<view v-if="!item.isLastLevel&&item.isShowChild" class="switch-on"
 										:style="{'border-left-color':switchColor}">
 									</view>
@@ -32,10 +33,11 @@
 									<view v-else class="item-last-dot" :style="{'border-top-color':switchColor}">
 									</view>
 								</view>
-								<view class="uni-flex-item uni-inline-item" @tap.stop="_onItemSelect(item, index)">
+								<view :class="`uni-flex-item uni-inline-item child${item.id}`"
+									@tap.stop="_onItemSelect(item, index)">
 									<view class="item-name"> {{item.name+(item.childCount?"("+item.childCount+")":'')}}
 									</view>
-									<view class="item-check" v-if="selectParent?true:item.isLastLevel">
+									<view :class="`item-check `" v-if="selectParent?true:item.isLastLevel">
 										<view class="item-check-yes" v-if="item.checkStatus==1"
 											:class="{'radio':!multiple}" :style="{'border-color':confirmColor}">
 											<view class="item-check-yes-part"
@@ -128,42 +130,47 @@
 				type: Boolean,
 				default: false
 			},
-			propsInitId:{
-				type:Array,
-				default: ()=> []
-			}
-				
+			propsInitId: {
+				type: Array,
+				default: () => []
+			},
+
 		},
 		data() {
 			return {
 				showDialog: false,
-				treeList: []
+				treeList: [],
+				tempData: [],
+				initParent: []
 			}
 		},
 		computed: {},
 		methods: {
 			_show() {
 				this.showDialog = true
+				this.handelClick()
 			},
 			_hide() {
 				this.showDialog = false
+				// this.handelClick()
 			},
 			_cancel() {
 				this._hide()
 				this.$emit("cancel", '');
+				this.handelClick()
 			},
-			        _confirm() { //多选
-			            let selectedList = [];
-			            let selectedNames;
-			            this.treeList.forEach((item, index) => {
-			                if (item.checkStatus === 2 && item.isLastLevel) {
-			                    selectedList.push(item.id);
-			                    selectedNames = selectedNames ? selectedNames + ' / ' + item.name : item.name;
-			                }
-			            })
-			            this._hide()
-			            this.$emit("select-change", selectedList, selectedNames);
-			        },
+			_confirm() { //多选
+				let selectedList = [];
+				let selectedNames;
+				this.treeList.forEach((item, index) => {
+					if (item.checkStatus === 2 && item.isLastLevel) {
+						selectedList.push(item.id);
+						selectedNames = selectedNames ? selectedNames + ' / ' + item.name : item.name;
+					}
+				})
+				this._hide()
+				this.$emit("select-change", selectedList, selectedNames);
+			},
 			//格式化原数据（原数据为tree结构）
 			_formatTreeData(list = [], level = 0, parentItem, isShowChild = true) {
 				let nextIndex = 0;
@@ -212,12 +219,9 @@
 					this.treeList.splice(nextIndex, 0, itemT);
 					nextIndex++;
 				})
-				//console.log(this.treeList);
 			},
 			// 节点打开、关闭切换
 			_onItemSwitch(item, index) {
-				// console.log(item)
-				// console.log('_itemSwitch')
 				if (item.isLastLevel === true) {
 					return;
 				}
@@ -230,7 +234,6 @@
 				}
 			},
 			_onItemChildSwitch(item, index) {
-				//console.log('_onItemChildSwitch')
 				const firstChildIndex = index + 1;
 				if (firstChildIndex > 0)
 					for (var i = firstChildIndex; i < this.treeList.length; i++) {
@@ -254,7 +257,6 @@
 			},
 			// 节点选中、取消选中
 			_onItemSelect(item, index) {
-				// console.log(index)
 				if (!this.multiple) { //单选
 					item.checkStatus = item.checkStatus == 0 ? 2 : 0;
 					this.treeList.forEach((v, i) => {
@@ -317,10 +319,7 @@
 				}
 			},
 			_onItemParentSelect(item, index, oldCheckStatus) {
-				//console.log('_onItemParentSelect')
-				//console.log(item)
 				const parentIndex = this.treeList.findIndex(itemP => itemP.id == item.parentId);
-				//console.log('parentIndex：' + parentIndex)
 				if (parentIndex >= 0) {
 					let itemParent = this.treeList[parentIndex];
 					let count = itemParent.childCheckCount;
@@ -348,7 +347,6 @@
 					} else {
 						itemParent.checkStatus = 1;
 					}
-					//console.log('itemParent：', itemParent)
 					this._onItemParentSelect(itemParent, parentIndex, oldCheckStatusParent);
 				}
 			},
@@ -358,34 +356,62 @@
 					this.treeList[i].checkStatus = v.orCheckStatus
 				})
 			},
-			initData(){
-				this.treeList.forEach((item,index)=>{
+			initData() {
+				this.treeList.forEach((item, index) => {
 					this.findSelected(item)
 				})
 			},
-			findSelected(node){
-				
-			if(this.propsInitId.length >0 && this.propsInitId){
-				this.propsInitId.forEach((id)=>{
-					if(id === node.id){
-						let oldCheckStatus = node.checkStatus;
-						node.checkStatus = 2;
-						node.childCheckCount = node.childCount;
-						node.childCheckPCount = 0;
-					}
-				})
-			}
+			findSelected(node) {
+				if (this.propsInitId.length > 0 && this.propsInitId) {
+					this.propsInitId.forEach((id) => {
+						if (id === node.id) {
+							// let oldCheckStatus = node.checkStatus;
+							// node.checkStatus = 2;
+							// node.childCheckCount = node.childCount;
+							// node.childCheckPCount = 0;
+							// node.isLastLevel = true
+							// node.name = node.factorName
+							this.tempData.push(node.factorName)
+							this.initParent.push(node.parentId)
+						}
+					})
+				}
 				if (!node.children || node.children.length === 0) return
 				else {
-					node.children.forEach((child)=>{
+					node.children.forEach((child) => {
 						this.findSelected(child)
 					})
 				}
 			},
+			handelClick() {
+				this.initParent.forEach((item, index) => {
+					let btn = document.querySelector(`.ca${item}`)
+					var event = new MouseEvent("click", {
+						view: window,
+						bubbles: true,
+						cancelable: true
+					});
+
+					// 触发元素的 click 事件
+					btn.dispatchEvent(event);
+				})
+				setTimeout(()=>{
+					this.propsInitId.forEach((item, index) => {
+						let dynamicVarName = document.querySelector(`.child${item}`)
+						var event = new MouseEvent('click', {
+							bubbles: true,
+							cancelable: true,
+							view: window
+						});
+						// 触发事件
+						dynamicVarName.dispatchEvent(event);
+					})
+				},100)
+			},
 			_initTree() {
-				this.treeList = []; 
+				this.treeList = [];
 				this._formatTreeData(this.localdata);
-				
+
 			}
 		},
 		watch: {
@@ -394,23 +420,23 @@
 			},
 			localTreeList() {
 				this.treeList = this.localTreeList;
-				this.initData() 
-	
 			},
-			treeList:{
-				handler(val){
-						this.$nextTick(()=>{
-							this.initData() 
-						})
+			treeList: {
+				handler(val) {
+
 				},
-				deep:true
+				deep: true
 			}
-			
 		},
 		mounted() {
 			this._initTree();
-			
-			
+		
+			setTimeout(() => {
+				this.$nextTick(() => {
+					this.initData()
+					this.$emit('initDataName',this.tempData)
+				})
+			}, 500)
 		}
 	}
 </script>
@@ -582,7 +608,13 @@
 		justify-content: center;
 		align-items: center;
 	}
-.uni-flex-item{display: flex; align-items: center; width:100%; }
+
+	.uni-flex-item {
+		display: flex;
+		align-items: center;
+		width: 100%;
+	}
+
 	.item-check-yes,
 	.item-check-no {
 		width: 20px;
@@ -648,16 +680,19 @@
 	.itemBorder {
 		border-bottom: 1px solid #e5e5e5;
 	}
+
 	.uni-flex {
-	display: flex;
-	flex-direction: row;
+		display: flex;
+		flex-direction: row;
 	}
+
 	.uni-flex-item {
-	flex: 1;
+		flex: 1;
 	}
-	.uni-inline-item{
-	display: flex;
-	flex-direction: row;
-	align-items:center;
+
+	.uni-inline-item {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 	}
 </style>

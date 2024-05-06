@@ -6,12 +6,9 @@
 		</view>
 		<!-- #endif -->
 		<view class="me-container">
-			<view class="me-header">
+			<view class="me-header" @click="goUserInfo">
 				<view class="avatar">
-					<!-- <img src="@/static" alt="" /> -->
 					<img class="img" :src="`${baseURL}${userInfo.headIcon}`" />
-
-					<!-- </img> -->
 				</view>
 				<viwe class="info">
 					<view class="info-top">
@@ -28,6 +25,14 @@
 						<uni-icons type="right" size="30"></uni-icons>
 					</view>
 				</view>
+				<!-- #ifdef APP-ANDROID -->
+		<!-- 	<view class="message-center link-box" @click="goUpdate()">
+				<text class="left-text">检查更新</text>
+				<view class="right-content">
+					<uni-icons type="right" size="30"></uni-icons>
+				</view>
+			</view> -->
+				<!-- #endif -->
 				<!-- #ifdef APP-PLUS -->
 				<view class="clear-cache link-box" @click="clearCache">
 					<text class="left-text">清除缓存</text>
@@ -48,7 +53,7 @@
 		</view>
 	</view>
 	<watermark v-else-if="!mainVisile && watermarkVisible" @visible="watermarkFlag"></watermark>
-	<!-- <message v-else-if="!mainVisile && messageVisible" @visible="messageFlag"></message> -->
+	<userInfoPage class="userInfo" v-else-if="!mainVisile && userInfoVisible" @visible= "userInfoFlag"></userInfoPage>
 </template>
 
 <script setup>
@@ -61,10 +66,8 @@
 		ref
 	} from 'vue';
 	import watermark from './watermark/index.vue'
-	// import message from './message/index.vue'
-	// import clearCache from './clearCache/index.vue'
-	// import {clearCache} from '@/utils/clearCache.js'
-	const userInfo = reactive({})
+	import userInfoPage from './userInfo/index.vue'
+	const userInfo = ref({})
 	const baseURL = inject('define').baseURL
 
 	function loginOut() {
@@ -101,21 +104,28 @@
 		watermarkVisible.value = true
 		mainVisile.value = false
 	}
-
+	const userInfoVisible = ref(false)
+	const userInfoRef = ref()
+	function goUserInfo(){
+		userInfoVisible.value = true
+		mainVisile.value = false
+	}
+	function userInfoFlag(val) {
+		userInfoVisible.value = val
+		mainVisile.value = !val
+	}
 	function watermarkFlag(val) {
 		watermarkVisible.value = val
 		mainVisile.value = !val
 	}
-	// const messageVisible = ref(false)
 	function goMessage() {
 		uni.navigateTo({
 			url: '/pages/me/message/index'
 		})
 	}
-	// function messageFlag(val){
-	// 	messageVisible.value = val
-	// 	mainVisile.value = !val
-	// }
+	function goUpdate(){
+		
+	}
 	// #ifdef APP-PLUS
 	const cacheSize = ref()
 
@@ -191,8 +201,7 @@
 		// #ifdef APP-PLUS
 		accCache()
 		// #endif
-		Object.assign(userInfo, uni.getStorageSync('userInfo'))
-		console.log(userInfo, uni.getStorageSync('userInfo'))
+		userInfo.value = uni.getStorageSync('userInfo')
 	})
 </script>
 
@@ -217,8 +226,8 @@
 	/* #endif */
 	.me-header {
 		width: 100%;
-		height: 200rpx;
-		padding: 20rpx;
+		height: 210rpx;
+		padding-left: 20rpx;
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: row;

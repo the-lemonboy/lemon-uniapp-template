@@ -66,7 +66,8 @@
 		defineExpose,
 		defineEmits,
 		toRaw,
-		reactive
+		reactive,
+		watch
 	} from 'vue'
 	import {
 		getSendsampleDetail,
@@ -299,6 +300,13 @@
 			})
 		}
 	}
+	watch(unSendList,(val)=>{
+		if(!val.some(item=>!item.send || item.send!==true)){
+			selectValue.value.checked = true
+		}else{
+			selectValue.value.checked = false
+		}
+	},{deep:true})
 	onLoad(() => {
 		getProjectEncode()
 	})

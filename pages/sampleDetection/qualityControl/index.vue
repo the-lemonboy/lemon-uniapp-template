@@ -22,7 +22,7 @@
 				<u-search placeholder="请输入项目编号" v-model="searchKeyWord" @search="getList()"></u-search>
 			</view>
 			<view class="content-box">
-				<uni-swipe-action ref="swipeAction" v-if="dataList.length">
+				<uni-swipe-action ref="swipeAction">
 					<uni-swipe-action-item class="swipe-item items-box" v-for="item of dataList" :key="item.id"
 						:right-options="swiperOptions" @change="swipeChange($event)"
 						@click="swipeClick($event,content,item.id)">
@@ -38,19 +38,17 @@
 						</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
-				<u-empty style="margin-top: 40px;" v-else text="暂无数据" mode="list"></u-empty>
+				<u-empty style="margin-top: 40px;" v-if="dataList.length == 0 && loading == false" text="暂无数据" mode="list"></u-empty>
 			</view>
 		</view>
 	</view>
-	<addOrEditor ref='EditorRef' @emitVisible='(val)=>mainVisible=val'></addOrEditor>
+	<addOrEditor ref='EditorRef' @curTab="curTab" @emitVisible='(val)=>mainVisible=val'></addOrEditor>
 </template>
 
 <script setup>
 	import {
 		ref,
-		reactive,
-		computed,
-		watch
+		reactive
 	} from 'vue'
 	import {
 		getQCCheckBaseList,
@@ -94,6 +92,14 @@
 			delta: 1
 		})
 	}
+	function curTab(val){
+		let temp = val
+		if(typeof val !== 'number'){
+			tabCurent.value = parseInt(temp)-1
+		}else{
+			tabCurent.value = temp-1
+		}
+	}
 	const dataList = ref([])
 	const query = reactive({
 		id: '',
@@ -102,12 +108,14 @@
 	})
 	// 搜索
 	const searchKeyWord = ref()
-	async function getList() {
+	const loading = ref(true)
+	 function getList() {
 		let menuId = getMenuId('项目列表')
 		const projectId = uni.getStorageSync('projectId')
 		uni.showLoading({
 			title: '加载中'
 		});
+		loading.value = true
 		let initQuery = {
 			currentPage: 1,
 			pageSize: 0,
@@ -119,7 +127,7 @@
 			id:searchKeyWord.value
 		}
 		Object.assign(initQuery, query)
-		await getQCCheckBaseList(initQuery).then(res => {
+		 getQCCheckBaseList(initQuery).then(res => {
 			let list = null
 			if (tabCurent.value == 0) {
 				list = res.data.list.filter(item => item.checkType == '1')
@@ -128,7 +136,9 @@
 			}
 			dataList.value = list
 			uni.hideLoading();
+			loading.value = false
 		})
+		loading.value = true
 	}
 	const tabCurent = ref(0)
 	function change(index) {
@@ -161,7 +171,7 @@
 	onLoad(() => {
 		getList()
 		uni.$on('refresh',(val)=>{
-			tabCurent.value = val
+			tabCurent.value = val-1
 			getList()
 		})
 	})

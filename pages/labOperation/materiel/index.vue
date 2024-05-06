@@ -18,7 +18,7 @@
 			<u-search placeholder="请输入物料名称" v-model="searchKeyWord"></u-search>
 		</view>
 		<view class="content-box">
-							<view class="item-box" v-for="item in tableData" :key="item.id" v-if="tableData.length">
+							<view class="item-box" v-for="item in dataList" :key="item.id">
 								<view class="left-item">
 									<view class="title">物料名称：{{ item.materialName }}</view>
 									<view class="center-zone">
@@ -28,7 +28,7 @@
 									<text class="time">物料类型：{{item.materialType}}</text>
 								</view>
 							</view>
-					<u-empty style="margin-top: 40px;" v-else text="暂无数据" mode="list"></u-empty>
+					<u-empty style="margin-top: 40px;"  v-if="dataList.length == 0 && loading == false" text="暂无数据" mode="list"></u-empty>
 		</view>
 	</view>
 	</view>
@@ -55,7 +55,7 @@
 	} from '@/utils/getMenuId.js'
 	import addMateriel from './addMateriel.vue';
 	const searchKeyWord = ref()
-	const tableData = ref([])
+	const dataList = ref([])
 	const listQuery = reactive({
 		currentPage: 1,
 		pageSize: 20,
@@ -63,10 +63,12 @@
 		sidx: "encode",
 	})
 	const reachBottomFlag = ref(false)
-	async function getList() {
+	const loading = ref(true)
+	 function getList() {
 		uni.showLoading({
 			title: '加载中'
 		});
+		loading.value = true
 		const menuId = getMenuId('库存管理')
 		if(!reachBottomFlag.value){
 			listQuery.currentPage = 1
@@ -82,17 +84,17 @@
 			 menuId: menuId,
 			 ...listQuery
 		}
-		await getMaterielListPage(queryData).then(res => {
+		 getMaterielListPage(queryData).then(res => {
 			if(reachBottomFlag.value){
-				tableData.value = [...tableData.value, ...res.data.list]
+				dataList.value = [...dataList.value, ...res.data.list]
 				listQuery.currentPage++
 			}else{
-				tableData.value = res.data.list
+				dataList.value = res.data.list
 			}
-			
-			
 			uni.hideLoading();
+			loading.value = false
 		})
+		loading.value = true
 	}
 	function goToBack(){
 		uni.navigateBack({delta:1})

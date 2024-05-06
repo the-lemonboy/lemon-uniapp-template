@@ -28,12 +28,10 @@
 				<view class="send-box-item" v-for="item of sendData.detailList" :key="item.id">
 					<view class="item-box">
 						<view class="left-item">
-							<view class="title" @click="goToDeatil(item.id)">{{ item.sampleNo }}</view>
+							<view class="title">{{ item.analysisFactorNames }}</view>
 							<view class="center-zone">
-								<text class="area">{{ item.sampleTime }}</text>
-								<text class="project">{{item.analysisFactorNames}}</text>
+								<text class="project">{{item.sampleTime}}</text>
 							</view>
-							<text class="time">{{item.registertime}}</text>
 						</view>
 					</view>
 				</view>

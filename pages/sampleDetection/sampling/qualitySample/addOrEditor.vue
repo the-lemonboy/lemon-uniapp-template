@@ -38,7 +38,7 @@
 			</u-form-item>
 		</u-form>
 		<ba-tree-picker ref="treePicker" :multiple='true' @select-change="selectChange" title="选择分析指标"
-		    :localdata="factorTreeList" valueKey="id" textKey="factorName" childrenKey="children" />
+		  @initDataName="initDataName" :propsInitId="initAnalysisFactorIds" :localdata="factorTreeList" valueKey="id" :selectParent="false" textKey="factorName" childrenKey="children" />
 		<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 			:default-time='getCurrentTime()'></u-picker>
 		<u-select v-model="sampleNoOptions.show" value-name="sampleNo" label-name="sampleNo"
@@ -118,6 +118,24 @@
 		      resulteIds = resulteIds.join(',')
 		      dataForm.value.analysisFactorIds = resulteIds
 			  selectName.value = names
+	 }
+	 function initDataName(val){
+	 	if(!selectName.value.length){
+	 		val.forEach((item,index)=>{
+	 				if(index<val.length-1){
+	 					selectName.value += item + '/'
+	 				}else{
+	 					selectName.value += item
+	 				}
+	 		})
+	 	}
+	 }
+	 const initAnalysisFactorIds = ref([])
+	  // initData里面执行
+	 function handelAnalysisFactorIds(){
+	 	if(dataForm.value.analysisFactorIds){
+			initAnalysisFactorIds.value = dataForm.value.analysisFactorIds.split(",")
+		}
 	 }
 	 onLoad(()=>{
 		 getfactorTypeOptions()
@@ -238,6 +256,7 @@ function ToastFn(text){
 		if (id) {
 			getQCSampleDetail(id).then(res => {
 				dataInfo(res.data)
+				handelAnalysisFactorIds()
 			})
 		}
 	}

@@ -31,36 +31,6 @@ if (uni.restoreGlobal) {
 }
 (function(vue) {
   "use strict";
-  const ON_SHOW = "onShow";
-  const ON_LAUNCH = "onLaunch";
-  const ON_LOAD = "onLoad";
-  const ON_READY = "onReady";
-  const ON_BACK_PRESS = "onBackPress";
-  const ON_REACH_BOTTOM = "onReachBottom";
-  const ON_PULL_DOWN_REFRESH = "onPullDownRefresh";
-  function requireNativePlugin(name) {
-    return weex.requireModule(name);
-  }
-  function formatAppLog(type2, filename, ...args) {
-    if (uni.__log__) {
-      uni.__log__(type2, filename, ...args);
-    } else {
-      console[type2].apply(console, [...args, filename]);
-    }
-  }
-  function resolveEasycom(component, easycom) {
-    return typeof component === "string" ? easycom : component;
-  }
-  const createHook = (lifecycle) => (hook, target = vue.getCurrentInstance()) => {
-    !vue.isInSSRComponentSetup && vue.injectHook(lifecycle, hook, target);
-  };
-  const onShow = /* @__PURE__ */ createHook(ON_SHOW);
-  const onLaunch = /* @__PURE__ */ createHook(ON_LAUNCH);
-  const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
-  const onReady = /* @__PURE__ */ createHook(ON_READY);
-  const onBackPress = /* @__PURE__ */ createHook(ON_BACK_PRESS);
-  const onReachBottom = /* @__PURE__ */ createHook(ON_REACH_BOTTOM);
-  const onPullDownRefresh = /* @__PURE__ */ createHook(ON_PULL_DOWN_REFRESH);
   const _export_sfc = (sfc, props) => {
     const target = sfc.__vccOpts || sfc;
     for (const [key, val] of props) {
@@ -327,6 +297,36 @@ if (uni.restoreGlobal) {
     );
   }
   const __easycom_0$6 = /* @__PURE__ */ _export_sfc(_sfc_main$1g, [["render", _sfc_render$C], ["__scopeId", "data-v-5de67484"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-icon/u-icon.vue"]]);
+  const ON_SHOW = "onShow";
+  const ON_LAUNCH = "onLaunch";
+  const ON_LOAD = "onLoad";
+  const ON_READY = "onReady";
+  const ON_BACK_PRESS = "onBackPress";
+  const ON_REACH_BOTTOM = "onReachBottom";
+  const ON_PULL_DOWN_REFRESH = "onPullDownRefresh";
+  function requireNativePlugin(name) {
+    return weex.requireModule(name);
+  }
+  function formatAppLog(type2, filename, ...args) {
+    if (uni.__log__) {
+      uni.__log__(type2, filename, ...args);
+    } else {
+      console[type2].apply(console, [...args, filename]);
+    }
+  }
+  function resolveEasycom(component, easycom) {
+    return typeof component === "string" ? easycom : component;
+  }
+  const createHook = (lifecycle) => (hook, target = vue.getCurrentInstance()) => {
+    !vue.isInSSRComponentSetup && vue.injectHook(lifecycle, hook, target);
+  };
+  const onShow = /* @__PURE__ */ createHook(ON_SHOW);
+  const onLaunch = /* @__PURE__ */ createHook(ON_LAUNCH);
+  const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
+  const onReady = /* @__PURE__ */ createHook(ON_READY);
+  const onBackPress = /* @__PURE__ */ createHook(ON_BACK_PRESS);
+  const onReachBottom = /* @__PURE__ */ createHook(ON_REACH_BOTTOM);
+  const onPullDownRefresh = /* @__PURE__ */ createHook(ON_PULL_DOWN_REFRESH);
   const _sfc_main$1f = {
     name: "u-search",
     emits: ["update:modelValue", "input", "change", "search", "custom", "clear", "focus", "blur"],
@@ -3619,7 +3619,6 @@ if (uni.restoreGlobal) {
         }
       }]);
       function dropChange(val) {
-        formatAppLog("log", "at pages/sampleDetection/index.vue:116", val);
         listQuery.sidx = val.type;
         listQuery.sort = val.value;
         getMenuList();
@@ -3658,13 +3657,11 @@ if (uni.restoreGlobal) {
         };
         await getProjectBaseList(queryData).then((res) => {
           tableData.value = res.data;
-          formatAppLog("log", "at pages/sampleDetection/index.vue:159", "first");
         });
       }
       function goToDeatil(id, name) {
         uni.setStorageSync("projectId", id);
         uni.setStorageSync("projectName", name);
-        formatAppLog("log", "at pages/sampleDetection/index.vue:168", name);
         uni.navigateTo({
           url: `/pages/sampleDetection/detail/index?id=${id}`
         });
@@ -6203,7 +6200,7 @@ if (uni.restoreGlobal) {
     ], 46, ["hover-start-time", "hover-stay-time", "disabled", "form-type", "open-type", "app-parameter", "hover-stop-propagation", "send-message-title", "lang", "data-name", "session-from", "send-message-img", "show-message-card", "hover-class", "loading"]);
   }
   const __easycom_5$3 = /* @__PURE__ */ _export_sfc(_sfc_main$12, [["render", _sfc_render$p], ["__scopeId", "data-v-097def2b"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-button/u-button.vue"]]);
-  const _imports_0 = "/static/images/logo.jpg";
+  const _imports_0 = "/static/images/logo.png";
   var hexcase = 0;
   function hex_md5(s) {
     return rstr2hex(rstr_md5(str2rstr_utf8(s)));
@@ -6415,7 +6412,6 @@ if (uni.restoreGlobal) {
       vue.reactive({});
       vue.ref("");
       vue.ref("");
-      vue.ref("");
       const form = vue.ref();
       const store2 = useStore();
       function onFocus(e) {
@@ -6488,7 +6484,6 @@ if (uni.restoreGlobal) {
               vue.createElementVNode("view", { class: "top_view" })
             ]),
             vue.createElementVNode("view", { class: "logo-v" }, [
-              vue.createCommentVNode(' 	<view class="login-bg">\n			<image src="/static/login-bg.png" mode="widthFix"></image>\n		</view> '),
               vue.createElementVNode("view", { class: "logo-hd u-flex-col" }, [
                 vue.createElementVNode("view", { class: "logoImg" }, [
                   vue.createElementVNode("image", {
@@ -6496,7 +6491,6 @@ if (uni.restoreGlobal) {
                     mode: "widthFix"
                   })
                 ]),
-                vue.createCommentVNode(' <view class="u-flex-col introduce u-m-t-30">\n				<text class="u-font-36 text-one">{{sysName}}</text>\n				<text class="u-font-24 text-two">低代码，企业数字化好帮手</text>\n			</view> '),
                 vue.createElementVNode("view", { class: "loginSwitch u-flex-col" }, [
                   vue.createElementVNode("view", { class: "loginInputBox u-flex-col" }, [
                     vue.createVNode(_component_u_form, {
@@ -6585,13 +6579,7 @@ if (uni.restoreGlobal) {
                   ])
                 ])
               ]),
-              vue.createElementVNode(
-                "view",
-                { class: "copyright" },
-                vue.toDisplayString(_ctx.copyright),
-                1
-                /* TEXT */
-              )
+              vue.createElementVNode("view", { class: "copyright" }, "Copyright 上海城勘信息科技有限公司")
             ])
           ],
           64
@@ -6609,9 +6597,6 @@ if (uni.restoreGlobal) {
           url: path
         });
       }
-      onPullDownRefresh(() => {
-        uni.stopPullDownRefresh();
-      });
       return (_ctx, _cache) => {
         return vue.openBlock(), vue.createElementBlock(
           vue.Fragment,
@@ -9037,13 +9022,12 @@ if (uni.restoreGlobal) {
             ]),
             _: 1
             /* STABLE */
-          }, 8, ["model"]),
-          vue.createCommentVNode(" <map></map> ")
+          }, 8, ["model"])
         ]);
       };
     }
   };
-  const project = /* @__PURE__ */ _export_sfc(_sfc_main$R, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/detail/project.vue"]]);
+  const project = /* @__PURE__ */ _export_sfc(_sfc_main$R, [["__scopeId", "data-v-96ec9245"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/detail/project.vue"]]);
   const _sfc_main$Q = {
     name: "uniTh",
     options: {
@@ -9801,7 +9785,6 @@ if (uni.restoreGlobal) {
         };
         getMember(query).then((res) => {
           dataList.value = res.data.list;
-          formatAppLog("log", "at pages/sampleDetection/detail/member.vue:41", dataList.value);
         });
       }
       onLoad(() => {
@@ -9983,10 +9966,12 @@ if (uni.restoreGlobal) {
         {
           name: "成员"
         }
+        // {
+        // 	name:'项目地图'
+        // }
       ]);
       const tabCurent = vue.ref(0);
       function change(index) {
-        formatAppLog("log", "at pages/sampleDetection/detail/index.vue:82", "index", index);
       }
       vue.reactive(null);
       function goToSampling(router) {
@@ -10075,7 +10060,8 @@ if (uni.restoreGlobal) {
                 }, null, 8, ["list", "modelValue"])
               ]),
               vue.createVNode(driver),
-              !tabCurent.value ? (vue.openBlock(), vue.createBlock(project, { key: 0 })) : (vue.openBlock(), vue.createBlock(member, { key: 1 }))
+              tabCurent.value == 0 ? (vue.openBlock(), vue.createBlock(project, { key: 0 })) : tabCurent.value == 1 ? (vue.openBlock(), vue.createBlock(member, { key: 1 })) : vue.createCommentVNode("v-if", true),
+              vue.createCommentVNode(' <projectMap v-else-if="tabCurent == 2"></projectMap> ')
             ])
           ],
           64
@@ -29315,6 +29301,17 @@ if (uni.restoreGlobal) {
     __name: "addOrEditor",
     emits: ["emitVisible"],
     setup(__props, { expose: __expose, emit: __emit }) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        checkTime: [{
+          required: true,
+          message: "请输入检查日期",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
       const emits = __emit;
       const timeParams = vue.reactive({
         year: true,
@@ -29376,13 +29373,17 @@ if (uni.restoreGlobal) {
         return _data;
       }
       function addOrUpdateData() {
-        dataForm.value = parseFiles(dataForm.value);
-        if (!dataForm.value.id) {
-          addQCCheckBase(dataForm.value).then((res) => ToastFn("创建成功"));
-        } else {
-          updateQCCheckBase(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
-        }
-        clearData(dataForm.value);
+        form.value.validate((valid) => {
+          if (valid) {
+            dataForm.value = parseFiles(dataForm.value);
+            if (!dataForm.value.id) {
+              addQCCheckBase(dataForm.value).then((res) => ToastFn("创建成功"));
+            } else {
+              updateQCCheckBase(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
+            }
+            clearData(dataForm.value);
+          }
+        });
       }
       function ToastFn(text) {
         uni.$emit("refresh", checkType.value);
@@ -29589,7 +29590,9 @@ if (uni.restoreGlobal) {
                 ),
                 vue.createVNode(_component_u_form, {
                   model: vue.unref(dataForm),
-                  ref: "Form",
+                  ref_key: "form",
+                  ref: form,
+                  rules: rules2,
                   style: { "margin": "10px" }
                 }, {
                   default: vue.withCtx(() => [
@@ -29601,6 +29604,8 @@ if (uni.restoreGlobal) {
                     }, {
                       default: vue.withCtx(() => [
                         vue.createVNode(_component_u_input, {
+                          disabled: "true",
+                          placeholder: "",
                           modelValue: vue.unref(dataForm).id,
                           "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => vue.unref(dataForm).id = $event)
                         }, null, 8, ["modelValue"])
@@ -29667,7 +29672,7 @@ if (uni.restoreGlobal) {
                   ]),
                   _: 1
                   /* STABLE */
-                }, 8, ["model"]),
+                }, 8, ["model", "rules"]),
                 vue.createVNode(_component_u_picker, {
                   modelValue: checkTimeVisible.value,
                   "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => checkTimeVisible.value = $event),
@@ -29713,7 +29718,6 @@ if (uni.restoreGlobal) {
         EditorRef.value.visible = true;
         mainVisible.value = false;
         if (id) {
-          formatAppLog("log", "at pages/sampleDetection/qualityControl/index.vue:85", id);
           EditorRef.value.itemId = id;
         } else {
           EditorRef.value.checkType = `${++tabCurent.value}`;
@@ -30035,7 +30039,6 @@ if (uni.restoreGlobal) {
       function submitSend() {
         const data = sendData.value;
         sendDetailId.value;
-        formatAppLog("log", "at pages/sampleDetection/sendSample/sendDetail.vue:75", sendData.value);
         ToastFn();
         if (sendData.value.id) {
           updateSendsample(sendData.value.id, data).then((res) => ToastFn("修改成功！"));
@@ -30129,50 +30132,55 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode("text", null, "确认中")
               ])
             ]),
-            sendData.value.detailList > 0 ? (vue.openBlock(true), vue.createElementBlock(
-              vue.Fragment,
-              { key: 0 },
-              vue.renderList(sendData.value.detailList, (item) => {
-                return vue.openBlock(), vue.createElementBlock("view", {
-                  class: "send-box-item",
-                  key: item.id
-                }, [
-                  vue.createElementVNode("view", { class: "item-box" }, [
-                    vue.createElementVNode("view", { class: "left-item" }, [
-                      vue.createElementVNode("view", {
-                        class: "title",
-                        onClick: ($event) => _ctx.goToDeatil(item.id)
-                      }, vue.toDisplayString(item.sampleNo), 9, ["onClick"]),
-                      vue.createElementVNode("view", { class: "center-zone" }, [
+            sendData.value.detailList.length ? (vue.openBlock(), vue.createElementBlock("view", {
+              key: 0,
+              class: "content"
+            }, [
+              (vue.openBlock(true), vue.createElementBlock(
+                vue.Fragment,
+                null,
+                vue.renderList(sendData.value.detailList, (item) => {
+                  return vue.openBlock(), vue.createElementBlock("view", {
+                    class: "send-box-item",
+                    key: item.id
+                  }, [
+                    vue.createElementVNode("view", { class: "item-box" }, [
+                      vue.createElementVNode("view", { class: "left-item" }, [
+                        vue.createElementVNode("view", {
+                          class: "title",
+                          onClick: ($event) => _ctx.goToDeatil(item.id)
+                        }, vue.toDisplayString(item.sampleNo), 9, ["onClick"]),
+                        vue.createElementVNode("view", { class: "center-zone" }, [
+                          vue.createElementVNode(
+                            "text",
+                            { class: "area" },
+                            vue.toDisplayString(item.sampleTime),
+                            1
+                            /* TEXT */
+                          ),
+                          vue.createElementVNode(
+                            "text",
+                            { class: "project" },
+                            vue.toDisplayString(item.analysisFactorNames),
+                            1
+                            /* TEXT */
+                          )
+                        ]),
                         vue.createElementVNode(
                           "text",
-                          { class: "area" },
-                          vue.toDisplayString(item.sampleTime),
-                          1
-                          /* TEXT */
-                        ),
-                        vue.createElementVNode(
-                          "text",
-                          { class: "project" },
-                          vue.toDisplayString(item.analysisFactorNames),
+                          { class: "time" },
+                          vue.toDisplayString(item.registertime),
                           1
                           /* TEXT */
                         )
-                      ]),
-                      vue.createElementVNode(
-                        "text",
-                        { class: "time" },
-                        vue.toDisplayString(item.registertime),
-                        1
-                        /* TEXT */
-                      )
+                      ])
                     ])
-                  ])
-                ]);
-              }),
-              128
-              /* KEYED_FRAGMENT */
-            )) : (vue.openBlock(), vue.createBlock(_component_u_empty, {
+                  ]);
+                }),
+                128
+                /* KEYED_FRAGMENT */
+              ))
+            ])) : (vue.openBlock(), vue.createBlock(_component_u_empty, {
               key: 1,
               style: { "margin-top": "40px" },
               text: "未选择样品",
@@ -30204,6 +30212,22 @@ if (uni.restoreGlobal) {
     emits: ["emitVisible"],
     setup(__props, { expose: __expose, emit: __emit }) {
       const emits = __emit;
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        transNo: [{
+          required: true,
+          message: "请输入批次编号",
+          trigger: "blur"
+        }],
+        transTime: [{
+          required: true,
+          message: "请输入送样时间",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
       function submitVisibleFlag(val) {
         emits("emitVisible", true);
         selectVisible.value = false;
@@ -30272,36 +30296,39 @@ if (uni.restoreGlobal) {
       const sendDetailRef = vue.ref(null);
       const sendId = vue.ref(null);
       function goSendDetail() {
-        formatAppLog("log", "at pages/sampleDetection/sendSample/selectSend.vue:215", uni.getStorageSync("projectId"));
-        dataForm.value.projectId = uni.getStorageSync("projectId");
-        dataForm.value.transUserId = uni.getStorageSync("userInfo").userId;
-        dataForm.value.organizeId = uni.getStorageSync("userInfo").organizeId;
-        const detailList = unSendList.value.filter((item) => item.send).map((item) => ({
-          analysisFactorIds: item.analysisFactorIds,
-          analysisFactorNames: item.analysisFactorNames,
-          classify: item.classify,
-          // dropped: item.dropped,
-          files: item.files,
-          // received: item.received,
-          remark: item.remark,
-          sampleAmount: item.sampleAmount,
-          sampleId: item.sampleId,
-          sampleName: item.sampleName,
-          sampleNo: item.sampleNo,
-          sampleTime: item.sampleTime,
-          sampleType: item.sampleType,
-          sampleUnit: item.sampleUnit,
-          transId: item.transId,
-          // useLocId: item.useLocId,
-          // useLocType: item.useLocType,
-          // useLocation: item.useLocation,
-          sampleTypeText: item.sampleTypeText
-        }));
-        dataForm.value.transCount = detailList.length;
-        dataForm.value.detailList = detailList;
-        selectVisible.value = false;
-        sendDetailRef.value.sendDetailVisible = true;
-        sendDetailRef.value.sendData = dataForm.value;
+        form.value.validate((valid) => {
+          if (valid) {
+            dataForm.value.projectId = uni.getStorageSync("projectId");
+            dataForm.value.transUserId = uni.getStorageSync("userInfo").userId;
+            dataForm.value.organizeId = uni.getStorageSync("userInfo").organizeId;
+            const detailList = unSendList.value.filter((item) => item.send).map((item) => ({
+              analysisFactorIds: item.analysisFactorIds,
+              analysisFactorNames: item.analysisFactorNames,
+              classify: item.classify,
+              // dropped: item.dropped,
+              files: item.files,
+              // received: item.received,
+              remark: item.remark,
+              sampleAmount: item.sampleAmount,
+              sampleId: item.sampleId,
+              sampleName: item.sampleName,
+              sampleNo: item.sampleNo,
+              sampleTime: item.sampleTime,
+              sampleType: item.sampleType,
+              sampleUnit: item.sampleUnit,
+              transId: item.transId,
+              // useLocId: item.useLocId,
+              // useLocType: item.useLocType,
+              // useLocation: item.useLocation,
+              sampleTypeText: item.sampleTypeText
+            }));
+            dataForm.value.transCount = detailList.length;
+            dataForm.value.detailList = detailList;
+            selectVisible.value = false;
+            sendDetailRef.value.sendDetailVisible = true;
+            sendDetailRef.value.sendData = dataForm.value;
+          }
+        });
       }
       function initData() {
         return new Promise((resolve) => {
@@ -30320,12 +30347,9 @@ if (uni.restoreGlobal) {
         emits("emitVisible", true);
       }
       function checkboxChange(e) {
-        formatAppLog("log", "at pages/sampleDetection/sendSample/selectSend.vue:269", unSendList.value);
-        formatAppLog("log", "at pages/sampleDetection/sendSample/selectSend.vue:270", e);
       }
       const selectValue = vue.ref({ name: "全选", disabled: false });
       function selectAll(e) {
-        formatAppLog("log", "at pages/sampleDetection/sendSample/selectSend.vue:274", e);
         if (e.value) {
           unSendList.value.forEach((item) => {
             item.send = true;
@@ -30336,6 +30360,13 @@ if (uni.restoreGlobal) {
           });
         }
       }
+      vue.watch(unSendList, (val) => {
+        if (!val.some((item) => !item.send || item.send !== true)) {
+          selectValue.value.checked = true;
+        } else {
+          selectValue.value.checked = false;
+        }
+      }, { deep: true });
       onLoad(() => {
         getProjectEncode();
       });
@@ -30385,18 +30416,15 @@ if (uni.restoreGlobal) {
                       class: "title",
                       style: { "font-size": "16px", "position": "absolute", "left": "50%", "top": "50%", "transform": "translate(-50%,-50%)" }
                     }, "送样信息"),
-                    vue.createElementVNode("text", {
-                      onClick: _cache[1] || (_cache[1] = ($event) => _ctx.addOrUpdateData()),
-                      type: "primary",
-                      class: "submit",
-                      style: { "color": "blue", "line-height": "44px", "margin-right": "10px", "float": "right" }
-                    }, "保存")
+                    vue.createCommentVNode(' <text @click="addOrUpdateData()" type="primary" class="submit"\n					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text> ')
                   ])
                 ]),
                 vue.createElementVNode("view", { class: "form-box" }, [
                   vue.createVNode(_component_u_form, {
                     model: dataForm.value,
-                    ref: "Form",
+                    ref_key: "form",
+                    ref: form,
+                    rules: rules2,
                     style: { "margin": "10px" }
                   }, {
                     default: vue.withCtx(() => [
@@ -30408,7 +30436,7 @@ if (uni.restoreGlobal) {
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_u_input, {
                             modelValue: dataForm.value.transNo,
-                            "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => dataForm.value.transNo = $event)
+                            "onUpdate:modelValue": _cache[1] || (_cache[1] = ($event) => dataForm.value.transNo = $event)
                           }, null, 8, ["modelValue"])
                         ]),
                         _: 1
@@ -30422,9 +30450,9 @@ if (uni.restoreGlobal) {
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_u_input, {
                             type: "select",
-                            onClick: _cache[3] || (_cache[3] = ($event) => showPickerDate("transTime")),
+                            onClick: _cache[2] || (_cache[2] = ($event) => showPickerDate("transTime")),
                             modelValue: dataForm.value.transTime,
-                            "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => dataForm.value.transTime = $event)
+                            "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => dataForm.value.transTime = $event)
                           }, null, 8, ["modelValue"])
                         ]),
                         _: 1
@@ -30433,10 +30461,10 @@ if (uni.restoreGlobal) {
                     ]),
                     _: 1
                     /* STABLE */
-                  }, 8, ["model"]),
+                  }, 8, ["model", "rules"]),
                   vue.createVNode(_component_u_picker, {
                     modelValue: selectTimeVisible.value,
-                    "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => selectTimeVisible.value = $event),
+                    "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => selectTimeVisible.value = $event),
                     mode: "time",
                     params: timeParams,
                     onConfirm: getTime,
@@ -30499,7 +30527,7 @@ if (uni.restoreGlobal) {
                           shape: "circle",
                           onChange: selectAll,
                           modelValue: selectValue.value.checked,
-                          "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => selectValue.value.checked = $event),
+                          "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => selectValue.value.checked = $event),
                           name: selectValue.value.name
                         }, {
                           default: vue.withCtx(() => [
@@ -30542,8 +30570,8 @@ if (uni.restoreGlobal) {
             vue.createVNode(sendDetail, {
               ref_key: "sendDetailRef",
               ref: sendDetailRef,
-              onSubmitVisibleFlag: _cache[7] || (_cache[7] = ($event) => submitVisibleFlag()),
-              onEmitVisible: _cache[8] || (_cache[8] = (val) => selectVisible.value = val),
+              onSubmitVisibleFlag: _cache[6] || (_cache[6] = ($event) => submitVisibleFlag()),
+              onEmitVisible: _cache[7] || (_cache[7] = (val) => selectVisible.value = val),
               sendId: sendId.value
             }, null, 8, ["sendId"])
           ],
@@ -30593,15 +30621,17 @@ if (uni.restoreGlobal) {
       const selectSendRef = vue.ref(null);
       const mainVisible = vue.ref(true);
       async function goSelectSend(id) {
-        selectSendRef.value.selectVisible = true;
-        mainVisible.value = false;
-        selectSendRef.value.sendId = id;
-        if (id) {
-          await selectSendRef.value.initData();
-          await selectSendRef.value.getUnsendList();
-        } else {
-          selectSendRef.value.getUnsendList();
-        }
+        vue.nextTick(async () => {
+          selectSendRef.value.selectVisible = true;
+          mainVisible.value = false;
+          selectSendRef.value.sendId = id;
+          if (id) {
+            await selectSendRef.value.initData();
+            await selectSendRef.value.getUnsendList();
+          } else {
+            selectSendRef.value.getUnsendList();
+          }
+        });
       }
       function goToBack() {
         uni.navigateBack({ delta: 1 });
@@ -30795,6 +30825,17 @@ if (uni.restoreGlobal) {
     __name: "selectReceive",
     emits: ["emitVisible"],
     setup(__props, { expose: __expose, emit: __emit }) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        receiveTime: [{
+          required: true,
+          message: "请输入收样时间",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
       const emits = __emit;
       const selectVisible = vue.ref(false);
       const timeParams = vue.reactive({
@@ -30813,7 +30854,6 @@ if (uni.restoreGlobal) {
       function getTime(e) {
         if (curTimeKey.value === "receiveTime")
           dataForm.value.receiveTime = `${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`;
-        formatAppLog("log", "at pages/sampleDetection/receiveSample/selectReceive.vue:107", "time", dataForm.value.receiveTime);
       }
       const dataForm = vue.ref({
         id: "",
@@ -30842,25 +30882,28 @@ if (uni.restoreGlobal) {
       vue.ref(null);
       const receiveId = vue.ref(null);
       function submitData() {
-        dataForm.value.projectId = uni.getStorageSync("projectId");
-        dataForm.value.receiveUserId = uni.getStorageSync("userInfo").userId;
-        dataForm.value.receiveUserName = uni.getStorageSync("userInfo").userName;
-        dataForm.value.transState = "1";
-        dataForm.value.detailList.forEach((item) => {
-          if (item.send) {
-            item.received = 1;
-            dataForm.value.receiveCount = 1;
-          } else {
-            item.received = -1;
+        form.value.validate((valid) => {
+          if (valid) {
+            dataForm.value.projectId = uni.getStorageSync("projectId");
+            dataForm.value.receiveUserId = uni.getStorageSync("userInfo").userId;
+            dataForm.value.receiveUserName = uni.getStorageSync("userInfo").userName;
+            dataForm.value.transState = "1";
+            dataForm.value.detailList.forEach((item) => {
+              if (item.send) {
+                item.received = 1;
+                dataForm.value.receiveCount = 1;
+              } else {
+                item.received = -1;
+              }
+              delete item.send;
+            });
+            if (dataForm.value.detailList.length > 0) {
+              receiveSample(receiveId.value, dataForm.value).then((res) => {
+                ToastFn("收样成功！");
+              });
+            }
           }
-          delete item.send;
         });
-        formatAppLog("log", "at pages/sampleDetection/receiveSample/selectReceive.vue:158", uni.getStorageSync("userInfo"));
-        if (dataForm.value.detailList.length > 0) {
-          receiveSample(receiveId.value, dataForm.value).then((res) => {
-            ToastFn("收样成功！");
-          });
-        }
       }
       function ToastFn(text) {
         emits("emitVisible", false);
@@ -30875,11 +30918,9 @@ if (uni.restoreGlobal) {
         emits("emitVisible", true);
       }
       function checkboxChange(e) {
-        formatAppLog("log", "at pages/sampleDetection/receiveSample/selectReceive.vue:180", e);
       }
       const selectValue = vue.ref({ name: "全选", disabled: false });
       function selectAll(e) {
-        formatAppLog("log", "at pages/sampleDetection/receiveSample/selectReceive.vue:184", e);
         if (e.value) {
           dataForm.value.detailList.forEach((item) => {
             item.send = true;
@@ -30890,8 +30931,13 @@ if (uni.restoreGlobal) {
           });
         }
       }
-      onLoad(() => {
-      });
+      vue.watch(dataForm, (val) => {
+        if (!val.detailList.some((item) => !item.send || item.send !== true)) {
+          selectValue.value.checked = true;
+        } else {
+          selectValue.value.checked = false;
+        }
+      }, { deep: true });
       __expose({
         addFlag,
         initData,
@@ -30950,7 +30996,9 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode("view", { class: "form-box" }, [
                   vue.createVNode(_component_u_form, {
                     model: dataForm.value,
-                    ref: "Form",
+                    ref_key: "form",
+                    ref: form,
+                    rules: rules2,
                     style: { "margin": "10px" }
                   }, {
                     default: vue.withCtx(() => [
@@ -30987,7 +31035,7 @@ if (uni.restoreGlobal) {
                     ]),
                     _: 1
                     /* STABLE */
-                  }, 8, ["model"]),
+                  }, 8, ["model", "rules"]),
                   vue.createVNode(_component_u_picker, {
                     modelValue: selectTimeVisible.value,
                     "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => selectTimeVisible.value = $event),
@@ -31147,16 +31195,16 @@ if (uni.restoreGlobal) {
         getList();
       }
       function goToBack() {
-        uni.navigateBack({ delta: 1 });
+        uni.navigateBack({
+          delta: 1
+        });
       }
-      const swiperOptions = vue.ref([
-        {
-          text: "删除",
-          style: {
-            backgroundColor: "#dd524d"
-          }
+      const swiperOptions = vue.ref([{
+        text: "删除",
+        style: {
+          backgroundColor: "#dd524d"
         }
-      ]);
+      }]);
       function swipeClick(e, ctx, id) {
         uni.showModal({
           title: "提示",
@@ -31176,6 +31224,9 @@ if (uni.restoreGlobal) {
       }
       onLoad(() => {
         getList();
+        uni.$on("refresh", () => {
+          getList();
+        });
       });
       onPullDownRefresh(async () => {
         try {
@@ -32140,7 +32191,6 @@ if (uni.restoreGlobal) {
       onReady(() => {
       });
       function onMessage(res) {
-        formatAppLog("log", "at pages/sampleDetection/sampling/monitorPoint/tMap.vue:54", "app接收网页消息:", res.detail.data[0]);
         emits("emitLocation", res.detail.data[0]);
         emits("emitVisible", true);
         getPositon(res.detail.data[0]);
@@ -32175,6 +32225,27 @@ if (uni.restoreGlobal) {
   const _sfc_main$m = {
     __name: "addOrEditor",
     setup(__props) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        sampleName: [{
+          required: true,
+          message: "请输入样品名称",
+          trigger: "blur"
+        }],
+        startTime: [{
+          required: true,
+          message: "请输入开始时间",
+          trigger: "blur"
+        }],
+        endTime: [{
+          required: true,
+          message: "请输入结束时间",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
       const mainVisible = vue.ref(true);
       const location = vue.ref();
       function emitLocation(val) {
@@ -32243,12 +32314,16 @@ if (uni.restoreGlobal) {
         return _data;
       }
       function addOrUpdateData() {
-        dataForm.value = parseData(dataForm.value);
-        if (!dataForm.value.id) {
-          addHoleBaseDetail(dataForm.value).then((res) => ToastFn("创建成功"));
-        } else {
-          updateHoleBase(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
-        }
+        form.value.validate((valid) => {
+          if (valid) {
+            dataForm.value = parseData(dataForm.value);
+            if (!dataForm.value.id) {
+              addHoleBaseDetail(dataForm.value).then((res) => ToastFn("创建成功"));
+            } else {
+              updateHoleBase(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
+            }
+          }
+        });
       }
       function ToastFn(text) {
         uni.$emit("refresh");
@@ -32336,7 +32411,9 @@ if (uni.restoreGlobal) {
             ),
             vue.createVNode(_component_u_form, {
               model: vue.unref(dataForm),
-              ref: "Form",
+              ref_key: "form",
+              ref: form,
+              rules: "rules",
               style: { "margin": "10px" }
             }, {
               default: vue.withCtx(() => [
@@ -33083,6 +33160,27 @@ if (uni.restoreGlobal) {
   const _sfc_main$k = {
     __name: "addOrEditor",
     setup(__props) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        sampleNo: [{
+          required: true,
+          message: "请输入样品编号",
+          trigger: "blur"
+        }],
+        startTime: [{
+          required: true,
+          message: "请输入开始时间",
+          trigger: "blur"
+        }],
+        endTime: [{
+          required: true,
+          message: "请输入结束时间",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
       const factorTreeList = vue.ref([]);
       const treePicker = vue.ref();
       const selectName = vue.ref([]);
@@ -33184,12 +33282,16 @@ if (uni.restoreGlobal) {
         return _data;
       }
       function addOrUpdateData() {
-        dataForm.value = parseData(dataForm.value);
-        if (!dataForm.value.id) {
-          addQCSample(dataForm.value).then((res) => ToastFn("创建成功"));
-        } else {
-          updateQCSample(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
-        }
+        form.value.validate((valid) => {
+          if (valid) {
+            dataForm.value = parseData(dataForm.value);
+            if (!dataForm.value.id) {
+              addQCSample(dataForm.value).then((res) => ToastFn("创建成功"));
+            } else {
+              updateQCSample(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
+            }
+          }
+        });
       }
       function ToastFn(text) {
         uni.$emit("refresh");
@@ -33279,7 +33381,9 @@ if (uni.restoreGlobal) {
               ),
               vue.createVNode(_component_u_form, {
                 model: vue.unref(dataForm),
-                ref: "Form",
+                ref_key: "form",
+                ref: form,
+                rules: rules2,
                 style: { "margin": "10px" }
               }, {
                 default: vue.withCtx(() => [
@@ -33410,7 +33514,7 @@ if (uni.restoreGlobal) {
                 ]),
                 _: 1
                 /* STABLE */
-              }, 8, ["model"]),
+              }, 8, ["model", "rules"]),
               vue.createVNode(_component_ba_tree_picker, {
                 ref_key: "treePicker",
                 ref: treePicker,
@@ -34313,8 +34417,6 @@ if (uni.restoreGlobal) {
       const tabCurent = vue.ref(0);
       function change(index) {
         tabCurent.value = index;
-        formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/index.vue:126", "index", index);
-        formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/index.vue:127", typeof index);
       }
       vue.reactive(null);
       function goToSampling(router) {
@@ -34332,7 +34434,6 @@ if (uni.restoreGlobal) {
         uni.scanCode({
           success: function(res) {
             const result = JSON.parse(res.result);
-            formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/index.vue:148", result.type);
             if (result.type === "soilSample") {
               uni.setStorageSync("soilSampleId", result.id);
               uni.navigateTo({
@@ -34473,6 +34574,27 @@ if (uni.restoreGlobal) {
   const _sfc_main$d = {
     __name: "addOrEditor",
     setup(__props) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        startDepth: [{
+          required: true,
+          message: "请输入起始深度",
+          trigger: "blur"
+        }],
+        endDepth: [{
+          required: true,
+          message: "请输入结束深度",
+          trigger: "blur"
+        }],
+        holeType: [{
+          required: true,
+          message: "请输入图层类型",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
       let dataForm = vue.ref({
         projectId: "",
         holeId: "",
@@ -34487,7 +34609,11 @@ if (uni.restoreGlobal) {
         pollutionDesc: "",
         files: []
       });
-      let solumTypeOptions = vue.reactive({ show: false, current: {}, list: [] });
+      let solumTypeOptions = vue.reactive({
+        show: false,
+        current: {},
+        list: []
+      });
       function getSolumTypeOptions() {
         getDictionaryDataSelectorCascade("497318342525198917").then((res) => {
           res.data.list.forEach((item) => {
@@ -34522,19 +34648,31 @@ if (uni.restoreGlobal) {
         solumPlasticityOptions.current = current;
         dataForm.value.solumPlasticity = current.label;
       }
-      const solumHumidityOptions = vue.reactive({ show: false, current: {}, list: [] });
+      const solumHumidityOptions = vue.reactive({
+        show: false,
+        current: {},
+        list: []
+      });
       function getsolumHumidityOptions() {
         getDictionaryDataSelector("497319923836527173").then((res) => {
           solumHumidityOptions.list = res.data.list;
         });
       }
-      const solumCompactnessOptions = vue.reactive({ show: false, current: {}, list: [] });
+      const solumCompactnessOptions = vue.reactive({
+        show: false,
+        current: {},
+        list: []
+      });
       function getSolumCompactnessOptions() {
         getDictionaryDataSelector("497320163494863429").then((res) => {
           solumCompactnessOptions.list = res.data.list;
         });
       }
-      const solumPlasticityOptions = vue.reactive({ show: false, current: {}, list: [] });
+      const solumPlasticityOptions = vue.reactive({
+        show: false,
+        current: {},
+        list: []
+      });
       function getsolumPlasticityOptions() {
         getDictionaryDataSelector("497320786047017541").then((res) => {
           solumPlasticityOptions.list = res.data.list;
@@ -34553,17 +34691,21 @@ if (uni.restoreGlobal) {
         return _data;
       }
       function addOrUpdateData() {
-        const data = parseFiles(dataForm.value);
-        const id = uni.getStorageSync("holeRecordId");
-        if (!id) {
-          addHoleRecord(data).then((res) => {
-            ToastFn("创建成功");
-          });
-        } else {
-          updateHoleRecord(id, data).then((res) => {
-            ToastFn("修改成功");
-          });
-        }
+        form.value.validate((valid) => {
+          if (valid) {
+            const data = parseFiles(dataForm.value);
+            const id = uni.getStorageSync("holeRecordId");
+            if (!id) {
+              addHoleRecord(data).then((res) => {
+                ToastFn("创建成功");
+              });
+            } else {
+              updateHoleRecord(id, data).then((res) => {
+                ToastFn("修改成功");
+              });
+            }
+          }
+        });
       }
       function ToastFn(text) {
         uni.$emit("refresh");
@@ -34599,7 +34741,9 @@ if (uni.restoreGlobal) {
       });
       function goToBack() {
         uni.setStorageSync("holeRecordId", null);
-        uni.navigateBack({ delta: 1 });
+        uni.navigateBack({
+          delta: 1
+        });
       }
       return (_ctx, _cache) => {
         const _component_uni_icons = resolveEasycom(vue.resolveDynamicComponent("uni-icons"), __easycom_0$5);
@@ -34652,7 +34796,9 @@ if (uni.restoreGlobal) {
               ),
               vue.createVNode(_component_u_form, {
                 model: vue.unref(dataForm),
-                ref: "Form",
+                ref_key: "form",
+                ref: form,
+                rules: rules2,
                 style: { "margin": "10px" }
               }, {
                 default: vue.withCtx(() => [
@@ -34810,7 +34956,7 @@ if (uni.restoreGlobal) {
                 ]),
                 _: 1
                 /* STABLE */
-              }, 8, ["model"]),
+              }, 8, ["model", "rules"]),
               vue.createVNode(_component_u_select, {
                 modelValue: vue.unref(solumTypeOptions).show,
                 "onUpdate:modelValue": _cache[16] || (_cache[16] = ($event) => vue.unref(solumTypeOptions).show = $event),
@@ -34887,7 +35033,6 @@ if (uni.restoreGlobal) {
             newConf.value.elementName = newConf.value.elementCode;
             const temp = deepCopy(newConf.value);
             curXrfConf.value.push(temp);
-            formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/editorXRF.vue:89", curXrfConf.value);
             for (let key in newConf.value) {
               newConf.value[key] = null;
             }
@@ -34904,9 +35049,7 @@ if (uni.restoreGlobal) {
       }
       function delConf(index) {
         let tempData = deepCopy(curXrfConf.value);
-        formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/editorXRF.vue:109", index, curXrfConfLength.value);
         if (index > curXrfConfLength.value) {
-          formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/editorXRF.vue:111", index, curXrfConfLength.value);
           for (let i = index; i < tempData.length; i++) {
             tempData[index - 1] = tempData[index];
             tempData[index - 1].elementSort = i.toString();
@@ -35106,6 +35249,56 @@ if (uni.restoreGlobal) {
   const _sfc_main$b = {
     __name: "addOrEditor",
     setup(__props) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        sampleName: [
+          {
+            validator: (rule, value, callback) => {
+              if (curSampleNameList.value.includes(value)) {
+                callback(new Error("该样品名称已存在"));
+              } else {
+                callback();
+              }
+            },
+            message: "请确保样品名称唯一",
+            trigger: ["change", "blur"]
+          },
+          {
+            required: true,
+            message: "请输入样品名称",
+            trigger: "blur"
+          }
+        ],
+        startTime: [{
+          required: true,
+          message: "请输入开始时间",
+          trigger: "blur"
+        }],
+        endTime: [{
+          required: true,
+          message: "请输入结束时间",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
+      const curSampleNameList = vue.ref([]);
+      function getCurSampleNameList() {
+        let _query = {
+          currentPage: 1,
+          projectId: uni.getStorageSync("projectId"),
+          holeId: uni.getStorageSync("holeId"),
+          sort: "desc",
+          sidx: "",
+          menuId: getMenuId("项目列表")
+        };
+        getSoilRecordList(_query).then((res) => {
+          curSampleNameList.value = res.data.list.map((item) => {
+            return item.sampleName;
+          });
+        });
+      }
       const visible = vue.ref(true);
       const xrfRef = vue.ref(null);
       function goXrfConf() {
@@ -35265,13 +35458,17 @@ if (uni.restoreGlobal) {
         return _data;
       }
       function addOrUpdateData() {
-        const id = uni.getStorageSync("soilSampleId");
-        dataForm.value = parseData(dataForm.value);
-        if (!id) {
-          addSoilRecord(dataForm.value).then((res) => ToastFn("创建成功"));
-        } else {
-          updateSoilRecord(id, dataForm.value).then((res) => ToastFn("修改成功"));
-        }
+        form.value.validate((valid) => {
+          if (valid) {
+            const id = uni.getStorageSync("soilSampleId");
+            dataForm.value = parseData(dataForm.value);
+            if (!id) {
+              addSoilRecord(dataForm.value).then((res) => ToastFn("创建成功"));
+            } else {
+              updateSoilRecord(id, dataForm.value).then((res) => ToastFn("修改成功"));
+            }
+          }
+        });
       }
       function ToastFn(text) {
         uni.$emit("refresh");
@@ -35288,6 +35485,8 @@ if (uni.restoreGlobal) {
         } else {
           _dataAll.files = [];
         }
+        _dataAll.hasParallelSample = _dataAll.hasParallelSample == "true" ? "1" : "0";
+        _dataAll.isInspection = _dataAll.isInspection == "true" ? "1" : "0";
         dataForm.value = _dataAll;
       }
       function initData() {
@@ -35295,6 +35494,9 @@ if (uni.restoreGlobal) {
         if (id) {
           getSoilRecordDetail(id).then((res) => {
             dataInfo(res.data);
+            curSampleNameList.value = curSampleNameList.value.filter((item) => {
+              return item !== dataForm.value.sampleName;
+            });
             XRFConfList.value = dataForm.value.xrfDetailsList;
             XRFConfLength.value = dataForm.value.xrfDetailsList.length;
           });
@@ -35305,6 +35507,7 @@ if (uni.restoreGlobal) {
       onLoad(() => {
         initData();
         getSampleNoOptions();
+        getCurSampleNameList();
       });
       function goToBack() {
         uni.setStorageSync("soilSampleId", null);
@@ -35364,7 +35567,9 @@ if (uni.restoreGlobal) {
                 ]),
                 vue.createVNode(_component_u_form, {
                   model: vue.unref(dataForm),
-                  ref: "Form",
+                  ref_key: "form",
+                  ref: form,
+                  rules: rules2,
                   style: { "margin": "10px" }
                 }, {
                   default: vue.withCtx(() => [
@@ -35610,7 +35815,7 @@ if (uni.restoreGlobal) {
                   ]),
                   _: 1
                   /* STABLE */
-                }, 8, ["model"]),
+                }, 8, ["model", "rules"]),
                 vue.createVNode(_component_u_button, {
                   class: "xrf-btn",
                   type: "primary",
@@ -35684,6 +35889,27 @@ if (uni.restoreGlobal) {
   const _sfc_main$a = {
     __name: "addOrEditor",
     setup(__props) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        wellNo: [{
+          required: true,
+          message: "请输入监测井编号",
+          trigger: "blur"
+        }],
+        startTime: [{
+          required: true,
+          message: "请输入开始时间",
+          trigger: "blur"
+        }],
+        endTime: [{
+          required: true,
+          message: "请输入结束时间",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
       const wellTypeOptions = vue.reactive({
         show: false,
         current: {},
@@ -35753,12 +35979,16 @@ if (uni.restoreGlobal) {
         return _data;
       }
       function addOrUpdateData() {
-        dataForm.value = parseData(dataForm.value);
-        if (!dataForm.value.id) {
-          addWellBase(dataForm.value).then((res) => ToastFn("创建成功"));
-        } else {
-          updateWellBase(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
-        }
+        form.value.validate((valid) => {
+          if (valid) {
+            dataForm.value = parseData(dataForm.value);
+            if (!dataForm.value.id) {
+              addWellBase(dataForm.value).then((res) => ToastFn("创建成功"));
+            } else {
+              updateWellBase(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
+            }
+          }
+        });
       }
       function ToastFn(text) {
         uni.$emit("refresh");
@@ -35839,7 +36069,9 @@ if (uni.restoreGlobal) {
               ]),
               vue.createVNode(_component_u_form, {
                 model: vue.unref(dataForm),
-                ref: "Form",
+                ref_key: "form",
+                ref: form,
+                rules: rules2,
                 style: { "margin": "10px" }
               }, {
                 default: vue.withCtx(() => [
@@ -36097,7 +36329,7 @@ if (uni.restoreGlobal) {
                 ]),
                 _: 1
                 /* STABLE */
-              }, 8, ["model"]),
+              }, 8, ["model", "rules"]),
               vue.createVNode(_component_u_picker, {
                 modelValue: selectTimeVisible.value,
                 "onUpdate:modelValue": _cache[22] || (_cache[22] = ($event) => selectTimeVisible.value = $event),
@@ -36126,6 +36358,32 @@ if (uni.restoreGlobal) {
   const _sfc_main$9 = {
     __name: "addOrEditor",
     setup(__props) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        wellId: [{
+          required: true,
+          message: "请输入监测井编号",
+          trigger: "blur"
+        }],
+        washMode: [{
+          required: true,
+          message: "请输入洗井类型",
+          trigger: "blur"
+        }],
+        startTime: [{
+          required: true,
+          message: "请输入开始时间",
+          trigger: "blur"
+        }],
+        endTime: [{
+          required: true,
+          message: "请输入结束时间",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
       const timeParams = vue.reactive({
         year: true,
         month: true,
@@ -36223,19 +36481,23 @@ if (uni.restoreGlobal) {
         } else {
           _data.files = "[]";
         }
-        formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/wellWashRecord/addOrEditor.vue:200", _data.files);
+        formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/wellWashRecord/addOrEditor.vue:227", _data.files);
         _data.projectId = uni.getStorageSync("projectId");
         _data.holeId = uni.getStorageSync("holeId");
         _data.id = uni.getStorageSync("wellWashRecordId");
         return _data;
       }
       function addOrUpdateData() {
-        dataForm.value = parseFiles(dataForm.value);
-        if (!dataForm.value.id) {
-          addWellWashRecord(dataForm.value).then((res) => ToastFn("创建成功"));
-        } else {
-          updateWellWashRecord(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
-        }
+        form.value.validate((valid) => {
+          if (valid) {
+            dataForm.value = parseFiles(dataForm.value);
+            if (!dataForm.value.id) {
+              addWellWashRecord(dataForm.value).then((res) => ToastFn("创建成功"));
+            } else {
+              updateWellWashRecord(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
+            }
+          }
+        });
       }
       function ToastFn(text) {
         uni.$emit("refresh");
@@ -36252,6 +36514,7 @@ if (uni.restoreGlobal) {
         } else {
           _dataAll.files = [];
         }
+        _dataAll.hasNapl = _dataAll.hasNapl == "true" ? "1" : "0";
         dataForm.value = _dataAll;
       }
       function initData() {
@@ -36329,7 +36592,9 @@ if (uni.restoreGlobal) {
               ),
               vue.createVNode(_component_u_form, {
                 model: vue.unref(dataForm),
-                ref: "Form",
+                ref_key: "form",
+                ref: form,
+                rules: rules2,
                 style: { "margin": "10px" }
               }, {
                 default: vue.withCtx(() => [
@@ -36594,7 +36859,7 @@ if (uni.restoreGlobal) {
                 ]),
                 _: 1
                 /* STABLE */
-              }, 8, ["model"]),
+              }, 8, ["model", "rules"]),
               vue.createVNode(_component_u_picker, {
                 modelValue: selectTimeVisible.value,
                 "onUpdate:modelValue": _cache[21] || (_cache[21] = ($event) => selectTimeVisible.value = $event),
@@ -36631,6 +36896,61 @@ if (uni.restoreGlobal) {
   const _sfc_main$8 = {
     __name: "addOrEditor",
     setup(__props) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        wellId: [{
+          required: true,
+          message: "请输入监测井编号",
+          trigger: "blur"
+        }],
+        sampleName: [
+          {
+            validator: (rule, value, callback) => {
+              if (curSampleNameList.value.includes(value)) {
+                callback(new Error("该样品名称已存在"));
+              } else {
+                callback();
+              }
+            },
+            message: "请确保样品名称唯一",
+            trigger: ["change", "blur"]
+          },
+          {
+            required: true,
+            message: "请输入样品名称",
+            trigger: "blur"
+          }
+        ],
+        startTime: [{
+          required: true,
+          message: "请输入开始时间",
+          trigger: "blur"
+        }],
+        endTime: [{
+          required: true,
+          message: "请输入结束深度",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
+      const curSampleNameList = vue.ref([]);
+      function getCurSampleNameList() {
+        let _query = {
+          currentPage: 1,
+          projectId: uni.getStorageSync("projectId"),
+          holeId: uni.getStorageSync("holeId"),
+          sort: "desc",
+          sidx: "",
+          menuId: getMenuId("项目列表")
+        };
+        getWaterSampleList(_query).then((res) => {
+          curSampleNameList.value = res.data.list.map((item) => {
+            return item.sampleName;
+          });
+        });
+      }
       const factorTreeList = vue.ref([]);
       const treePicker = vue.ref();
       const selectName = vue.ref([]);
@@ -36796,12 +37116,16 @@ if (uni.restoreGlobal) {
         return _data;
       }
       function addOrUpdateData() {
-        dataForm.value = parseData(dataForm.value);
-        if (!dataForm.id) {
-          addWaterSample(dataForm.value).then((res) => ToastFn("创建成功"));
-        } else {
-          updateWaterSample(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
-        }
+        form.value.validate((valid) => {
+          if (valid) {
+            dataForm.value = parseData(dataForm.value);
+            if (!dataForm.id) {
+              addWaterSample(dataForm.value).then((res) => ToastFn("创建成功"));
+            } else {
+              updateWaterSample(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
+            }
+          }
+        });
       }
       function ToastFn(text) {
         uni.$emit("refresh");
@@ -36816,6 +37140,9 @@ if (uni.restoreGlobal) {
         if (id) {
           getWaterSampleDetail(id).then((res) => {
             dataInfo(res.data);
+            curSampleNameList.value = curSampleNameList.value.filter((item) => {
+              return item !== dataForm.value.sampleName;
+            });
           });
         }
       }
@@ -36823,6 +37150,7 @@ if (uni.restoreGlobal) {
         initData();
         getWellIdOptions();
         getSampleNoOptions();
+        getCurSampleNameList();
       });
       function goToBack() {
         uni.setStorageSync("waterSampleId", null);
@@ -36837,6 +37165,9 @@ if (uni.restoreGlobal) {
         } else {
           _dataAll.files = [];
         }
+        _dataAll.hasParallelSample = _dataAll.hasParallelSample == "true" ? "1" : "0";
+        _dataAll.isInspection = _dataAll.isInspection == "true" ? "1" : "0";
+        _dataAll.hasNapl = _dataAll.hasNapl == "true" ? "1" : "0";
         dataForm.value = _dataAll;
       }
       return (_ctx, _cache) => {
@@ -36894,7 +37225,9 @@ if (uni.restoreGlobal) {
               ),
               vue.createVNode(_component_u_form, {
                 model: vue.unref(dataForm),
-                ref: "Form",
+                ref_key: "form",
+                ref: form,
+                rules: rules2,
                 style: { "margin": "10px" }
               }, {
                 default: vue.withCtx(() => [
@@ -37091,9 +37424,6 @@ if (uni.restoreGlobal) {
                     _: 1
                     /* STABLE */
                   }),
-                  vue.createCommentVNode(` 	<u-form-item label-width='100px' label="采样设备" prop="deviceIdOptions"><u-input
-					v-model="deviceIdOptions.current.label" type="select"
-					@click="deviceIdOptions.show=true" /></u-form-item> `),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
                     label: "分析指标"
@@ -37261,7 +37591,7 @@ if (uni.restoreGlobal) {
                 ]),
                 _: 1
                 /* STABLE */
-              }, 8, ["model"]),
+              }, 8, ["model", "rules"]),
               vue.createVNode(_component_ba_tree_picker, {
                 ref_key: "treePicker",
                 ref: treePicker,
@@ -37329,6 +37659,13 @@ if (uni.restoreGlobal) {
       data
     });
   }
+  function addMateriel$1(data) {
+    return request({
+      url: `/api/material/Apply/stockCheck`,
+      method: "post",
+      data
+    });
+  }
   function getApplyEquipmentListPage(data) {
     return request({
       url: `/api/equipment/Apply/getListPage`,
@@ -37386,6 +37723,22 @@ if (uni.restoreGlobal) {
     __name: "addMateriel",
     emits: ["emitVisible"],
     setup(__props, { expose: __expose, emit: __emit }) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        applyTime: [{
+          required: true,
+          message: "请输入申请时间",
+          trigger: "blur"
+        }],
+        projectId: [{
+          required: true,
+          message: "请输入项目名称",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
       const emits = __emit;
       const selectTimeVisible = vue.ref(false);
       const timeParams = {
@@ -37435,6 +37788,46 @@ if (uni.restoreGlobal) {
           projectOptions.list = res.data;
         });
       }
+      function addData() {
+        form.value.validate((valid) => {
+          if (valid) {
+            dataForm.applyUserId = uni.getStorageSync("userInfo").userId;
+            dataForm.organizeId = uni.getStorageSync("userInfo").organizeId;
+            materielList.value.forEach((item) => {
+              item.applyCount = item.currStockCount - item.lastStockCount;
+            });
+            dataForm.detailList = materielList.value;
+            addMateriel$1(dataForm).then((res) => {
+              dataForm = clearData(dataForm);
+              materielList.value = [];
+              materielOptions.list = [];
+              ToastFn("创建成功");
+            });
+          }
+        });
+      }
+      function ToastFn(text) {
+        uni.$emit("refresh");
+        goToBack();
+        uni.showToast({
+          title: text,
+          duration: 2e3
+        });
+      }
+      function clearData(data) {
+        for (let key in data) {
+          if (Array.isArray(data[key])) {
+            data[key] = [];
+          } else if (Object.prototype.toString.call(data[key]) === "[object Object]") {
+            data[key] = {};
+          } else if (typeof data[key] === "number") {
+            data[key] = 0;
+          } else {
+            data[key] = null;
+          }
+        }
+        return data;
+      }
       const materielOptions = vue.reactive({
         show: false,
         current: {},
@@ -37447,25 +37840,24 @@ if (uni.restoreGlobal) {
         for (let val of materielOptions.list) {
           if (val.materialId === current.value) {
             currentData = val;
-            formatAppLog("log", "at pages/labOperation/materiel/addMateriel.vue:174", currentData);
-            return;
+            break;
           }
         }
         let selectMaterie = {
-          applyCount: 0,
+          applyCount: currentData.currStockCount - currentData.lastStockCount,
           applyType: dataForm.applyType,
           // currStockCount: current.currStockCount,
           id: generateUUID(),
           isHazchem: currentData.isHazchem,
           lastStockCount: currentData.lastStockCount,
-          //现有库存
+          //
           materialId: currentData.materialId,
           materialModel: currentData.materialModel,
           materialName: currentData.materialName,
           materialPrice: currentData.materialPrice,
-          currStockCount: 0,
+          currStockCount: currentData.currStockCount,
           //盘点数量
-          storeState: currentData.currStockCount
+          storeState: currentData.storeState
         };
         materielList.value[materielIdx.value] = selectMaterie;
       }
@@ -37494,14 +37886,14 @@ if (uni.restoreGlobal) {
           });
         }
       }
-      function addMateriel2() {
+      function addMaterielList() {
         let newMaterie = {
           applyCount: null,
           applyType: null,
-          currStockCount: null,
+          currStockCount: 0,
           id: generateUUID(),
-          isHazchem: null,
-          lastStockCount: null,
+          isHazchem: 0,
+          lastStockCount: 0,
           materialId: null,
           materialModel: null,
           materialName: null,
@@ -37509,8 +37901,6 @@ if (uni.restoreGlobal) {
           storeState: null
         };
         materielList.value.push(newMaterie);
-      }
-      function addOrUpdateData() {
       }
       onLoad(() => {
         getProjectList();
@@ -37571,7 +37961,7 @@ if (uni.restoreGlobal) {
                   style: { "font-size": "16px", "position": "absolute", "left": "50%", "top": "50%", "transform": "translate(-50%,-50%)" }
                 }, "盘点物料库存"),
                 vue.createElementVNode("text", {
-                  onClick: _cache[1] || (_cache[1] = ($event) => addOrUpdateData()),
+                  onClick: _cache[1] || (_cache[1] = ($event) => addData()),
                   type: "primary",
                   class: "submit",
                   style: { "color": "blue", "line-height": "44px", "margin-right": "10px", "float": "right" }
@@ -37592,15 +37982,17 @@ if (uni.restoreGlobal) {
             vue.createVNode(driver),
             vue.createVNode(_component_u_form, {
               model: vue.unref(dataForm),
-              ref: "Form",
-              style: { "margin": "10px" }
+              ref_key: "form",
+              ref: form,
+              rules: "rules",
+              style: { "margin": "auto", "width": "90%" }
             }, {
               default: vue.withCtx(() => [
                 vue.createCommentVNode(` <u-form-item label-width='100px' label="记录编号" prop="startDepth"><u-input  v-model="dataForm.startDepth" /></u-form-item> `),
                 vue.createVNode(_component_u_form_item, {
                   "label-width": "100px",
                   label: "选择项目",
-                  prop: "checkTime"
+                  prop: "projectId"
                 }, {
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_u_input, {
@@ -37613,22 +38005,6 @@ if (uni.restoreGlobal) {
                   _: 1
                   /* STABLE */
                 }),
-                vue.createCommentVNode(` <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> `),
-                vue.createCommentVNode(` <u-form-item label-width='100px' label="检查人" prop="checkUserId"><u-input v-model="dataForm.solumColor" /></u-form-item> `),
-                vue.createVNode(_component_u_form_item, {
-                  "label-width": "100px",
-                  label: "申请人",
-                  prop: "weather"
-                }, {
-                  default: vue.withCtx(() => [
-                    vue.createVNode(_component_u_input, {
-                      modelValue: vue.unref(dataForm).weather,
-                      "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => vue.unref(dataForm).weather = $event)
-                    }, null, 8, ["modelValue"])
-                  ]),
-                  _: 1
-                  /* STABLE */
-                }),
                 vue.createVNode(_component_u_form_item, {
                   "label-width": "100px",
                   label: "申请时间",
@@ -37636,9 +38012,9 @@ if (uni.restoreGlobal) {
                 }, {
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_u_input, {
-                      onClick: _cache[5] || (_cache[5] = ($event) => selectTimeVisible.value = true),
+                      onClick: _cache[4] || (_cache[4] = ($event) => selectTimeVisible.value = true),
                       modelValue: vue.unref(dataForm).applyTime,
-                      "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => vue.unref(dataForm).applyTime = $event)
+                      "onUpdate:modelValue": _cache[5] || (_cache[5] = ($event) => vue.unref(dataForm).applyTime = $event)
                     }, null, 8, ["modelValue"])
                   ]),
                   _: 1
@@ -37652,7 +38028,7 @@ if (uni.restoreGlobal) {
                   default: vue.withCtx(() => [
                     vue.createVNode(_component_u_input, {
                       modelValue: vue.unref(dataForm).weather,
-                      "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => vue.unref(dataForm).weather = $event)
+                      "onUpdate:modelValue": _cache[6] || (_cache[6] = ($event) => vue.unref(dataForm).weather = $event)
                     }, null, 8, ["modelValue"])
                   ]),
                   _: 1
@@ -37664,7 +38040,7 @@ if (uni.restoreGlobal) {
             }, 8, ["model"]),
             vue.createVNode(_component_u_picker, {
               modelValue: selectTimeVisible.value,
-              "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => selectTimeVisible.value = $event),
+              "onUpdate:modelValue": _cache[7] || (_cache[7] = ($event) => selectTimeVisible.value = $event),
               mode: "time",
               params: timeParams,
               onConfirm: getTime,
@@ -37682,7 +38058,7 @@ if (uni.restoreGlobal) {
                 type: "success",
                 class: "add-btn",
                 size: "mini",
-                onClick: addMateriel2
+                onClick: addMaterielList
               }, {
                 default: vue.withCtx(() => [
                   vue.createTextVNode("新增")
@@ -37691,7 +38067,7 @@ if (uni.restoreGlobal) {
                 /* STABLE */
               })
             ]),
-            vue.createVNode(driver),
+            vue.createVNode(driver, { style: { "margin": "10px auto" } }),
             (vue.openBlock(true), vue.createElementBlock(
               vue.Fragment,
               null,
@@ -37715,7 +38091,7 @@ if (uni.restoreGlobal) {
                     model: materielList.value[index],
                     ref_for: true,
                     ref: "Form",
-                    style: { "margin": "10px" }
+                    style: { "margin": "auto", "width": "90%" }
                   }, {
                     default: vue.withCtx(() => [
                       vue.createVNode(
@@ -37762,22 +38138,26 @@ if (uni.restoreGlobal) {
                       ),
                       vue.createCommentVNode(` <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> `),
                       vue.createCommentVNode(` <u-form-item label-width='100px' label="检查人" prop="checkUserId"><u-input v-model="dataForm.solumColor" /></u-form-item> `),
-                      vue.createVNode(_component_u_form_item, {
-                        "label-width": "100px",
-                        label: "盘点数量",
-                        prop: "currStockCount"
-                      }, {
-                        default: vue.withCtx(() => [
-                          vue.createVNode(_component_u_number_box, {
-                            "positive-integer": false,
-                            modelValue: _ctx.value,
-                            "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => _ctx.value = $event),
-                            onChange: _ctx.valChange
-                          }, null, 8, ["modelValue", "onChange"])
-                        ]),
-                        _: 1
-                        /* STABLE */
-                      }),
+                      vue.createVNode(
+                        _component_u_form_item,
+                        {
+                          "label-width": "100px",
+                          label: "盘点数量",
+                          prop: "applyCount"
+                        },
+                        {
+                          default: vue.withCtx(() => [
+                            vue.createVNode(_component_u_number_box, {
+                              modelValue: item.applyCount,
+                              "onUpdate:modelValue": ($event) => item.applyCount = $event
+                            }, null, 8, ["modelValue", "onUpdate:modelValue"])
+                          ]),
+                          _: 2
+                          /* DYNAMIC */
+                        },
+                        1024
+                        /* DYNAMIC_SLOTS */
+                      ),
                       vue.createVNode(_component_u_form_item, {
                         "label-width": "100px",
                         label: "盘存说明",
@@ -37786,7 +38166,7 @@ if (uni.restoreGlobal) {
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_u_input, {
                             modelValue: vue.unref(dataForm).temperature,
-                            "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => vue.unref(dataForm).temperature = $event)
+                            "onUpdate:modelValue": _cache[8] || (_cache[8] = ($event) => vue.unref(dataForm).temperature = $event)
                           }, null, 8, ["modelValue"])
                         ]),
                         _: 1
@@ -37803,7 +38183,7 @@ if (uni.restoreGlobal) {
             )),
             vue.createVNode(_component_u_select, {
               modelValue: projectOptions.show,
-              "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => projectOptions.show = $event),
+              "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => projectOptions.show = $event),
               "value-name": "id",
               "label-name": "name",
               list: projectOptions.list,
@@ -37811,7 +38191,7 @@ if (uni.restoreGlobal) {
             }, null, 8, ["modelValue", "list"]),
             vue.createVNode(_component_u_select, {
               modelValue: materielOptions.show,
-              "onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => materielOptions.show = $event),
+              "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => materielOptions.show = $event),
               "value-name": "materialId",
               "label-name": "materialName",
               list: materielOptions.list,
@@ -37876,6 +38256,9 @@ if (uni.restoreGlobal) {
       onLoad(() => {
         reachBottomFlag.value = false;
         getList();
+        uni.$on("refresh", () => {
+          getList();
+        });
       });
       onReachBottom(() => {
         reachBottomFlag.value = true;
@@ -38021,6 +38404,32 @@ if (uni.restoreGlobal) {
     __name: "applyInstrument",
     emits: ["emitVisible"],
     setup(__props, { expose: __expose, emit: __emit }) {
+      const form = vue.ref(null);
+      const rules2 = vue.reactive({
+        applyTime: [{
+          required: true,
+          message: "请输入申请时间",
+          trigger: "blur"
+        }],
+        useDay: [{
+          required: true,
+          message: "请输入使用日期",
+          trigger: "blur"
+        }],
+        useStarTime: [{
+          required: true,
+          message: "请输入开始时段",
+          trigger: "blur"
+        }],
+        useOverTime: [{
+          required: true,
+          message: "请输入结束时段",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
+      });
       const emits = __emit;
       const timeParams = vue.reactive({
         year: true,
@@ -38068,7 +38477,6 @@ if (uni.restoreGlobal) {
         InstrumentList.value = [];
         useOverTime.value = null;
         useStarTime.value = null;
-        formatAppLog("log", "at pages/labOperation/instrument/applyInstrument.vue:153", dataForm.value);
         if (id.value) {
           getEquipmentDetail(id.value).then((res) => {
             dataForm.value = res.data;
@@ -38090,7 +38498,6 @@ if (uni.restoreGlobal) {
                 useState: item.useState
               };
             });
-            formatAppLog("log", "at pages/labOperation/instrument/applyInstrument.vue:175", res.data, "ins");
           });
         }
       }
@@ -38120,7 +38527,6 @@ if (uni.restoreGlobal) {
         }
       }
       function getTime(e) {
-        formatAppLog("log", "at pages/labOperation/instrument/applyInstrument.vue:208", curTimeKey.value);
         if (curTimeType.value == 0) {
           if (curTimeKey.value === "applyTime")
             dataForm.value.applyTime = `${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`;
@@ -38228,19 +38634,23 @@ if (uni.restoreGlobal) {
         InstrumentList.value = InstrumentList.value.filter((item, index) => index !== idx);
       }
       function addOrUpdateData() {
-        dataForm.value.applyUserId = uni.getStorageSync("userInfo").userId;
-        dataForm.value.organizeId = uni.getStorageSync("userInfo").organizeId;
-        dataForm.value.detailList = InstrumentList.value;
-        dataForm.value.useRang = `${useStarTime.value}-${useOverTime.value}`;
-        dataForm.value.detailList.forEach((item) => {
-          item.useRang = `${useStarTime.value}-${useOverTime.value}`;
-          item.useDay = dataForm.value.useDay;
+        form.value.validate((valid) => {
+          if (valid) {
+            dataForm.value.applyUserId = uni.getStorageSync("userInfo").userId;
+            dataForm.value.organizeId = uni.getStorageSync("userInfo").organizeId;
+            dataForm.value.detailList = InstrumentList.value;
+            dataForm.value.useRang = `${useStarTime.value}-${useOverTime.value}`;
+            dataForm.value.detailList.forEach((item) => {
+              item.useRang = `${useStarTime.value}-${useOverTime.value}`;
+              item.useDay = dataForm.value.useDay;
+            });
+            if (!id.value) {
+              addEquipment(dataForm.value).then((res) => ToastFn("创建成功！"));
+            } else {
+              updateEquipment(id.value, dataForm.value).then((res) => ToastFn("更新成功！"));
+            }
+          }
         });
-        if (!id.value) {
-          addEquipment(dataForm.value).then((res) => ToastFn("创建成功！"));
-        } else {
-          updateEquipment(id.value, dataForm.value).then((res) => ToastFn("更新成功！"));
-        }
       }
       function ToastFn(text) {
         uni.$emit("refresh");
@@ -38312,7 +38722,7 @@ if (uni.restoreGlobal) {
                   type: "primary",
                   class: "submit",
                   style: { "color": "blue", "line-height": "44px", "margin-right": "10px", "float": "right" }
-                }, "新增")
+                }, "保存")
               ])
             ]),
             vue.createElementVNode("view", { class: "content-box" }, [
@@ -38323,8 +38733,10 @@ if (uni.restoreGlobal) {
               vue.createVNode(driver),
               vue.createVNode(_component_u_form, {
                 model: vue.unref(dataForm),
-                ref: "Form",
-                style: { "margin": "10px" }
+                ref_key: "form",
+                ref: form,
+                rules: rules2,
+                style: { "margin": "auto", "width": "90%" }
               }, {
                 default: vue.withCtx(() => [
                   vue.createVNode(_component_u_form_item, {
@@ -38404,7 +38816,7 @@ if (uni.restoreGlobal) {
                 ]),
                 _: 1
                 /* STABLE */
-              }, 8, ["model"]),
+              }, 8, ["model", "rules"]),
               vue.createVNode(_component_u_picker, {
                 modelValue: selectTimeVisible.value,
                 "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => selectTimeVisible.value = $event),
@@ -38434,7 +38846,7 @@ if (uni.restoreGlobal) {
                   /* STABLE */
                 })
               ]),
-              vue.createVNode(driver),
+              vue.createVNode(driver, { style: { "margin": "10px auto" } }),
               (vue.openBlock(true), vue.createElementBlock(
                 vue.Fragment,
                 null,
@@ -38462,7 +38874,7 @@ if (uni.restoreGlobal) {
                       model: item,
                       ref_for: true,
                       ref: "Form",
-                      style: { "margin": "10px" }
+                      style: { "margin": "auto", "width": "90%" }
                     }, {
                       default: vue.withCtx(() => [
                         vue.createVNode(

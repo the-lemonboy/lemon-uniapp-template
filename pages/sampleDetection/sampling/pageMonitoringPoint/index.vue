@@ -8,41 +8,43 @@
 		<view class="nav-container" style="height: 44px;">
 			<view class="nav-bar"
 				style="position: fixed; z-index: 99; background-color: white;box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
-			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
-			<text class="title"
-				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
-			<text @click="scanQRcode" type="primary" class="submit"
-				style="color:blue; line-height: 44px; margin-right: 10px; float:right;"><uni-icons type="scan" size="30"></uni-icons></text>
-		</view>
+				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
+				<text class="title"
+					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
+				<text @click="scanQRcode" type="primary" class="submit"
+					style="color:blue; line-height: 44px; margin-right: 10px; float:right;"><uni-icons type="scan"
+						size="30"></uni-icons></text>
+			</view>
 		</view>
 		<view class="link-container">
 			<view @click="goToSampling(item.routerUrl)" class="link-box" v-for='item of linkOptions' :key='item.id'>
-				<image :src='item.iconUrl' style="width: 45rpx; margin-bottom: 5px; height: 45rpx;" ></image>
+				<image :src='item.iconUrl' style="width: 45rpx; margin-bottom: 5px; height: 45rpx;"></image>
 				<text>{{item.iconName}}</text>
 			</view>
 		</view>
-	
+
 		<view class="tab-box">
-			<u-tabs :font-size='20' :inactive-color="'#adb5bd'" :list="tabOptions" :is-scroll="true" v-model="tabCurent" @change="change"></u-tabs>
+			<u-tabs :font-size='20' :inactive-color="'#adb5bd'" :list="tabOptions" :is-scroll="true" v-model="tabCurent"
+				@change="change"></u-tabs>
 		</view>
-			<driver></driver>
-	<view class="content">
-		<view class="holeRecord-container" v-if="tabCurent === 0">
-			<holeRecord></holeRecord>
+		<driver></driver>
+		<view class="content">
+			<view class="holeRecord-container" v-if="tabCurent === 0">
+				<holeRecord></holeRecord>
+			</view>
+			<view class="waterSample-container" v-else-if="tabCurent === 1">
+				<soilSample></soilSample>
+			</view>
+			<view class="wellBase-container" v-else-if="tabCurent === 2">
+				<wellBase></wellBase>
+			</view>
+			<view class="wellWashRecord-container" v-else-if="tabCurent === 3">
+				<wellWashRecord></wellWashRecord>
+			</view>
+			<view class="soilSample-container" v-else-if="tabCurent === 4">
+				<waterSample></waterSample>
+			</view>
 		</view>
-		<view class="waterSample-container" v-else-if="tabCurent === 1">
-			<soilSample></soilSample>
-		</view>
-		<view class="wellBase-container" v-else-if="tabCurent === 2">
-			<wellBase></wellBase>
-		</view>
-		<view class="wellWashRecord-container" v-else-if="tabCurent === 3">
-			<wellWashRecord></wellWashRecord>
-		</view>
-		<view class="soilSample-container" v-else-if="tabCurent === 4">
-			<waterSample></waterSample>
-		</view>
-	</view>
 	</view>
 </template>
 
@@ -117,7 +119,7 @@
 		{
 			name: '水样记录'
 		},
-		
+
 	])
 	const tabCurent = ref(0)
 
@@ -133,27 +135,29 @@
 			url: router,
 		})
 	}
+
 	function goToBack() {
 		uni.setStorageSync('holeId', null)
 		uni.navigateBack({
 			delta: 1
 		})
 	}
-	function scanQRcode(){
+
+	function scanQRcode() {
 		uni.scanCode({
-			success: function (res) {
+			success: function(res) {
 				const result = JSON.parse(res.result)
-				if(result.type === 'soilSample'){
+				if (result.type === 'soilSample') {
 					uni.setStorageSync('soilSampleId', result.id)
 					uni.navigateTo({
-						url:'/pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/addOrEditor'
+						url: '/pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/addOrEditor'
 					})
-				}else if(result.type === 'waterSample'){
+				} else if (result.type === 'waterSample') {
 					uni.setStorageSync('waterSampleId', result.id)
 					uni.navigateTo({
-						url:'/pages/sampleDetection/sampling/pageMonitoringPoint/waterSample/addOrEditor'
+						url: '/pages/sampleDetection/sampling/pageMonitoringPoint/waterSample/addOrEditor'
 					})
-				}else{
+				} else {
 					uni.showToast({
 						title: '无效二维码',
 						duration: 2000
@@ -171,10 +175,11 @@
 		box-sizing: border-box;
 	}
 
-.tab-box{
-	width: 95%;
-	margin: auto;
-}
+	.tab-box {
+		width: 95%;
+		margin: auto;
+	}
+
 	.link-container {
 		// display: flex;
 		// flex-direction: row;
@@ -182,8 +187,9 @@
 		// box-sizing: border-box;
 		margin-top: 15px;
 		display: grid;
-		grid-template-columns: repeat(4,1fr);
+		grid-template-columns: repeat(4, 1fr);
 		grid-row-gap: 20px;
+
 		.link-box {
 			justify-items: center;
 			align-items: center;

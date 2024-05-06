@@ -61,24 +61,37 @@ export function getCurrentTime() {
 }
 // 深拷贝
 export function deepCopy(obj) {
-  // 如果传入的是基本类型，则直接返回
   if (obj === null || typeof obj !== 'object') {
     return obj;
   }
-
-  // 根据传入对象的类型，创建一个空对象或者数组
   const result = Array.isArray(obj) ? [] : {};
-
-  // 遍历传入对象的所有属性或者元素
   for (let key in obj) {
-    // 如果属性是对象或者数组，则递归调用深拷贝函数
     if (typeof obj[key] === 'object' && obj[key] !== null) {
       result[key] = deepCopy(obj[key]);
     } else {
-      // 如果是基本类型，则直接复制给新对象或数组
       result[key] = obj[key];
     }
   }
 
   return result;
+}
+
+
+// 时间戳转时间
+export function timestampToTime(timestamp) {
+    const date = new Date(timestamp); // 使用时间戳创建 Date 对象
+    const year = date.getFullYear(); // 获取年份
+    const month = date.getMonth() + 1; // 获取月份，注意月份从 0 开始，所以要加 1
+    const day = date.getDate(); // 获取日期
+    const hours = date.getHours(); // 获取小时
+    const minutes = date.getMinutes(); // 获取分钟
+    const seconds = date.getSeconds(); // 获取秒数
+    
+    // 辅助函数，用于在数字小于 10 时在前面添加 0
+    const addZero = (num) => (num < 10 ? '0' + num : num);
+    
+    // 构造时间字符串
+    const timeString = `${year}-${addZero(month)}-${addZero(day)} ${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`;
+    
+    return timeString;
 }

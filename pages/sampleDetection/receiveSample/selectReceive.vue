@@ -65,8 +65,8 @@
 		ref,
 		defineExpose,
 		defineEmits,
-		toRaw,
-		reactive
+		reactive,
+		watch
 	} from 'vue'
 	import {
 		getSendsampleDetail,
@@ -204,6 +204,14 @@ function ToastFn(text){
 			})
 		}
 	}
+	watch(dataForm,(val)=>{
+		// console.log(val)
+		if(!val.detailList.some(item=>!item.send || item.send!==true)){
+			selectValue.value.checked = true
+		}else{
+			selectValue.value.checked = false
+		}
+	},{deep:true})
 	defineExpose({
 		addFlag,
 		initData,

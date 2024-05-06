@@ -56,7 +56,7 @@
 			</u-form>
 			<u-button class="xrf-btn" type="primary" @click="goXrfConf">编辑xrf</u-button>
 			<ba-tree-picker ref="treePicker" :multiple='true' @select-change="selectChange" title="选择分析指标"
-				:localdata="factorTreeList" valueKey="id" textKey="factorName" childrenKey="children" />
+			@initDataName="initDataName" :propsInitId="initAnalysisFactorIds" :selectParent="false"	:localdata="factorTreeList" valueKey="id" textKey="factorName" childrenKey="children" />
 			<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 				:default-time='getCurrentTime()'></u-picker>
 			<u-select v-model="sampleNoOptions.show" value-name="sampleNo" label-name="sampleNo"
@@ -140,18 +140,21 @@
 	const curSampleNameList = ref([])
 
 	function getCurSampleNameList() {
-		let _query = {
-			currentPage: 1,
-			projectId: uni.getStorageSync('projectId'),
-			holeId: uni.getStorageSync('holeId'),
-			sort: 'desc',
-			sidx: '',
-			menuId: getMenuId('项目列表')
-		}
-		getSoilRecordList(_query).then(res => {
-			curSampleNameList.value = res.data.list.map(item => {
-			          return item.sampleName
-			        })
+		return new Promise(resolve=>{
+			let _query = {
+				currentPage: 1,
+				projectId: uni.getStorageSync('projectId'),
+				holeId: uni.getStorageSync('holeId'),
+				sort: 'desc',
+				sidx: '',
+				menuId: getMenuId('项目列表')
+			}
+			getSoilRecordList(_query).then(res => {
+				curSampleNameList.value = res.data.list.map(item => {
+				          return item.sampleName
+				        })
+						resolve()
+			})
 		})
 	}
 	const visible = ref(true)
@@ -204,12 +207,33 @@
 	}
 	//监听选择（ids为数组）
 	function selectChange(ids, names) {
+		let resulteIds = ids.map(item => BigInt(item))
+		 resulteIds = resulteIds.join(',')
 		dataForm.value.analysisFactorIds = ids
 		selectName.value = names
 	}
+	function initDataName(val){
+		if(!selectName.value.length){
+			val.forEach((item,index)=>{
+					if(index<val.length-1){
+						selectName.value += item + '/'
+					}else{
+						selectName.value += item
+					}
+			})
+		}
+	}
 	onLoad(() => {
 		getfactorTypeOptions()
+		// initDataName()
 	})
+	 // initData里面执行
+	const initAnalysisFactorIds = ref([])
+	function handelAnalysisFactorIds(){
+		if(dataForm.value.analysisFactorIds){
+		initAnalysisFactorIds.value = dataForm.value.analysisFactorIds.split(",")
+		}
+	}
 	// 样品编号
 	const sampleNoOptions = reactive({
 		show: false,
@@ -364,24 +388,28 @@
 	}
 
 	function initData() {
-		const id = uni.getStorageSync('soilSampleId')
-		if (id) {
-			getSoilRecordDetail(id).then(res => {
-				dataInfo(res.data)
-				curSampleNameList.value = curSampleNameList.value.filter(item => {
-					return item !== dataForm.value.sampleName
+		return new Promise(resolve=>{
+			const id = uni.getStorageSync('soilSampleId')
+			if (id) {
+				getSoilRecordDetail(id).then(res => {
+					dataInfo(res.data)
+					curSampleNameList.value = curSampleNameList.value.filter(item => {
+						return item !== dataForm.value.sampleName
+					})
+					handelAnalysisFactorIds()
+					XRFConfList.value = dataForm.value.xrfDetailsList
+					XRFConfLength.value = dataForm.value.xrfDetailsList.length
 				})
-				XRFConfList.value = dataForm.value.xrfDetailsList
-				XRFConfLength.value = dataForm.value.xrfDetailsList.length
-			})
-		} else {
-			initXRF()
-		}
+			} else {
+				initXRF()
+			}
+		})
 	}
-	onLoad(() => {
-		initData()
+	onLoad(async() => {
+		await getCurSampleNameList()
+		await initData()
 		getSampleNoOptions()
-		getCurSampleNameList()
+		
 	})
 
 	function goToBack() {

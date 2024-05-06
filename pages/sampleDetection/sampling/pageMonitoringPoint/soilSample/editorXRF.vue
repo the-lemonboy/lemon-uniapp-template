@@ -11,7 +11,7 @@
 					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 				<text class="title"
-					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">建井信息</text>
+					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">XRF配置</text>
 				<text @click="submitXrf()" type="primary" class="submit"
 					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 			</view>
@@ -23,13 +23,14 @@
 			</u-form>
 			<u-popup v-model="popupShow" mode='bottom'>
 				<view class="popup-container">
-					<u-form :model="newConf" ref="popRef" style="margin: 20px;">
+					<u-form :model="newConf" :rules="rules" ref="popRef" style="margin: 20px;">
 						<u-form-item label-width='100px' label="属性" prop="elementCode"><u-input
 								v-model="newConf.elementCode" /></u-form-item>
 						<u-form-item label-width='100px' label="值" prop="reading"><u-input
-								v-model="newConf.reading" /></u-form-item></u-form>
+								v-model="newConf.reading" /></u-form-item>
+					</u-form>
 					<view class="popup-btn">
-						<u-button type="primary" @click="popupShow = false">取消</u-button>
+						<u-button type="success" @click="popupShow = false">取消</u-button>
 						<u-button type="primary" @click="submitNewConf">确认</u-button>
 					</view>
 				</view>
@@ -70,17 +71,19 @@
 		elementSort: null,
 		reading: null
 	})
-	const popupRules = reactive({
-		elementCode: [{
+	const popRef = ref(null)
+	const rules = reactive({
+	elementCode: [{
 			required: true,
-			message: '请输入属性',
+			message: '请输入图层类型',
 			trigger: 'blur',
-		}],
+		}]
 	})
-	const popRef = ref()
-
+	onReady(() => {
+		popRef.value.setRules(rules);
+	})
 	function submitNewConf() {
-		popRef.value.validate((valid) => {
+		popRef.value.validate(valid => {
 			if (valid) {
 				newConf.value.elementSort = curXrfConf.value.length + 1
 				newConf.value.elementName = newConf.value.elementCode
@@ -100,23 +103,19 @@
 
 	function showpop() {
 		popupShow.value = true
-
 	}
 	// 删除
 	function delConf(index) {
 		let tempData = deepCopy(curXrfConf.value)
-		if (index > curXrfConfLength.value) {
+		if (curXrfConf.value.length - 1> curXrfConfLength.value ) {
 			for (let i = index; i < tempData.length; i++) {
-				tempData[index - 1] = tempData[index]
-				tempData[index - 1].elementSort = i.toString()
+				tempData[index] = tempData[index+1]
+				tempData[index].elementSort = i.toString()
 			}
 		}
 		tempData.pop()
 		curXrfConf.value = tempData
 	}
-	onReady(() => {
-		popRef.value.setRules(popupRules)
-	})
 	const emits = defineEmits(['curConfData','emitVisible'])
 
 	function submitXrf() {

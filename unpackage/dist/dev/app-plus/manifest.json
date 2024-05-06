@@ -46,7 +46,42 @@
     "usingComponents": true,
     "nvueStyleCompiler": "uni-app",
     "compilerVersion": 3,
+    "compatible": {
+      "ignoreVersion": true
+    },
     "distribute": {
+      "icons": {
+        "android": {
+          "hdpi": "unpackage/res/icons/72x72.png",
+          "xhdpi": "unpackage/res/icons/96x96.png",
+          "xxhdpi": "unpackage/res/icons/144x144.png",
+          "xxxhdpi": "unpackage/res/icons/192x192.png"
+        },
+        "ios": {
+          "appstore": "unpackage/res/icons/1024x1024.png",
+          "ipad": {
+            "app": "unpackage/res/icons/76x76.png",
+            "app@2x": "unpackage/res/icons/152x152.png",
+            "notification": "unpackage/res/icons/20x20.png",
+            "notification@2x": "unpackage/res/icons/40x40.png",
+            "proapp@2x": "unpackage/res/icons/167x167.png",
+            "settings": "unpackage/res/icons/29x29.png",
+            "settings@2x": "unpackage/res/icons/58x58.png",
+            "spotlight": "unpackage/res/icons/40x40.png",
+            "spotlight@2x": "unpackage/res/icons/80x80.png"
+          },
+          "iphone": {
+            "app@2x": "unpackage/res/icons/120x120.png",
+            "app@3x": "unpackage/res/icons/180x180.png",
+            "notification@2x": "unpackage/res/icons/40x40.png",
+            "notification@3x": "unpackage/res/icons/60x60.png",
+            "settings@2x": "unpackage/res/icons/58x58.png",
+            "settings@3x": "unpackage/res/icons/87x87.png",
+            "spotlight@2x": "unpackage/res/icons/80x80.png",
+            "spotlight@3x": "unpackage/res/icons/120x120.png"
+          }
+        }
+      },
       "google": {
         "permissions": [
           "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
@@ -140,20 +175,20 @@
       "height": "50px",
       "list": [
         {
-          "iconPath": "/static/tabbar-icons/index.png",
-          "selectedIconPath": "/static/tabbar-icons/index_s.png",
+          "iconPath": "/static/tabbar-icons/sample.png",
+          "selectedIconPath": "/static/tabbar-icons/sample_s.png",
           "text": "采样检测",
           "pagePath": "pages/sampleDetection/index"
         },
         {
-          "iconPath": "/static/tabbar-icons/index.png",
-          "selectedIconPath": "/static/tabbar-icons/index_s.png",
+          "iconPath": "/static/tabbar-icons/lab.png",
+          "selectedIconPath": "/static/tabbar-icons/lab_s.png",
           "text": "实验室运维",
           "pagePath": "pages/labOperation/index"
         },
         {
-          "iconPath": "/static/tabbar-icons/feeds.png",
-          "selectedIconPath": "/static/tabbar-icons/feeds_s.png",
+          "iconPath": "/static/tabbar-icons/me.png",
+          "selectedIconPath": "/static/tabbar-icons/me_s.png",
           "text": "关于我",
           "pagePath": "pages/me/index"
         }

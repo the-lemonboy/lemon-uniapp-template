@@ -1842,7 +1842,7 @@ uni-scroll-view[data-v-750d9d75] {
 /* 透明度 */
 /* 文章场景相关 */
 .detail-container[data-v-232f9d69] {
-  padding: 0;
+  padding-bottom: 0.625rem;
   margin: 0;
   box-sizing: border-box;
 }

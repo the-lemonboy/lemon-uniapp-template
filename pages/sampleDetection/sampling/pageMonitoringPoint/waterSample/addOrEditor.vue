@@ -70,7 +70,7 @@
 			</u-form-item>
 		</u-form>
 		<ba-tree-picker ref="treePicker" :multiple='true' @select-change="selectChange" title="选择分析指标"
-		    :localdata="factorTreeList" valueKey="id" textKey="factorName" childrenKey="children" />
+		  @initDataName="initDataName" :propsInitId="initAnalysisFactorIds" :localdata="factorTreeList" :selectParent="false" valueKey="id" textKey="factorName" childrenKey="children" />
 		<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 			:default-time='getCurrentTime()'></u-picker>
 		<u-select v-model="wellIdOptions.show" value-name="wellNo" label-name="wellNo" :list="wellIdOptions.list"
@@ -158,18 +158,21 @@
 	const curSampleNameList = ref([])
 	
 	function getCurSampleNameList() {
-		let _query = {
-			currentPage: 1,
-			projectId: uni.getStorageSync('projectId'),
-			holeId: uni.getStorageSync('holeId'),
-			sort: 'desc',
-			sidx: '',
-			menuId: getMenuId('项目列表')
-		}
-		getWaterSampleList(_query).then(res => {
-			curSampleNameList.value = res.data.list.map(item => {
-			          return item.sampleName
-			        })
+		return new Promise(resolve=>{
+			let _query = {
+				currentPage: 1,
+				projectId: uni.getStorageSync('projectId'),
+				holeId: uni.getStorageSync('holeId'),
+				sort: 'desc',
+				sidx: '',
+				menuId: getMenuId('项目列表')
+			}
+			getWaterSampleList(_query).then(res => {
+				curSampleNameList.value = res.data.list.map(item => {
+				          return item.sampleName
+				        })
+						resolve()
+			})
 		})
 	}
 	// 分析指标
@@ -194,8 +197,28 @@
 			 dataForm.value.analysisFactorIds = resulteIds
 			 selectName.value = names
 	 }
+	 function initDataName(val){
+	 	if(!selectName.value.length){
+	 		val.forEach((item,index)=>{
+	 				if(index<val.length-1){
+	 					selectName.value += item + '/'
+	 				}else{
+	 					selectName.value += item
+	 				}
+	 		})
+	 	}
+	 }
+	 const initAnalysisFactorIds = ref([])
+	 // initData里面执行
+	 function handelAnalysisFactorIds(){
+		 if(dataForm.value.analysisFactorIds){
+			 initAnalysisFactorIds.value = dataForm.value.analysisFactorIds.split(",")
+			console.log(initAnalysisFactorIds.value ) 
+		 }
+	 }
 	 onLoad(()=>{
 		 getfactorTypeOptions()
+		 // initDataName()
 	 })
 	// 监测井类型
 	const wellIdOptions = reactive({
@@ -370,21 +393,28 @@ function ToastFn(text){
 		});
 	}
 	function initData() {
-		const id = uni.getStorageSync('waterSampleId')
-		if (id) {
-			getWaterSampleDetail(id).then(res => {
-				dataInfo(res.data)	
-				curSampleNameList.value = curSampleNameList.value.filter(item => {
-					return item !== dataForm.value.sampleName
+		return new Promise(resolve=>{
+			const id = uni.getStorageSync('waterSampleId')
+			if (id) {
+				getWaterSampleDetail(id).then(res => {
+					dataInfo(res.data)	
+					curSampleNameList.value = curSampleNameList.value.filter(item => {
+						return item !== dataForm.value.sampleName
+					})
+					handelAnalysisFactorIds()
+					resolve()
 				})
-			})
-		}
+			}
+		})
 	}
-	onLoad(() => {
-		initData()
+	onLoad(async() => {
 		getWellIdOptions()
 		getSampleNoOptions()
-		getCurSampleNameList()
+		await getCurSampleNameList()
+		await initData()
+		
+		
+		
 	})
 
 	function goToBack() {

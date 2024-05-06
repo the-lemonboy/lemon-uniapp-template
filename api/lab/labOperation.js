@@ -106,26 +106,18 @@ export function getEquipmentBaseDetail(id){
 		method:'get'
 	})
 }
-// 获取详细
-// export function getSoilRecordDetail(id){
-// 	return request({
-// 		url:`/api/project/SoilSample/${id}`,
-// 		method:'get'
-// 	})
-// }
-// // 新增
-// export function addSoilRecord(data){
-// 	return request({
-// 		url:`/api/project/SoilSample`,
-// 		method: 'post',
-// 		data
-// 	})
-// }
-// // 修改
-// export function updateSoilRecord(id,data){
-// 	return request({
-// 		url:`/api/project/SoilSample/${id}`,
-// 		method:'put',
-// 		data
-// 	})
-// }
+// 打开门禁
+export function openDoor(ip,usename,password){
+	return request({
+		url:`/api/device/DeviceOperate/openGate?ip=${ip}&userName=${usename}&password=${password}`,
+		method: 'post'
+	})
+}
+
+export function getDoorInfoList(data){
+	return request({
+		url:`/api/device/GateInfo/getList`,
+		method:'post',
+		data
+	})
+}

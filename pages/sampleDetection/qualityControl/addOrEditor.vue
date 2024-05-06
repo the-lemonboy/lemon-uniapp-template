@@ -80,7 +80,6 @@
 	onReady(() => {
 		form.value.setRules(rules);
 	})
-	const emits = defineEmits(['emitVisible'])
 	// 选择时间
 	const timeParams = reactive({
 		year: true,
@@ -168,7 +167,6 @@
 	}
 
 	function ToastFn(text) {
-		// emits('initList',checkType.value)
 		uni.$emit('refresh', checkType.value)
 		goToBack()
 		uni.showToast({
@@ -200,12 +198,16 @@
 			getQCCheckConfList()
 		}
 	}
-
+	const emits = defineEmits(['emitVisible','curTab'])
 	function goToBack() {
-		// uni.setStorageSync('holeRecordId', null
+		if(itemId.value){
+			emits('curTab', dataForm.value.checkType)
+		}else{
+			emits('curTab', checkType.value)
+		}
+		emits('emitVisible', true)
 		itemId.value = null
 		clearData(dataForm.value)
-		emits('emitVisible', true)
 		visible.value = false
 	}
 	// 质控内容
@@ -301,7 +303,9 @@
 					}
 				} else {
 					for (let key in confTreeData.value) {
-						dataForm.value.detailList = dataForm.value.detailList.concat(confTreeData.value[key])
+						if(Array.isArray(confTreeData.value[key])){
+							dataForm.value.detailList = dataForm.value.detailList.concat(confTreeData.value[key])
+						}
 					}
 				}
 			}
