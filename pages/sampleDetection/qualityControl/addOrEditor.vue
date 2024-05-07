@@ -9,17 +9,17 @@
 			<view class="nav-container" style="height: 44px;">
 				<view class="nav-bar"
 					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
-				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
-				<text class="title"
-					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
-				<text @click="addOrUpdateData()" type="primary" class="submit"
-					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
-			</view>
+					<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
+					<text class="title"
+						style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
+					<text @click="addOrUpdateData()" type="primary" class="submit"
+						style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
+				</view>
 			</view>
 			<u-toast ref="uToast" />
 			<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
-				<u-form-item v-if="itemId" label-width='100px' label="记录编号" prop="startDepth"><u-input
-					disabled="true" placeholder=""	v-model="dataForm.id" /></u-form-item>
+				<u-form-item v-if="itemId" label-width='100px' label="记录编号" prop="startDepth"><u-input disabled="true"
+						placeholder="" v-model="dataForm.id" /></u-form-item>
 				<u-form-item label-width='100px' label="检查日期" prop="checkTime"><u-input type="select"
 						@click="showPickerDate('checkTime')" v-model="dataForm.checkTime" /></u-form-item>
 				<view class="detail-content">
@@ -31,6 +31,14 @@
 				<u-form-item label-width='100px' label="上传图片" prop="file">
 					<upload @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files"></upload>
 				</u-form-item>
+				<!-- <u-form-item label-width='100px' label="上传视频" prop="file">
+					 <htz-image-upload 
+					 mediaType="video"
+					        :max="3" 
+					        v-model="ceshiData" 
+					        @uploadSuccess="ceshiUploadSuccess" 
+					        :action="comUploadUrl+type"></htz-image-upload>
+				</u-form-item> -->
 			</u-form>
 			<u-picker v-model="checkTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 				:default-time='getCurrentTime()'></u-picker>
@@ -41,6 +49,7 @@
 </template>
 
 <script setup>
+	import htzImageUpload from '@/components/htz-image-upload/htz-image-upload.vue'
 	import {
 		reactive,
 		ref,
@@ -48,7 +57,8 @@
 		defineProps,
 		watch,
 		defineExpose,
-		defineEmits
+		defineEmits,
+		inject
 	} from 'vue'
 	import {
 		onLoad,
@@ -69,6 +79,20 @@
 		QcInitListTree
 	} from '@/api/sample/qualityControl.js'
 	import editorDetail from './editorDetail.vue';
+	// const baseURL = inject('define').baseURL
+	// 	const comUploadUrl = inject('define').comUploadUrl
+	// 	const type = 'annexpic'
+	// 	const ceshiData =ref([])
+	//   function ceshiUploadSuccess(res) { //上传成功
+	//                 /****************
+	//                 因为上传接口返回的结构不一致，所以以下代码需要根据实际的接口返回结构开发，在此只是展示如果给数组里添加的过程，仅供参考
+	//                 ***************/
+	//                 var _res = JSON.parse(res.data);
+	//                 if (_res.code == 200) {
+	//                     this.ceshiData.push(_res.result);
+	//                 }
+	//                 /*******************************/
+	//             }
 	const form = ref(null)
 	const rules = reactive({
 		checkTime: [{
@@ -155,14 +179,14 @@
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid) {
-		dataForm.value = parseFiles(dataForm.value)
-		if (!dataForm.value.id) {
-			addQCCheckBase(dataForm.value).then(res => ToastFn('创建成功'))
-		} else {
-			updateQCCheckBase(dataForm.value.id, dataForm.value).then(res => ToastFn('修改成功'))
-		}
-		clearData(dataForm.value)
-		}
+				dataForm.value = parseFiles(dataForm.value)
+				if (!dataForm.value.id) {
+					addQCCheckBase(dataForm.value).then(res => ToastFn('创建成功'))
+				} else {
+					updateQCCheckBase(dataForm.value.id, dataForm.value).then(res => ToastFn('修改成功'))
+				}
+				clearData(dataForm.value)
+			}
 		});
 	}
 
@@ -198,11 +222,13 @@
 			getQCCheckConfList()
 		}
 	}
-	const emits = defineEmits(['emitVisible','curTab'])
+
+	const emits = defineEmits(['emitVisible', 'curTab'])
+
 	function goToBack() {
-		if(itemId.value){
+		if (itemId.value) {
 			emits('curTab', dataForm.value.checkType)
-		}else{
+		} else {
 			emits('curTab', checkType.value)
 		}
 		emits('emitVisible', true)
@@ -303,7 +329,7 @@
 					}
 				} else {
 					for (let key in confTreeData.value) {
-						if(Array.isArray(confTreeData.value[key])){
+						if (Array.isArray(confTreeData.value[key])) {
 							dataForm.value.detailList = dataForm.value.detailList.concat(confTreeData.value[key])
 						}
 					}

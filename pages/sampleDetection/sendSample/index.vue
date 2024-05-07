@@ -97,6 +97,7 @@
 			selectSendRef.value.selectVisible = true
 			mainVisible.value = false
 			selectSendRef.value.sendId = id
+			selectSendRef.value.dataForm = clearData(selectSendRef.value.dataForm) 
 			if(id){
 				await selectSendRef.value.initData()
 				await selectSendRef.value.getUnsendList()
@@ -105,6 +106,20 @@
 			}
 		})
 			
+	}
+	function clearData(data){
+		for(let key in data){
+			if(Array.isArray(data[key])){
+				data[key] = []
+			}else if (Object.prototype.toString.call(data[key]) === '[object Object]'){
+				data[key] = {}
+			}else if(typeof data[key] === 'number'){
+				data[key] = 0
+			}else{
+				data[key] = null
+			}
+		}
+		return data
 	}
 	function goToBack(){
 		uni.navigateBack({delta:1})

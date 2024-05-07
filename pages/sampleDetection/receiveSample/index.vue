@@ -27,7 +27,7 @@
 								<view class="title">批次号：{{ item.transNo }}</view>
 								<view class="center-zone">
 									<text class="area">项目号：{{ item.projectName }}</text>
-									<text class="project">{{item.typetext}}</text>
+									<!-- <text class="project">{{item.typetext}}</text> -->
 								</view>
 								<text class="time">接收数量：{{item.transCount}}</text>
 							</view>
@@ -62,6 +62,7 @@
 	import selectReceive from './selectReceive.vue'
 	const dataList = ref([])
 	const searchKeyWord = ref()
+	const loading = ref(true)
 	async function getList() {
 		uni.showLoading({
 			title: '加载中'

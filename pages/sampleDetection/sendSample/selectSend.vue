@@ -247,7 +247,7 @@
 	            // received: item.received,
 	            remark: item.remark,
 	            sampleAmount: item.sampleAmount,
-	            sampleId: item.sampleId,
+	            sampleId: item.id,
 	            sampleName: item.sampleName,
 	            sampleNo: item.sampleNo,
 	            sampleTime: item.sampleTime,
@@ -315,7 +315,8 @@
 		addFlag,
 		sendId,
 		getUnsendList,
-		initData
+		initData,
+		dataForm
 	})
 </script>
 

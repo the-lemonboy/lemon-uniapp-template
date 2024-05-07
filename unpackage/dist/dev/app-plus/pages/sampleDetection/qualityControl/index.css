@@ -2166,6 +2166,157 @@ uni-scroll-view[data-v-750d9d75] {
 .u-btn-picker--tips[data-v-e8b59df9] {
   color: #909399;
 }
+
+.ceshi[data-v-63998fe8] {
+		width: 100%;
+		height: 100%;
+		position: relative;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		background-color: #FFFFFF;
+		color: #2C405A;
+		opacity: 0.5;
+		z-index: 100;
+}
+
+
+.preview-full[data-v-63998fe8] {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 1002;
+}
+.preview-full uni-video[data-v-63998fe8] {
+		width: 100%;
+		height: 100%;
+		z-index: 1002;
+}
+.preview-full-close[data-v-63998fe8] {
+		position: fixed;
+		right: 1rem;
+		top: 0.78125rem;
+		width: 2.5rem;
+		height: 2.5rem;
+		line-height: 1.875rem;
+		text-align: center;
+		z-index: 1003;
+		/* 	background-color: #808080; */
+		color: #fff;
+		font-size: 2.03125rem;
+		font-weight: bold;
+		text-shadow: 1px 2px 5px rgb(0 0 0);
+}
+
+
+
+	/* .preview-full-close-before,
+	.preview-full-close-after {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		content: '';
+		height: 60rpx;
+		margin-top: -30rpx;
+		width: 6rpx;
+		margin-left: -3rpx;
+		background-color: #FFFFFF;
+		z-index: 20000;
+	}
+
+	.preview-full-close-before {
+		transform: rotate(45deg);
+
+	}
+
+	.preview-full-close-after {
+		transform: rotate(-45deg);
+
+	} */
+.htz-image-upload-list[data-v-63998fe8] {
+		display: flex;
+		flex-wrap: wrap;
+}
+.htz-image-upload-Item[data-v-63998fe8] {
+		width: 5rem;
+		height: 5rem;
+		margin: 0.40625rem;
+		border-radius: 0.3125rem;
+		position: relative;
+}
+.htz-image-upload-Item uni-image[data-v-63998fe8] {
+		width: 100%;
+		height: 100%;
+		border-radius: 0.3125rem;
+}
+.htz-image-upload-Item-video[data-v-63998fe8] {
+		width: 100%;
+		height: 100%;
+		border-radius: 0.3125rem;
+		position: relative;
+}
+.htz-image-upload-Item-video-fixed[data-v-63998fe8] {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		border-radius: 0.3125rem;
+		z-index: 996;
+}
+.htz-image-upload-Item uni-video[data-v-63998fe8] {
+		width: 100%;
+		height: 100%;
+		border-radius: 0.3125rem;
+}
+.htz-image-upload-Item-add[data-v-63998fe8] {
+		font-size: 3.28125rem;
+		/* line-height: 160rpx; */
+		text-align: center;
+		border: 1px dashed #d9d9d9;
+		color: #d9d9d9;
+}
+.htz-image-upload-Item-del[data-v-63998fe8] {
+		background-color: #f5222d;
+		font-size: 0.75rem;
+		position: absolute;
+		width: 1.09375rem;
+		height: 1.09375rem;
+		line-height: 1.09375rem;
+		text-align: center;
+		top: 0;
+		right: 0;
+		z-index: 997;
+		color: #fff;
+}
+.htz-image-upload-Item-del-cover[data-v-63998fe8] {
+		background-color: #f5222d;
+		font-size: 0.75rem;
+		position: absolute;
+		width: 1.09375rem;
+		height: 1.09375rem;
+		text-align: center;
+		top: 0;
+		right: 0;
+		color: #fff;
+
+		line-height: 0.78125rem;
+
+
+
+
+		z-index: 997;
+}
+.htz-image-upload-Item-video-app-poster[data-v-63998fe8] {
+		width: 100%;
+		height: 100%;
+}
+
 /**
  * 这里是uni-app内置的常用样式变量
  *

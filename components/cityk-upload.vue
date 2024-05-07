@@ -180,6 +180,7 @@
 				fileExtenSion: _lists[index].file.type,
 				fileSize: _lists[index].file.size
 			})
+			console.log(fileList.value)
 			// fileList.value = fileList.value
 			emits('update:value', fileList.value); // 触发 input 事件，并传递更新后的 fileList 的值
 		} else {

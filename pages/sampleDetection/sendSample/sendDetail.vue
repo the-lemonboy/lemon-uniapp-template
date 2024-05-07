@@ -17,6 +17,7 @@
 					<view class="left-box">
 						<text>送样人：{{userName}}</text>
 						<text>联系电话：{{mobilePhone}}</text>
+						<text>批次编号：{{sendData.transNo}}</text>
 						<text>送样时间：{{sendData.transTime}}</text>
 					</view>
 					<view class="right-box">

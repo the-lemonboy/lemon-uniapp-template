@@ -64,8 +64,8 @@
 	const emits = defineEmits(['visible'])
 
 	function goToBack() {
-		const userInfoEl = document.querySelector('.mo-container')
-		userInfoEl.classList.add('animate__animated', 'animate__bounceOutRight')
+		// const userInfoEl = document.querySelector('.mo-container')
+		// userInfoEl.classList.add('animate__animated', 'animate__bounceOutRight')
 		emits('visible', false)
 	}
 </script>

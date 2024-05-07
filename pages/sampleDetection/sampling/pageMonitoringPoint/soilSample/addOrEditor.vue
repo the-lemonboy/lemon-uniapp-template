@@ -30,24 +30,26 @@
 				<u-form-item label-width="150" label="送检" prop="isInspection">
 					<u-radio-group v-model="dataForm.isInspection">
 						<u-radio :name="val.value" :disabled="val.disabled" v-for="(val,index) of isInspectionRadio"
-							:key="index">{{val.name}}</u-radio>
+							:key="index" @change="isInspectionChange">{{val.name}}</u-radio>
 					</u-radio-group>
 				</u-form-item>
-				<u-form-item label-width='100px' label="样品编号" prop="sampleNo"><u-input
+				<u-form-item v-if="isInspectionFlag" label-width='100px' label="样品编号" prop="sampleNo"><u-input
 						v-model="sampleNoOptions.current.label" type="select"
 						@click="sampleNoOptions.show=true" /></u-form-item>
-				<u-form-item label-width="150" label="添加平行样" prop="hasParallelSample">
+				<u-form-item v-if="isInspectionFlag" label-width='100px' label="样品保存方式" prop="storageMethod"><u-input type='number'
+						v-model="dataForm.storageMethod" /></u-form-item>
+				<u-form-item v-if="isInspectionFlag" label-width="150" label="添加平行样" prop="hasParallelSample">
 					<u-radio-group v-model="dataForm.hasParallelSample">
-						<u-radio :name="val.value" :disabled="val.disabled"
+						<u-radio :name="val.value" :disabled="val.disabled" @change="hasParallelSampleChange"
 							v-for="(val,index) of hasParallelSampleRadio" :key="index">{{val.name}}</u-radio>
 					</u-radio-group>
 				</u-form-item>
-				<u-form-item label-width='120px' label="平行样样品编号" prop="relationSampleId"><u-input
+				<u-form-item v-if="isInspectionFlag && hasParallelSampleFlag" label-width='120px' label="平行样样品编号" prop="relationSampleId"><u-input
 						v-model="relationSampleIdOptions.current.label" type="select"
 						@click="relationSampleIdOptions.show=true" /></u-form-item>
-				<u-form-item label-width='100px' label="样品保存方式" prop="storageMethod"><u-input type='number'
-						v-model="dataForm.storageMethod" /></u-form-item>
-				<u-form-item label-width="100px" label="分析指标"><u-input type="select" v-model="selectName"
+				<u-form-item v-if="isInspectionFlag && hasParallelSampleFlag" label-width='100px' label="平行样样品名称" prop="relationSampleName"><u-input type='number'
+						v-model="dataForm.relationSampleName" /></u-form-item>
+				<u-form-item v-if="isInspectionFlag" label-width="100px" label="分析指标"><u-input type="select" v-model="selectName"
 						@click="showPicker" /></u-form-item>
 				<u-form-item label-width='100px' label="上传图片" prop="file">
 					<upload :watermark='true' @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files">
@@ -107,11 +109,8 @@
 				validator: (rule, value, callback) => {
 					if (curSampleNameList.value.includes(value)) {
 						callback(new Error('该样品名称已存在'))
-						// console.log(value)
-						// return false
 					} else {
 						callback()
-						// return true
 					}
 				},
 				message: '请确保样品名称唯一',
@@ -166,6 +165,8 @@
 		xrfRef.value.curXrfConf = XRFConfList.value
 		xrfRef.value.curXrfConfLength = XRFConfLength.value
 	}
+	const isInspectionFlag = ref(false)
+	const hasParallelSampleFlag = ref(false)
 	const isInspectionRadio = ref([{
 			name: "是",
 			value: "1",
@@ -177,6 +178,14 @@
 			disabled: false
 		}
 	])
+	function isInspectionChange(val){
+		if(val == 0){
+			isInspectionFlag.value = false
+		}else{
+			isInspectionFlag.value = true
+		}
+		
+	}
 	const hasParallelSampleRadio = ref([{
 			name: "是",
 			value: "1",
@@ -188,6 +197,13 @@
 			disabled: false
 		}
 	])
+	function hasParallelSampleChange(val){
+		if(val == 0){
+			hasParallelSampleFlag.value = false
+		}else{
+			hasParallelSampleFlag.value = true
+		}
+	}
 	// 分析指标
 	// 显示选择器
 	const factorTreeList = ref([])
@@ -393,6 +409,7 @@
 			if (id) {
 				getSoilRecordDetail(id).then(res => {
 					dataInfo(res.data)
+					judgeFlag(res.data)
 					curSampleNameList.value = curSampleNameList.value.filter(item => {
 						return item !== dataForm.value.sampleName
 					})
@@ -404,6 +421,18 @@
 				initXRF()
 			}
 		})
+	}
+	function judgeFlag(dataForm){
+		if(dataForm.isInspection === 'false' || dataForm.isInspection == 0 || dataForm.isInspection === false  ){
+			isInspectionFlag.value = false
+		}else{
+			isInspectionFlag.value = true
+		}
+		if(dataForm.hasParallelSample === 'false' || dataForm.hasParallelSample == 0 || dataForm.hasParallelSample === false  ){
+			hasParallelSampleFlag.value = false
+		}else{
+			hasParallelSampleFlag.value = true
+		}
 	}
 	onLoad(async() => {
 		await getCurSampleNameList()

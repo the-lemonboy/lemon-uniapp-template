@@ -1912,7 +1912,10 @@
 		justify-content: center;
 		align-items: center;
 }
-.uni-flex-item[data-v-c951339f]{display: flex; align-items: center; width:100%;
+.uni-flex-item[data-v-c951339f] {
+		display: flex;
+		align-items: center;
+		width: 100%;
 }
 .item-check-yes[data-v-c951339f],
 	.item-check-no[data-v-c951339f] {
@@ -1974,16 +1977,16 @@
 		border-bottom: 1px solid #e5e5e5;
 }
 .uni-flex[data-v-c951339f] {
-	display: flex;
-	flex-direction: row;
+		display: flex;
+		flex-direction: row;
 }
 .uni-flex-item[data-v-c951339f] {
-	flex: 1;
+		flex: 1;
 }
-.uni-inline-item[data-v-c951339f]{
-	display: flex;
-	flex-direction: row;
-	align-items:center;
+.uni-inline-item[data-v-c951339f] {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 }
 
 /**

@@ -17,9 +17,9 @@
 		</view>
 		<u-toast ref="uToast" />
 		<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
-			<u-form-item label-width='100px' label="起始深度" prop="startDepth"><u-number-box
+			<u-form-item label-width='100px' label="起始深度" prop="startDepth"><u-number-box :positive-integer="false"
 					v-model="dataForm.startDepth"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="结束深度" prop="endDepth"><u-number-box
+			<u-form-item label-width='100px' label="结束深度" prop="endDepth"><u-number-box :positive-integer="false"
 					v-model="dataForm.endDepth"></u-number-box></u-form-item>
 			<u-form-item label-width='100px' label="土层类型" prop="holeType"><u-input v-model="dataForm.solumType"
 					type="select" @click="solumTypeOptions.show = true" /></u-form-item>
