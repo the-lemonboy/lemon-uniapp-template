@@ -77,9 +77,6 @@
 		{
 			name: '成员'
 		},
-		// {
-		// 	name:'项目地图'
-		// }
 	])
 	const tabCurent = ref(0)
 

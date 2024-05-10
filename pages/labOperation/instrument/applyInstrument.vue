@@ -11,7 +11,7 @@
 					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 					<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 					<text class="title"
-						style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">采样信息</text>
+						style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">仪器使用详细</text>
 					<text @click="addOrUpdateData()" type="primary" class="submit"
 						style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 				</view>
