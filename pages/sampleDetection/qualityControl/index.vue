@@ -24,7 +24,7 @@
 			<view class="content-box">
 				<uni-swipe-action ref="swipeAction">
 					<uni-swipe-action-item class="swipe-item items-box" v-for="item of dataList" :key="item.id"
-						:right-options="swiperOptions" @change="swipeChange($event)"
+						:right-options="swiperOptions"
 						@click="swipeClick($event,content,item.id)">
 						<view class="item-box" @click="goAddOrEditorData(item.id)">
 							<view class="left-item">

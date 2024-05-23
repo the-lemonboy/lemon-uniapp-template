@@ -141,7 +141,7 @@
 		width: 90%;
 		height: 180px;
 		margin: 10px auto;
-		padding: 0 10px;
+		padding: 10px 10px;
 		border: 1px solid #e6e6e6;
 		border-radius: 5px;
 		box-shadow: 5px 5px 18px #ebebeb, -5px -5px 18px #fff;

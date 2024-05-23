@@ -15,13 +15,12 @@
 					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
 			</view>
 		</view>
-		<u-toast ref="uToast" />
 		<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
 			<u-form-item label-width='100px' label="起始深度" prop="startDepth"><u-number-box :positive-integer="false"
 					v-model="dataForm.startDepth"></u-number-box></u-form-item>
 			<u-form-item label-width='100px' label="结束深度" prop="endDepth"><u-number-box :positive-integer="false"
 					v-model="dataForm.endDepth"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="土层类型" prop="holeType"><u-input v-model="dataForm.solumType"
+			<u-form-item label-width='100px' label="土层类型" prop="solumType"><u-input v-model="dataForm.solumType"
 					type="select" @click="solumTypeOptions.show = true" /></u-form-item>
 			<u-form-item label-width='100px' label="颜色" prop="solumColor"><u-input
 					v-model="dataForm.solumColor" /></u-form-item>
@@ -79,17 +78,7 @@
 	} from '@/api/dictionary'
 	const form = ref(null)
 	const rules = reactive({
-		startDepth: [{
-			required: true,
-			message: '请输入起始深度',
-			trigger: 'blur',
-		}],
-		endDepth: [{
-			required: true,
-			message: '请输入结束深度',
-			trigger: 'blur',
-		}],
-		holeType: [{
+		solumType: [{
 			required: true,
 			message: '请输入图层类型',
 			trigger: 'blur',
@@ -101,8 +90,8 @@
 	let dataForm = ref({
 		projectId: '',
 		holeId: '',
-		startDepth: '',
-		endDepth: '',
+		startDepth: 0,
+		endDepth: 0,
 		solumType: '',
 		solumColor: '',
 		solumSmell: '',
@@ -210,7 +199,10 @@
 	}
 
 	function addOrUpdateData() {
+		console.log(dataForm.value)
+		
 		form.value.validate(valid => {
+			console.log(valid)
 			if (valid) {
 				const data = parseFiles(dataForm.value)
 				const id = uni.getStorageSync('holeRecordId')

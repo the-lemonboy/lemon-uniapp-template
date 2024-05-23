@@ -34,7 +34,7 @@
 						</view>
 					</uni-swipe-action-item>
 				</uni-swipe-action>
-				<u-empty style="margin-top: 40px;" v-if="dataList.length == 0 && loading == false" text="暂无数据" mode="list"></u-empty>
+				<u-empty style="margin-top: 40px;" v-if="dataList.length === 0 && loading == false" text="暂无数据" mode="list"></u-empty>
 
 			</view>
 
@@ -91,7 +91,7 @@
 			uni.hideLoading();
 			loading.value = false
 		})
-		loading.value = true
+		loading.value = false
 	}
 	const selectSendRef = ref(null)
 	const mainVisible = ref(true)

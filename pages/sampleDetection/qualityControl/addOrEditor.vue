@@ -25,7 +25,9 @@
 				<view class="detail-content">
 					<text class="zk-title">质控内容</text>
 					<view class="read" v-for="(item,index) in confTreeData" :key="index" @click="goDetail(index)">
-						<text class="content">{{confTitle[index]}}({{item.length}})</text>
+						<!-- <text class="content">({{item.length}})</text> -->
+					   <div class="content-left">{{confTitle[index]}}</div>
+					   <div class="content-right"><uni-icons type="right" color="`${$uni-text-color-grey;}`" size="30" style="line-height: 44px;"></uni-icons></div>
 					</view>
 				</view>
 				<u-form-item label-width='100px' label="上传图片" prop="file">
@@ -389,11 +391,16 @@
 				font-size: 30rpx;
 				font-weight: bold;
 			}
-
-			.content {
-				line-height: 23px;
-				font-size: 25rpx;
+			.read {
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				align-items: center;
+				font-size: 30rpx;
 				color: $uni-text-color-grey;
+			}
+			.content {
+				
 			}
 		}
 
