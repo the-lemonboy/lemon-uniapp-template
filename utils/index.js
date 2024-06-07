@@ -95,3 +95,24 @@ export function timestampToTime(timestamp) {
     
     return timeString;
 }
+
+/**
+ * @param {新版本号} newVersion
+ * @param {旧版本号} oldVersion
+ */
+export function compareVersion(newVersion, oldVersion) {
+    const arr1 = v1.split('.').map(Number);
+    const arr2 = v2.split('.').map(Number);
+    
+    const maxLength = Math.max(arr1.length, arr2.length);
+    
+    for (let i = 0; i < maxLength; i++) {
+        const num1 = arr1[i] !== undefined ? arr1[i] : 0;
+        const num2 = arr2[i] !== undefined ? arr2[i] : 0;
+        
+        if (num1 > num2) return 1;
+        if (num1 < num2) return -1;
+    }
+    
+    return 0;
+}

@@ -25,14 +25,14 @@
 						<uni-icons type="right" size="30"></uni-icons>
 					</view>
 				</view>
-				<!-- #ifdef APP-ANDROID -->
-		<!-- 	<view class="message-center link-box" @click="goUpdate()">
-				<text class="left-text">检查更新</text>
-				<view class="right-content">
-					<uni-icons type="right" size="30"></uni-icons>
+
+				<view class="message-center link-box" @click="handleUpdate()">
+					<text class="left-text">检查更新</text>
+					<view class="right-content">
+						<uni-icons type="right" size="30"></uni-icons>
+					</view>
 				</view>
-			</view> -->
-				<!-- #endif -->
+
 				<!-- #ifdef APP-PLUS -->
 				<view class="clear-cache link-box" @click="clearCache">
 					<text class="left-text">清除缓存</text>
@@ -53,7 +53,9 @@
 		</view>
 	</view>
 	<watermark v-else-if="!mainVisile && watermarkVisible" @visible="watermarkFlag"></watermark>
-	<userInfoPage class="userInfo" v-else-if="!mainVisile && userInfoVisible" @visible= "userInfoFlag"></userInfoPage>
+	<userInfoPage class="userInfo" v-else-if="!mainVisile && userInfoVisible" @visible="userInfoFlag"></userInfoPage>
+	<updataPopup ref="updatePopup"></updataPopup>
+	<button @click="ceshi11">ceshi</button>
 </template>
 
 <script setup>
@@ -67,9 +69,22 @@
 	} from 'vue';
 	import watermark from './watermark/index.vue'
 	import userInfoPage from './userInfo/index.vue'
+	import updataPopup from './checkUpdate/index.vue'
+	import {
+		compareVersion
+	} from '@/utils/index.js'
+	import {
+		getLasterVersionNo,
+		getLasterVersion
+	} from '@/api/updateVersion/updateVersion.js'
 	const userInfo = ref({})
 	const baseURL = inject('define').baseURL
-
+function ceshi11(){
+	console.log(('click'))
+	getLasterVersion().then(res=>{
+		
+	})
+}
 	function loginOut() {
 		uni.showModal({
 			title: '提示',
@@ -106,25 +121,64 @@
 	}
 	const userInfoVisible = ref(false)
 	const userInfoRef = ref()
-	function goUserInfo(){
+
+	function goUserInfo() {
 		userInfoVisible.value = true
 		mainVisile.value = false
 	}
+
 	function userInfoFlag(val) {
 		userInfoVisible.value = val
 		mainVisile.value = !val
 	}
+
 	function watermarkFlag(val) {
 		watermarkVisible.value = val
 		mainVisile.value = !val
 	}
+
 	function goMessage() {
 		uni.navigateTo({
 			url: '/pages/me/message/index'
 		})
 	}
-	function goUpdate(){
-		
+	// const checkUpdateVisible = ref(false)
+	const updatePopup = ref(null)
+	// const lasterVersionNo = ref(null)
+	async function _getLasterVersionNo() {
+		try {
+			const res = await getLasterVersionNo();
+			return res.lastVersion;
+		} catch (error) {
+			console.error('获取最新版本号失败:', error);
+			throw error;
+		}
+	}
+	async function handleUpdate() {
+		// try {
+		// 	const lasterVersionNo = await _getLasterVersionNo();
+		// 	const curVersionNo = plus.runtime.version; // 获取当前版本号
+		// 	const updateFlag = compareVersion(lasterVersionNo, curVersionNo); // 比较版本号
+
+		// 	if (updateFlag > 0) {
+		// 		// lasterVersionNo > curVersionNo，表示有新版本
+		// 		console.log('有新版本需要更新');
+		// 		updatePopup.value.updateDialog.open()
+		// 		// 执行更新操作，例如提示用户下载并安装新版本
+		// 	} else if (updateFlag === 0) {
+		// 		console.log('当前已经是最新版本');
+		// 	} else {
+		// 		console.log('当前版本高于最新版本（这种情况不太可能出现）');
+		// 	}
+		// } catch (error) {
+		// 	console.error('处理更新时出错:', error);
+		// }
+		updatePopup.value.updateDialog.open()
+	}
+
+	function goUpdate() {
+		updatePopup.value.updateDialog.open()
+		// checkUpdateVisible.value = true
 	}
 	// #ifdef APP-PLUS
 	const cacheSize = ref()
@@ -214,6 +268,7 @@
 		width: 100%;
 		background-color: #e9ecef;
 	}
+
 	/* #endif */
 	/* #ifdef H5 */
 	.me-container {
@@ -223,6 +278,7 @@
 		width: 100%;
 		background-color: #e9ecef;
 	}
+
 	/* #endif */
 	.me-header {
 		width: 100%;

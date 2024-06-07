@@ -38,7 +38,7 @@ function request(config) {
 			title: config.options.loadText || '正在加载'
 		})
 	}
-
+   const spacialUrl = '/api/app/getAppLastVersion'
 	return new Promise((resolve, reject) => {
 		uni.request({
 			url: url,
@@ -50,14 +50,17 @@ function request(config) {
 				if (config.options.load) {
 					uni.hideLoading()
 				}
-				if (res.statusCode === 200) {
+				if (res.statusCode === 200 && url.indexOf(spacialUrl) === -1 ) {
 					if (res.data.code == 200) {
 						resolve(res.data)
 					} else {
 						ajaxError(res.data)
 						reject(res.data.msg)
 					}
-				} else {
+				}else if(res.statusCode === 200 && url.indexOf(spacialUrl) > -1){
+					resolve(res.data)
+				}
+				 else {
 					ajaxError(res.data)
 					reject(res.errMsg)
 				}
