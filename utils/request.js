@@ -5,20 +5,6 @@ const defaultOpt = {
 	load: true
 }
 
-// 示例
-// async xxxx(code) {
-//   var res = await this.request({
-// 		url: '/api/System/DictionaryData/All',
-// 		method: 'GET',
-// 		data,
-// 		options: {
-// 			load: false
-// 		}
-// 	})
-//   if (!res) return
-//   console.log(res)
-// }
-
 function request(config) {
 	config.options = Object.assign(defaultOpt, config.options)
 	const token = uni.getStorageSync('token') || ''

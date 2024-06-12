@@ -54,8 +54,7 @@
 	</view>
 	<watermark v-else-if="!mainVisile && watermarkVisible" @visible="watermarkFlag"></watermark>
 	<userInfoPage class="userInfo" v-else-if="!mainVisile && userInfoVisible" @visible="userInfoFlag"></userInfoPage>
-	<updataPopup ref="updatePopup"></updataPopup>
-	<button @click="ceshi11">ceshi</button>
+	<updataPopup :lastVersion="lastVersion" ref="updatePopup"></updataPopup>
 </template>
 
 <script setup>
@@ -79,12 +78,7 @@
 	} from '@/api/updateVersion/updateVersion.js'
 	const userInfo = ref({})
 	const baseURL = inject('define').baseURL
-function ceshi11(){
-	console.log(('click'))
-	getLasterVersion().then(res=>{
-		
-	})
-}
+
 	function loginOut() {
 		uni.showModal({
 			title: '提示',
@@ -144,41 +138,46 @@ function ceshi11(){
 	}
 	// const checkUpdateVisible = ref(false)
 	const updatePopup = ref(null)
-	// const lasterVersionNo = ref(null)
 	async function _getLasterVersionNo() {
 		try {
 			const res = await getLasterVersionNo();
-			return res.lastVersion;
+			return res.data.lastVersion;
 		} catch (error) {
 			console.error('获取最新版本号失败:', error);
 			throw error;
 		}
 	}
+	const lastVersion = ref(null)
 	async function handleUpdate() {
-		// try {
-		// 	const lasterVersionNo = await _getLasterVersionNo();
-		// 	const curVersionNo = plus.runtime.version; // 获取当前版本号
-		// 	const updateFlag = compareVersion(lasterVersionNo, curVersionNo); // 比较版本号
+		try {
+			lastVersion.value = await _getLasterVersionNo();
+			const curVersionNo = plus.runtime.version; // 获取当前版本号
+			const updateFlag = compareVersion(lastVersion.value, curVersionNo); // 比较版本号
+			if (updateFlag > 0) {
+				updatePopup.value.updateDialog.open()
+				// 执行更新操作，例如提示用户下载并安装新版本
+			} else if (updateFlag === 0) {
+				uni.showToast({
+					title: '已经是最新版本啦！',
+					icon: 'error',
+					duration: 2000
+				});
+			} else {
+				;
+				uni.showToast({
+					title: '当前版本高于最新版本',
+					icon: 'error',
+					duration: 2000
+				});
+			}
+		} catch (error) {
+			uni.showToast({
+				title: error + '系统错误',
+				icon: 'error',
+				duration: 2000
 
-		// 	if (updateFlag > 0) {
-		// 		// lasterVersionNo > curVersionNo，表示有新版本
-		// 		console.log('有新版本需要更新');
-		// 		updatePopup.value.updateDialog.open()
-		// 		// 执行更新操作，例如提示用户下载并安装新版本
-		// 	} else if (updateFlag === 0) {
-		// 		console.log('当前已经是最新版本');
-		// 	} else {
-		// 		console.log('当前版本高于最新版本（这种情况不太可能出现）');
-		// 	}
-		// } catch (error) {
-		// 	console.error('处理更新时出错:', error);
-		// }
-		updatePopup.value.updateDialog.open()
-	}
-
-	function goUpdate() {
-		updatePopup.value.updateDialog.open()
-		// checkUpdateVisible.value = true
+			});
+		}
 	}
 	// #ifdef APP-PLUS
 	const cacheSize = ref()

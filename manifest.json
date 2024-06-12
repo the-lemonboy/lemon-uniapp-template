@@ -11,7 +11,7 @@
         "nvueStyleCompiler" : "uni-app",
         "compilerVersion" : 3,
         "splashscreen" : {
-            "alwaysShowBeforeRender" : false,
+            "alwaysShowBeforeRender" : true,
             "waiting" : true,
             "autoclose" : false,
             "delay" : 0
@@ -107,6 +107,14 @@
                         "spotlight@2x" : "unpackage/res/icons/80x80.png",
                         "spotlight@3x" : "unpackage/res/icons/120x120.png"
                     }
+                }
+            },
+            "splashscreen" : {
+                "androidStyle" : "default",
+                "android" : {
+                    "hdpi" : "/Users/lemon/Downloads/res/drawable-hdpi/_1.9.png",
+                    "xhdpi" : "/Users/lemon/Downloads/res/drawable-xhdpi/_1.9.png",
+                    "xxhdpi" : "/Users/lemon/Downloads/res/drawable-xxhdpi/_1.9.png"
                 }
             }
         }

@@ -101,8 +101,8 @@ export function timestampToTime(timestamp) {
  * @param {旧版本号} oldVersion
  */
 export function compareVersion(newVersion, oldVersion) {
-    const arr1 = v1.split('.').map(Number);
-    const arr2 = v2.split('.').map(Number);
+    const arr1 = newVersion.split('.').map(Number);
+    const arr2 = oldVersion.split('.').map(Number);
     
     const maxLength = Math.max(arr1.length, arr2.length);
     
