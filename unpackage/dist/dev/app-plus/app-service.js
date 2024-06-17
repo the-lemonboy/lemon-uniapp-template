@@ -3156,29 +3156,53 @@ if (uni.restoreGlobal) {
     }) {
       return new Promise((resolve, reject) => {
         getCurrentUser().then((res) => {
-          const userInfo = res.data.userInfo || {};
-          const permissionList = res.data.permissionList || [];
-          const sysConfigInfo = res.data.sysConfigInfo || {};
-          const sysVersion = sysConfigInfo.sysVersion || "";
-          const copyright = sysConfigInfo.copyright || "";
-          commit("SET_USERINFO", userInfo);
-          uni.setStorageSync("sysVersion", sysVersion);
-          uni.setStorageSync("permissionList", permissionList);
-          uni.setStorageSync("sysConfigInfo", sysConfigInfo);
-          uni.setStorageSync("copyright", copyright);
-          uni.setStorageSync("userInfo", userInfo);
-          uni.setStorageSync("watermarkFlag", true);
-          uni.setStorageSync("watermarkTime", null);
-          uni.setStorageSync("projectName", null);
-          uni.setStorageSync("latAndLon", null);
-          uni.setStorageSync("watermarkValue", [
-            { name: "经纬度", value: uni.getStorageSync("latAndLon"), flag: true },
-            { name: "日期", value: uni.getStorageSync("watermarkTime"), flag: true },
-            { name: "人员", value: uni.getStorageSync("userInfo").userName, flag: true },
-            { name: "项目名称", value: uni.getStorageSync("projectName"), flag: true }
-          ]);
-          resolve(userInfo);
+          if (res.code == 200) {
+            const userInfo = res.data.userInfo || {};
+            const permissionList = res.data.permissionList || [];
+            const sysConfigInfo = res.data.sysConfigInfo || {};
+            const sysVersion = sysConfigInfo.sysVersion || "";
+            const copyright = sysConfigInfo.copyright || "";
+            commit("SET_USERINFO", userInfo);
+            uni.setStorageSync("sysVersion", sysVersion);
+            uni.setStorageSync("permissionList", permissionList);
+            uni.setStorageSync("sysConfigInfo", sysConfigInfo);
+            uni.setStorageSync("copyright", copyright);
+            uni.setStorageSync("userInfo", userInfo);
+            uni.setStorageSync("watermarkFlag", true);
+            uni.setStorageSync("watermarkTime", null);
+            uni.setStorageSync("projectName", null);
+            uni.setStorageSync("latAndLon", null);
+            uni.setStorageSync("watermarkValue", [
+              {
+                name: "经纬度",
+                value: uni.getStorageSync("latAndLon"),
+                flag: true
+              },
+              {
+                name: "日期",
+                value: uni.getStorageSync("watermarkTime"),
+                flag: true
+              },
+              {
+                name: "人员",
+                value: uni.getStorageSync("userInfo").userName,
+                flag: true
+              },
+              {
+                name: "项目名称",
+                value: uni.getStorageSync("projectName"),
+                flag: true
+              }
+            ]);
+            resolve(userInfo);
+          }
         }).catch((error) => {
+          uni.reLaunch({
+            url: "/pages/login/index",
+            success: () => {
+              plus.navigator.closeSplashscreen();
+            }
+          });
           reject(error);
         });
       });
@@ -3223,13 +3247,15 @@ if (uni.restoreGlobal) {
     },
     getters
   });
-  const baseURL = "http://192.168.88.162:30019";
+  const baseURL = "http://112.64.139.162:30019";
+  const frontEndUrl = "http://112.64.139.162:30018";
   const define = {
     baseURL,
     webSocketUrl: "ws://106.14.80.181:30019/websocket",
     comUploadUrl: baseURL + "/api/file/Uploader/",
     timeout: 1e6,
-    report: baseURL + "/Report"
+    report: baseURL + "/Report",
+    frontEndUrl
   };
   const host = define.baseURL;
   const defaultOpt = {
@@ -9333,11 +9359,15 @@ if (uni.restoreGlobal) {
       lastVersion: {
         type: String,
         default: null
+      },
+      apkPath: {
+        type: String,
+        default: null
       }
     },
     setup(__props, { expose: __expose }) {
       const props = __props;
-      const baseURL2 = vue.inject("define").baseURL;
+      const frontEndUrl2 = vue.inject("define").frontEndUrl;
       const updateDialog = vue.ref(null);
       vue.ref(null);
       function closePopup() {
@@ -9347,10 +9377,12 @@ if (uni.restoreGlobal) {
       const progressPercent = vue.ref(0);
       function downloadApp() {
         downloadFlag.value = true;
+        formatAppLog("log", "at pages/me/checkUpdate/index.vue:57", `${frontEndUrl2}${props.apkPath}`);
         const downloadTask = uni.downloadFile({
           // 存放最新安装包的地址
-          url: `${baseURL2}/api/app/getAppLastVersion`,
+          url: `${frontEndUrl2}${props.apkPath}`,
           success: (downloadResult) => {
+            formatAppLog("log", "at pages/me/checkUpdate/index.vue:62", downloadResult.statusCode);
             if (downloadResult.statusCode === 200) {
               plus.runtime.install(
                 downloadResult.tempFilePath,
@@ -9366,14 +9398,23 @@ if (uni.restoreGlobal) {
                     icon: "error",
                     duration: 2e3
                   });
+                  downloadFlag.value = false;
                 }
               );
+            } else {
+              uni.showToast({
+                title: "安装失败！",
+                icon: "error",
+                duration: 2e3
+              });
+              downloadFlag.value = false;
             }
+          },
+          fail: (res) => {
           }
         });
         downloadTask.onProgressUpdate((res) => {
           progressPercent.value = res.progress;
-          formatAppLog("log", "at pages/me/checkUpdate/index.vue:90", res.progress);
           if (res.progress == 100) {
             downloadFlag.value = false;
             progressPercent.value = 0;
@@ -9381,8 +9422,6 @@ if (uni.restoreGlobal) {
           }
         });
       }
-      onLoad(async () => {
-      });
       __expose({
         updateDialog
       });
@@ -9466,7 +9505,7 @@ if (uni.restoreGlobal) {
                 }
               });
             } else if (res.cancel) {
-              formatAppLog("log", "at pages/me/index.vue:103", "用户点击取消");
+              formatAppLog("log", "at pages/me/index.vue:104", "用户点击取消");
             }
           }
         });
@@ -9500,33 +9539,30 @@ if (uni.restoreGlobal) {
       async function _getLasterVersionNo() {
         try {
           const res = await getLasterVersionNo();
-          return res.data.lastVersion;
+          return res.data;
         } catch (error) {
-          formatAppLog("error", "at pages/me/index.vue:145", "获取最新版本号失败:", error);
+          formatAppLog("error", "at pages/me/index.vue:146", "获取最新版本号失败:", error);
           throw error;
         }
       }
       const lastVersion = vue.ref(null);
+      const apkPath = vue.ref(null);
       async function handleUpdate() {
         try {
-          lastVersion.value = await _getLasterVersionNo();
+          const apkInfo = await _getLasterVersionNo();
+          lastVersion.value = apkInfo.lastVersion;
           const curVersionNo = plus.runtime.version;
-          uni.getSystemInfo({
-            success: function(res) {
-              formatAppLog("log", "at pages/me/index.vue:157", res.appVersion, "APP版本号");
-            }
-          });
           const updateFlag = compareVersion(lastVersion.value, curVersionNo);
           if (updateFlag > 0) {
+            apkPath.value = apkInfo.url;
             updatePopup.value.updateDialog.open();
           } else if (updateFlag === 0) {
             uni.showToast({
               title: "已经是最新版本啦！",
-              icon: "fail",
+              icon: "error",
               duration: 2e3
             });
           } else {
-            ;
             uni.showToast({
               title: "当前版本高于最新版本",
               icon: "error",
@@ -9536,7 +9572,7 @@ if (uni.restoreGlobal) {
         } catch (error) {
           uni.showToast({
             title: error + "系统错误",
-            icon: "fail",
+            icon: "error",
             duration: 2e3
           });
         }
@@ -9565,13 +9601,13 @@ if (uni.restoreGlobal) {
                         });
                         accCache();
                       }, function(e2) {
-                        formatAppLog("log", "at pages/me/index.vue:215", e2.message);
+                        formatAppLog("log", "at pages/me/index.vue:218", e2.message);
                       });
                     } else {
                       entry.remove();
                     }
                   }, function(e2) {
-                    formatAppLog("log", "at pages/me/index.vue:221", "文件路径读取失败");
+                    formatAppLog("log", "at pages/me/index.vue:224", "文件路径读取失败");
                   });
                 }
               } else {
@@ -9584,7 +9620,7 @@ if (uni.restoreGlobal) {
                 });
               }
             } else if (res.cancel) {
-              formatAppLog("log", "at pages/me/index.vue:234", "用户点击取消");
+              formatAppLog("log", "at pages/me/index.vue:237", "用户点击取消");
             }
           }
         });
@@ -9603,7 +9639,7 @@ if (uni.restoreGlobal) {
           } else {
             cacheSize.value = (sizeCache / 1073741824).toFixed(2) + "GB";
           }
-          formatAppLog("log", "at pages/me/index.vue:254", cacheSize.value, "--cache");
+          formatAppLog("log", "at pages/me/index.vue:257", cacheSize.value, "--cache");
         });
       }
       onLoad(() => {
@@ -9744,9 +9780,10 @@ if (uni.restoreGlobal) {
             })) : vue.createCommentVNode("v-if", true),
             vue.createVNode(updataPopup, {
               lastVersion: lastVersion.value,
+              apkPath: apkPath.value,
               ref_key: "updatePopup",
               ref: updatePopup
-            }, null, 8, ["lastVersion"])
+            }, null, 8, ["lastVersion", "apkPath"])
           ],
           64
           /* STABLE_FRAGMENT */

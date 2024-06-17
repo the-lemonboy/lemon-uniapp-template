@@ -54,7 +54,7 @@
 	</view>
 	<watermark v-else-if="!mainVisile && watermarkVisible" @visible="watermarkFlag"></watermark>
 	<userInfoPage class="userInfo" v-else-if="!mainVisile && userInfoVisible" @visible="userInfoFlag"></userInfoPage>
-	<updataPopup :lastVersion="lastVersion" ref="updatePopup"></updataPopup>
+	<updataPopup :lastVersion="lastVersion" :apkPath="apkPath" ref="updatePopup"></updataPopup>
 </template>
 
 <script setup>
@@ -141,19 +141,28 @@
 	async function _getLasterVersionNo() {
 		try {
 			const res = await getLasterVersionNo();
-			return res.data.lastVersion;
+			return res.data;
 		} catch (error) {
 			console.error('获取最新版本号失败:', error);
 			throw error;
 		}
 	}
 	const lastVersion = ref(null)
+	const apkPath = ref(null)
+	function  handleDownloadFile(url, name) {
+      const a = document.createElement('a')
+      a.href = url
+      a.download = name
+      a.click()
+    }
 	async function handleUpdate() {
 		try {
-			lastVersion.value = await _getLasterVersionNo();
+			const apkInfo = await _getLasterVersionNo()
+			lastVersion.value = apkInfo.lastVersion;
 			const curVersionNo = plus.runtime.version; // 获取当前版本号
 			const updateFlag = compareVersion(lastVersion.value, curVersionNo); // 比较版本号
 			if (updateFlag > 0) {
+				apkPath.value = apkInfo.url
 				updatePopup.value.updateDialog.open()
 				// 执行更新操作，例如提示用户下载并安装新版本
 			} else if (updateFlag === 0) {
@@ -163,7 +172,6 @@
 					duration: 2000
 				});
 			} else {
-				;
 				uni.showToast({
 					title: '当前版本高于最新版本',
 					icon: 'error',

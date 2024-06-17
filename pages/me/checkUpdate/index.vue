@@ -9,7 +9,8 @@
 					<view class="lastVersion">发现新版本({{props.lastVersion}})</view>
 				</view>
 				<button v-if="!downloadFlag" class="update-btn" @click="downloadApp">立即更新</button>
-				<u-line-progress v-else active-color='#2096FC' class="progress-box" :striped="true" :percent="progressPercent" :striped-active="true"></u-line-progress>
+				<u-line-progress v-else active-color='#2096FC' class="progress-box" :striped="true"
+					:percent="progressPercent" :striped-active="true"></u-line-progress>
 				<image @click="closePopup" class="close-btn" src="../../../static/images/app_update_close.png"></image>
 			</view>
 		</uni-popup>
@@ -27,9 +28,6 @@
 		getLasterVersion
 	} from '@/api/updateVersion/updateVersion.js'
 	import {
-		onLoad
-	} from "@dcloudio/uni-app"
-	import {
 		compareVersion
 	} from '@/utils/index.js'
 	const props = defineProps({
@@ -37,33 +35,31 @@
 			type: String,
 			default: null
 		},
+		apkPath:{
+			type:String,
+			default:null
+		}
 	})
-	const baseURL = inject('define').baseURL
+	const frontEndUrl = inject('define').frontEndUrl
 	const updateDialog = ref(null)
 	const lastVersion = ref(null)
 	// 获取最新版本号
 
-	// func
-	function handleUpdate() {
-		const curVersion = ref(plus.runtime.version)
-		const updateFlag = compareVersion(lasterVersionNo, curVersion)
-	}
-
 	function closePopup() {
 		updateDialog.value.close()
 	}
-
-
-
 	// 更新版本
 	const downloadFlag = ref(false)
 	const progressPercent = ref(0)
+
 	function downloadApp() {
 		downloadFlag.value = true
+		console.log(`${frontEndUrl}${props.apkPath}`)
 		const downloadTask = uni.downloadFile({
 			// 存放最新安装包的地址
-			url: `${baseURL}/api/app/getAppLastVersion`,
+			url: `${frontEndUrl}${props.apkPath}`,
 			success: (downloadResult) => {
+				console.log(downloadResult.statusCode)
 				if (downloadResult.statusCode === 200) {
 					plus.runtime.install(
 						downloadResult.tempFilePath, {
@@ -78,29 +74,32 @@
 								icon: "error",
 								duration: 2000
 							})
+							downloadFlag.value = false
 						}
+						
 					)
 				} else {
-
+					uni.showToast({
+						title: '安装失败！',
+						icon: "error",
+						duration: 2000
+					})
+					downloadFlag.value = false
 				}
+			},
+			fail: (res) => {
+				// console.log(res)
 			}
 		})
-		downloadTask.onProgressUpdate((res)=>{
+		downloadTask.onProgressUpdate((res) => {
 			progressPercent.value = res.progress
-			console.log(res.progress)
-			if(res.progress == 100) {
-				downloadFlag.value=false
+			if (res.progress == 100) {
+				downloadFlag.value = false
 				progressPercent.value = 0
 				closePopup()
-				}
+			}
 		})
 	}
-		onLoad(async () => {
-			// _getlasterVersion()
-			// await _getlasterVersionNo()
-
-
-		})
 	defineExpose({
 		updateDialog
 	})
@@ -143,13 +142,15 @@
 			color: white;
 			line-height: 40px;
 		}
-		.progress-box{
+
+		.progress-box {
 			position: absolute;
 			bottom: 30px;
 			width: 90%;
 			left: 50%;
 			transform: translateX(-50%);
 		}
+
 		.close-btn {
 			width: 50rpx;
 			height: 50rpx;
