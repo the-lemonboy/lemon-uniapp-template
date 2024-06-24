@@ -52,7 +52,7 @@
 				</view>
 				<view class="right-box">
 					<text class="count">共计： {{dataForm.detailList.length}}个</text>
-					<u-button type="primary" @click="submitData">确认采样</u-button>
+					<u-button type="primary" @click="submitData">确认收样</u-button>
 				</view>
 			</view>
 		</view>

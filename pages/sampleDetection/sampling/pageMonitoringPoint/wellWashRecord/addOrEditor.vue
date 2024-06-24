@@ -20,29 +20,50 @@
 			<u-form-item label-width='100px' label="监测井编号" prop="wellId"><u-input v-model="dataForm.wellId"
 					type="select" @click="wellNoOptions.show=true" /></u-form-item>
 			<!-- <u-form-item label-width='100px' label="洗井类型" prop="washMode"><u-input  v-model="dataForm.washMode" type="select" @click="washModeOptions.show=true" /></u-form-item> -->
-			<u-form-item label-width='100px' label="监测井类型" prop="washMode"><u-input v-model="dataForm.washMode"
+			<u-form-item label-width='100px' label="洗井类型" prop="washMode"><u-input v-model="dataForm.washMode"
 					type="select" @click="washModeOptions.show=true" /></u-form-item>
-			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input type="select"
+			<u-form-item label-width='100px' label="洗井开始时间" prop="startTime"><u-input type="select"
 					@click="showPickerDate('startTime')" v-model="dataForm.startTime" /></u-form-item>
-			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select"
+			<u-form-item label-width='100px' label="洗井结束时间" prop="endTime"><u-input type="select"
 					@click="showPickerDate('endTime')" v-model="dataForm.endTime" /></u-form-item>
 			<!-- <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> -->
 			<u-form-item label-width='100px' label="洗井设备" prop="deviceId"><u-input
 					v-model="dataForm.deviceId" /></u-form-item>
-			<u-form-item label-width='100px' label="井水体积" prop="waterVolume"><u-number-box :positive-integer="false"
-					v-model="dataForm.waterVolume"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="水温" prop="waterTemperature"><u-number-box :positive-integer="false"
-					v-model="dataForm.waterTemperature"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="pH值" prop="waterPh"><u-number-box :positive-integer="false"
-					v-model="dataForm.waterPh"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="电导率" prop="waterConductivity"><u-number-box
-					:positive-integer="false" v-model="dataForm.waterConductivity"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="氧化还原电位" prop="oxReductionPotential"><u-number-box
-					:positive-integer="false" v-model="dataForm.oxReductionPotential"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="溶解氧" prop="dissolvedOxygen"><u-number-box :positive-integer="false"
-					v-model="dataForm.dissolvedOxygen"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="浊度" prop="waterTurbidity"><u-number-box :positive-integer="false"
-					v-model="dataForm.waterTurbidity"></u-number-box></u-form-item>
+			<u-form-item label-width='100px' label="井水体积" prop="waterVolume">
+			  <u-input type="number" v-model="dataForm.waterVolume"></u-input>
+			  <span>(单位: L)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="水温" prop="waterTemperature">
+			  <u-input type="number" v-model="dataForm.waterTemperature"></u-input>
+			  <span>(单位: ℃)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="pH值" prop="waterPh">
+			  <u-input type="number" v-model="dataForm.waterPh"></u-input>
+			  <span>(单位: 无量纲)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="电导率" prop="waterConductivity">
+			  <u-input type="number" v-model="dataForm.waterConductivity"></u-input>
+			  <span>(单位: μS/cm)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="氧化还原电位" prop="oxReductionPotential">
+			  <u-input type="number" v-model="dataForm.oxReductionPotential"></u-input>
+			  <span>(单位: mV)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="溶解氧" prop="dissolvedOxygen">
+			  <u-input type="number" v-model="dataForm.dissolvedOxygen"></u-input>
+			  <span>(单位: mg/L)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="浊度" prop="waterTurbidity">
+			  <u-input type="number" v-model="dataForm.waterTurbidity"></u-input>
+			  <span>(单位: NTU)</span>
+			</u-form-item>
+
 			<u-form-item label-width='100px' label="是否发现NAPL" prop="hasNapl">
 				<u-radio-group v-model="dataForm.hasNapl">
 					<u-radio :name="val.value" :disabled="val.disabled" v-for="(val,index) of selectRadio"

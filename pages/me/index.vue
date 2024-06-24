@@ -22,14 +22,19 @@
 				<view class="message-center link-box" @click="goMessage()">
 					<text class="left-text">消息中心</text>
 					<view class="right-content">
-						<uni-icons type="right" size="30"></uni-icons>
+						<uni-icons type="right" size="30" color="#999"></uni-icons>
 					</view>
 				</view>
 
 				<view class="message-center link-box" @click="handleUpdate()">
-					<text class="left-text">检查更新</text>
+
+					<view class="left-content">
+						<text class="left-text">检查更新</text>
+						<u-badge v-if="updateFlag>0" style="margin-left: 10px;" :absolute="false" color="white" bgColor="red" count="new"></u-badge>
+					</view>
 					<view class="right-content">
-						<uni-icons type="right" size="30"></uni-icons>
+						<text type="right" class="mini-text">版本{{curVersionNo}}</text>
+						<uni-icons type="right" size="30" color="#999"></uni-icons>
 					</view>
 				</view>
 
@@ -37,14 +42,14 @@
 				<view class="clear-cache link-box" @click="clearCache">
 					<text class="left-text">清除缓存</text>
 					<view class="right-content">
-						<text class="right-text">{{cacheSize}}</text>
-						<uni-icons type="right" size="30"></uni-icons>
+						<text class="right-text mini-text">{{cacheSize}}</text>
+						<uni-icons type="right" size="30" color="#999"></uni-icons>
 					</view>
 				</view>
 				<!-- #endif -->
 				<view class="setting link-box" @click="gowatermark">
 					<text class="left-text">设置</text>
-					<uni-icons type="right" size="30"></uni-icons>
+					<uni-icons type="right" size="30" color="#999"></uni-icons>
 				</view>
 				<view class="login-out">
 					<u-button type="primary" @click="loginOut">退出登录</u-button>
@@ -149,23 +154,24 @@
 	}
 	const lastVersion = ref(null)
 	const apkPath = ref(null)
-	function  handleDownloadFile(url, name) {
-      const a = document.createElement('a')
-      a.href = url
-      a.download = name
-      a.click()
-    }
+	const curVersionNo = ref(plus.runtime.version)
+	const updateFlag = ref(false)
+	async function _compareVeresion(){
+		const apkInfo = await _getLasterVersionNo()
+		lastVersion.value = apkInfo.lastVersion;
+		updateFlag.value = compareVersion(lastVersion.value, curVersionNo.value); 
+	}
 	async function handleUpdate() {
 		try {
-			const apkInfo = await _getLasterVersionNo()
-			lastVersion.value = apkInfo.lastVersion;
-			const curVersionNo = plus.runtime.version; // 获取当前版本号
-			const updateFlag = compareVersion(lastVersion.value, curVersionNo); // 比较版本号
-			if (updateFlag > 0) {
+			// const apkInfo = await _getLasterVersionNo()
+			// lastVersion.value = apkInfo.lastVersion;
+			// curVersionNo.value = plus.runtime.version; // 获取当前版本号
+			// const updateFlag = compareVersion(lastVersion.value, curVersionNo.value); // 比较版本号
+			if (updateFlag.value > 0) {
 				apkPath.value = apkInfo.url
 				updatePopup.value.updateDialog.open()
 				// 执行更新操作，例如提示用户下载并安装新版本
-			} else if (updateFlag === 0) {
+			} else if (updateFlag.value === 0) {
 				uni.showToast({
 					title: '已经是最新版本啦！',
 					icon: 'error',
@@ -263,6 +269,7 @@
 		accCache()
 		// #endif
 		userInfo.value = uni.getStorageSync('userInfo')
+		_compareVeresion()
 	})
 </script>
 
@@ -335,10 +342,12 @@
 			flex-direction: row;
 			justify-content: space-between;
 			align-items: center;
-			// .left-text{
-			// 	line-height: 100rpx;
-			// }
+
 		}
+
+		// .left-text {
+		// 	position: relative;
+		// }
 
 		.right-content {
 			display: flex;
@@ -354,5 +363,9 @@
 		left: 50%;
 		transform: translateX(-50%);
 		bottom: 50px;
+	}
+
+	.mini-text {
+		color: $uni-text-color-grey;
 	}
 </style>

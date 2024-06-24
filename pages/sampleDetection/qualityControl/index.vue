@@ -11,7 +11,7 @@
 					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 				<text class="title"
-					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">质控</text>
+					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">质控信息</text>
 			<uni-icons @click="goAddOrEditorData()" class="add" type="plus-filled" size="30" style="color:#2160FF; line-height: 44px; margin-right: 10px; float:right;"></uni-icons>
 			</view>
 			</view>
@@ -19,7 +19,7 @@
 				<u-tabs :list="tabOptions" :is-scroll="true" v-model="tabCurent" @change="change"></u-tabs>
 			</view>
 			<view class="search-box">
-				<u-search placeholder="请输入项目编号" v-model="searchKeyWord" @search="getList()"></u-search>
+				<u-search placeholder="请输入记录编号" v-model="searchKeyWord" @search="getList()" :show-action="searchShowActionFlag" @focus="searchShowActionFlag=true" @blur="searchShowActionFlag=false"></u-search>
 			</view>
 			<view class="content-box">
 				<uni-swipe-action ref="swipeAction">
@@ -101,12 +101,8 @@
 		}
 	}
 	const dataList = ref([])
-	const query = reactive({
-		id: '',
-		recorderId: '',
-		recordTime: ''
-	})
 	// 搜索
+	const searchShowActionFlag = ref(false)
 	const searchKeyWord = ref()
 	const loading = ref(true)
 	 function getList() {
@@ -126,7 +122,7 @@
 			holeId: '',
 			id:searchKeyWord.value
 		}
-		Object.assign(initQuery, query)
+		// Object.assign(initQuery, query)
 		 getQCCheckBaseList(initQuery).then(res => {
 			let list = null
 			if (tabCurent.value == 0) {

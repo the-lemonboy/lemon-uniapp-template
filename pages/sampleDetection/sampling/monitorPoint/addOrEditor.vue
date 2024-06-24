@@ -9,12 +9,12 @@
 			<view class="nav-container" style="height: 44px;">
 				<view class="nav-bar"
 					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
-				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
-				<text class="title"
-					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">监测点位</text>
-				<text @click="addOrUpdateData()" type="primary" class="submit"
-					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
-			</view>
+					<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
+					<text class="title"
+						style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">监测点位</text>
+					<text @click="addOrUpdateData()" type="primary" class="submit"
+						style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
+				</view>
 			</view>
 			<u-toast ref="uToast" />
 			<u-form :model="dataForm" ref="form" rules="rules" style="margin: 10px;">
@@ -27,22 +27,32 @@
 						v-model="dataForm.longitude" /><u-input v-model="dataForm.latitude" /><uni-icons
 						@click="mainVisible = false" type="location-filled" size="30"
 						style="color: green;"></uni-icons></u-form-item>
-				<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input
-						type="select"  @cick="showPickerDate('startTime')" v-model="dataForm.startTime" /></u-form-item>
-				<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select"  @click="showPickerDate('endTime')"
-						v-model="dataForm.endTime" /></u-form-item>
-				<u-form-item label-width='100px' label="钻孔直径" prop="diameter"><u-number-box :positive-integer="false"
-						v-model="dataForm.diameter"></u-number-box></u-form-item>
-				<u-form-item label-width='100px' label="初见水位埋深" prop="sWaterLevel"><u-number-box
-						:positive-integer="false" v-model="dataForm.sWaterLevel"></u-number-box></u-form-item>
-				<u-form-item label-width='100px' label="地面高程" prop="elevation"><u-number-box :positive-integer="false"
-						v-model="dataForm.elevation"></u-number-box></u-form-item>
+				<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input type="select"
+						@cick="showPickerDate('startTime')" v-model="dataForm.startTime" /></u-form-item>
+				<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select"
+						@click="showPickerDate('endTime')" v-model="dataForm.endTime" /></u-form-item>
+				<u-form-item label-width='100px' label="钻孔直径" prop="diameter">
+					<u-input type="number" v-model="dataForm.diameter"></u-input>
+					<span>(单位: cm)</span>
+				</u-form-item>
+
+				<u-form-item label-width='100px' label="初见水位埋深" prop="sWaterLevel">
+					<u-input type="number" v-model="dataForm.sWaterLevel"></u-input>
+					<span>(单位: m)</span>
+				</u-form-item>
+
+				<u-form-item label-width='100px' label="地面高程" prop="elevation">
+					<u-input type="number" v-model="dataForm.elevation"></u-input>
+					<span>(单位: m)</span>
+				</u-form-item>
+
 				<u-form-item label-width='100px' label="参考高程来源" prop="reevlResouce"><u-input
 						v-model="dataForm.reevlResouce" /></u-form-item>
 				<u-form-item label-width='100px' label="备注" prop="remark"><u-input
 						v-model="dataForm.remark" /></u-form-item>
 				<u-form-item label-width='100px' label="上传图片" prop="file">
-					<upload :watermark="true" @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files"></upload>
+					<upload :watermark="true" @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files">
+					</upload>
 				</u-form-item>
 			</u-form>
 			<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
@@ -102,7 +112,8 @@
 	import tMap from './tMap.vue'
 	const mainVisible = ref(true)
 	const location = ref()
-	function emitLocation(val){
+
+	function emitLocation(val) {
 		location.value = val
 		dataForm.value.longitude = val.latlng.lng
 		dataForm.value.latitude = val.latlng.lat
@@ -159,11 +170,12 @@
 		remark: '',
 		files: []
 	})
+
 	function showPickerDate(value) {
 		curTimeKey.value = value,
-		selectTimeVisible.value = true
+			selectTimeVisible.value = true
 	}
-	
+
 	function parseData(_data) {
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
@@ -177,16 +189,17 @@
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid) {
-		parseData(dataForm.value)
-		if (!dataForm.value.id) {
-			addHoleBaseDetail(dataForm.value).then(res =>ToastFn('创建成功'))
-		} else {
-			updateHoleBase(dataForm.value.id, dataForm.value).then(res=>ToastFn('修改成功'))
-		}
-		}
+				parseData(dataForm.value)
+				if (!dataForm.value.id) {
+					addHoleBaseDetail(dataForm.value).then(res => ToastFn('创建成功'))
+				} else {
+					updateHoleBase(dataForm.value.id, dataForm.value).then(res => ToastFn('修改成功'))
+				}
+			}
 		});
 	}
-function ToastFn(text){
+
+	function ToastFn(text) {
 		uni.$emit('refresh')
 		goToBack()
 		uni.showToast({
@@ -194,6 +207,7 @@ function ToastFn(text){
 			duration: 2000
 		});
 	}
+
 	function initData() {
 		const id = uni.getStorageSync('holeId')
 		if (id) {

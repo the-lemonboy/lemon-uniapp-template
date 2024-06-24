@@ -16,10 +16,16 @@
 			</view>
 		</view>
 		<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
-			<u-form-item label-width='100px' label="起始深度" prop="startDepth"><u-number-box :positive-integer="false"
-					v-model="dataForm.startDepth"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="结束深度" prop="endDepth"><u-number-box :positive-integer="false"
-					v-model="dataForm.endDepth"></u-number-box></u-form-item>
+			<u-form-item label-width="100px" label="起始深度" prop="startDepth">
+				<u-input disabled v-model="dataForm.startDepth"></u-input>
+				<span style="margin-left: 5px;">(单位: m)</span>
+			</u-form-item>
+
+			<u-form-item label-width="100px" label="结束深度" prop="endDepth">
+				<u-input v-model="dataForm.endDepth"></u-input>
+				<span>(单位: m)</span>
+			</u-form-item>
+
 			<u-form-item label-width='100px' label="土层类型" prop="solumType"><u-input v-model="dataForm.solumType"
 					type="select" @click="solumTypeOptions.show = true" /></u-form-item>
 			<u-form-item label-width='100px' label="颜色" prop="solumColor"><u-input
@@ -70,23 +76,65 @@
 	import {
 		addHoleRecord,
 		updateHoleRecord,
-		getHoleRecordDetail
+		getHoleRecordDetail,
+		getHoleRecordList
 	} from '@/api/sample.js'
 	import {
 		getDictionaryDataSelector,
 		getDictionaryDataSelectorCascade
 	} from '@/api/dictionary'
+	// 深度校验逻辑
+	const checkDepthValue = ref(0)
+	const loading = ref(false)
+
+	function getList() {
+		return new Promise(resolve=>{
+			loading.value = true
+			let menuId = getMenuId('项目列表')
+			const projectId = uni.getStorageSync('projectId')
+			const holeId = uni.getStorageSync('holeId')
+			let query = {
+				currentPage: 1,
+				pageSize: 0,
+				sort: 'desc',
+				sidx: '',
+				menuId: menuId,
+				projectId: projectId,
+				holeId: holeId
+			}
+			getHoleRecordList(query).then(res => {
+			
+				let tempMaxDepth = 0
+				const id = uni.getStorageSync('holeRecordId')
+				res.data.list.filter(item => item.id !== id).forEach(item => {
+					if (item.endDepth > tempMaxDepth) {
+						tempMaxDepth = item.endDepth
+					}
+				})
+				checkDepthValue.value = tempMaxDepth
+				loading.value = false
+				resolve()
+			}).finally(() => {
+				loading.value = false
+			})
+			
+		})
+	}
+	function validityDepth() {
+		 if ( dataForm.value.endDepth <= dataForm.value.startDepth){
+			uni.showToast({
+				title: `请入大于${dataForm.value.startDepth}的结束深度`,
+				icon: 'error',
+				duration: 1000
+			});
+			return 0
+		}else{
+			return 1
+		}
+
+	}
+	// -----
 	const form = ref(null)
-	const rules = reactive({
-		solumType: [{
-			required: true,
-			message: '请输入图层类型',
-			trigger: 'blur',
-		}]
-	})
-	onReady(() => {
-		form.value.setRules(rules);
-	})
 	let dataForm = ref({
 		projectId: '',
 		holeId: '',
@@ -101,6 +149,28 @@
 		pollutionDesc: '',
 		files: []
 	})
+	const rules = reactive({
+		endDepth: [{
+				validator: (rule, value, callback) => {
+					if (!value) {
+						callback(new Error('请入结束深度'))
+					} else {
+						callback()
+					}
+				},
+				message: '请入结束深度',
+				trigger: ['change', 'blur'],
+			}],
+		solumType: [{
+			required: true,
+			message: '请输入图层类型',
+			trigger: 'blur',
+		}]
+	})
+	onReady(() => {
+		form.value.setRules(rules);
+	})
+
 	// 获取采样类型
 	let solumTypeOptions = reactive({
 		show: false,
@@ -198,10 +268,10 @@
 
 	function addOrUpdateData() {
 		console.log(dataForm.value)
-		
+
 		form.value.validate(valid => {
-			if (valid) {
-				 parseFiles(dataForm.value)
+			if (valid && validityDepth()) {
+				parseFiles(dataForm.value)
 				const id = uni.getStorageSync('holeRecordId')
 				if (!id) {
 					addHoleRecord(dataForm.value).then(res => {
@@ -240,9 +310,14 @@
 			getHoleRecordDetail(id).then(res => {
 				dataForm.value = dataInfo(res.data)
 			})
+		}else{
+			// 新增
+			dataForm.value.startDepth = checkDepthValue.value
+			dataForm.value.endDepth = checkDepthValue.value+1
 		}
 	}
-	onLoad(() => {
+	onLoad(async() => {
+		await getList()
 		initData()
 		getsolumHumidityOptions()
 		getSolumCompactnessOptions()

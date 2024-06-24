@@ -272,7 +272,6 @@ function ToastFn(text){
 	}
 
 	function dataInfo(_dataAll) {
-		let _dataAll = dataAll
 		if (_dataAll.files) {
 			_dataAll.files = JSON.parse(_dataAll.files)
 		} else {

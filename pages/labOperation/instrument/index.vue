@@ -17,7 +17,7 @@
 		</view>
 		</view>
 	<view class="search-box">
-		<u-search placeholder="搜索申请单号" v-model="searchKeyWord" @search="getList()"></u-search>
+		<u-search placeholder="搜索申请单号" v-model="searchKeyWord" @search="getList()" :show-action="searchShowActionFlag" @focus="searchShowActionFlag=true" @blur="searchShowActionFlag=false"></u-search>
 	</view>
 	<view class="content-box">
 		<uni-swipe-action ref="swipeAction">
@@ -70,6 +70,7 @@
 	const dataList = ref([])
 	// 搜索
 	const searchKeyWord = ref()
+	const searchShowActionFlag = ref(false)
 	const listQuery = reactive({
 		currentPage: 1,
 		pageSize: 20,

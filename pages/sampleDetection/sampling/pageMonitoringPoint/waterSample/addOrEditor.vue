@@ -21,9 +21,9 @@
 					type="select" @click="wellIdOptions.show=true" /></u-form-item>
 			<u-form-item label-width='100px' label="样品名称" prop="sampleName"><u-input
 					v-model="dataForm.sampleName" /></u-form-item>
-			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input type="select"
+			<u-form-item label-width='100px' label="采样开始时间" prop="startTime"><u-input type="select"
 					@click="showPickerDate('startTime')" v-model="dataForm.startTime" /></u-form-item>
-			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select"
+			<u-form-item label-width='100px' label="采样结束时间" prop="endTime"><u-input type="select"
 					@click="showPickerDate('endTime')" v-model="dataForm.endTime" /></u-form-item>
 			<u-form-item label-width="150" label="送检" prop="isInspection">
 				<u-radio-group v-model="dataForm.isInspection">
@@ -48,19 +48,37 @@
 				prop="relationSampleName"><u-input type='number' v-model="dataForm.relationSampleName" /></u-form-item>
 			<u-form-item label-width="100px" label="分析指标"><u-input type="select" v-model="selectName"
 					@click="showPicker" /></u-form-item>
-			<u-form-item label-width='100px' label="井深" prop="waterTemperature"><u-number-box :positive-integer="false"
-					v-model="dataForm.waterTemperature"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="pH值" prop="waterPh"><u-number-box :positive-integer="false"
-					v-model="dataForm.waterPh"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="电导率" prop="waterConductivity"><u-number-box
-					:positive-integer="false" v-model="dataForm.waterConductivity"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="氧化还原电位" prop="oxReductionPotential"><u-number-box
-					:positive-integer="false" v-model="dataForm.oxReductionPotential"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="溶解氧" prop="dissolvedOxygen"><u-number-box :positive-integer="false"
-					v-model="dataForm.dissolvedOxygen"></u-number-box></u-form-item>
-			<u-form-item label-width='100px' label="浊度" prop="waterTurbidity"><u-number-box :positive-integer="false"
-					v-model="dataForm.waterTurbidity"></u-number-box></u-form-item>
-			<u-form-item label-width="100px" label="发现NAPL" prop="hasNapl">
+			<u-form-item label-width='100px' label="井深" prop="waterTemperature">
+			  <u-input type="number" v-model="dataForm.waterTemperature"></u-input>
+			  <span>(单位: ℃)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="pH值" prop="waterPh">
+			  <u-input type="number" v-model="dataForm.waterPh"></u-input>
+			  <span>(单位: 无量纲)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="电导率" prop="waterConductivity">
+			  <u-input type="number" v-model="dataForm.waterConductivity"></u-input>
+			  <span>(单位: μS/cm)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="氧化还原电位" prop="oxReductionPotential">
+			  <u-input type="number" v-model="dataForm.oxReductionPotential"></u-input>
+			  <span>(单位: mV)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="溶解氧" prop="dissolvedOxygen">
+			  <u-input type="number" v-model="dataForm.dissolvedOxygen"></u-input>
+			  <span>(单位: mg/L)</span>
+			</u-form-item>
+			
+			<u-form-item label-width='100px' label="浊度" prop="waterTurbidity">
+			  <u-input type="number" v-model="dataForm.waterTurbidity"></u-input>
+			  <span>(单位: NTU)</span>
+			</u-form-item>
+
+			<u-form-item label-width="100px" label="是否发现NAPL" prop="hasNapl">
 				<u-radio-group v-model="dataForm.hasNapl">
 					<u-radio :name="val.value" :disabled="val.disabled" v-for="(val,index) of hasNaplRadio"
 						:key="index">{{val.name}}</u-radio>
@@ -82,8 +100,6 @@
 			:list="sampleNoOptions.list" @confirm="onSampleNoOptions"></u-select>
 		<u-select v-model="relationSampleIdOptions.show" value-name="sampleNo" label-name="sampleNo"
 			:list="relationSampleIdOptions.list" @confirm="onRelationSampleIdOptions"></u-select>
-		<!-- 	<u-select v-model="deviceIdOptions.show" value-name="enCode" label-name="fullName" :list="deviceIdOptions.list"
-			@confirm="onDeviceIdOptions"></u-select> -->
 	</view>
 </template>
 

@@ -21,7 +21,7 @@
 			</view>
 			<view class="control-check">
 				<text class="check-title">水印显示内容</text>
-				<u-checkbox-group shape="circle" class="check-box">
+				<u-checkbox-group shape="circle" class="check-box" :disabled="checkFlag">
 							<view class="check-item" v-for="(item, index) in checkList" :key="index" >
 								<text>{{item.name}}</text>
 								<u-checkbox
@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-	import {ref,defineEmits} from 'vue'
+	import {ref,defineEmits,watch} from 'vue'
 	import {onLoad,onPullDownRefresh} from '@dcloudio/uni-app'
 	import driver from '@/components/driver.vue'
 	const emits = defineEmits('visible')
@@ -53,20 +53,35 @@ function control(val){
 const checkList = ref([
 				{
 					name: '日期',
-					disabled: true
+					disabled: true,
+					checked:false
 				},
 				{
 					name: '项目名称',
-					disabled: true
+					disabled: true,
+					checked:false
 				},
 				{
 					name: '经纬度',
-					disabled: true
+					disabled: true,
+					checked:false
 				},{
 					name: '人员',
-					disabled: true
+					disabled: true,
+					checked:false
 				}
 			])
+const checkFlag = ref(false)
+watch(controlFlag, (val) => {
+  console.log(val);
+  checkFlag.value = !val;
+  if (!val) {
+    checkList.value = checkList.value.map(item => ({
+      ...item,
+      checked: val
+    }));
+  }
+});
   function initData(){
 	  let watermarkValue = uni.getStorageSync('watermarkValue')
 	  watermarkValue.forEach(item=>{

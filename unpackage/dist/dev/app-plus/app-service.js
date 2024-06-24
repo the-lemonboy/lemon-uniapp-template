@@ -3658,6 +3658,7 @@ if (uni.restoreGlobal) {
         listQuery.sort = val.value;
         getMenuList();
       }
+      const searchShowActionFlag = vue.ref(false);
       const searchKeyWord = vue.ref();
       function swipeClick(e2, ctx, id) {
         uni.showModal({
@@ -3745,8 +3746,11 @@ if (uni.restoreGlobal) {
                   placeholder: "请输入项目名称",
                   modelValue: searchKeyWord.value,
                   "onUpdate:modelValue": _cache[0] || (_cache[0] = ($event) => searchKeyWord.value = $event),
-                  onSearch: _cache[1] || (_cache[1] = ($event) => getMenuList())
-                }, null, 8, ["modelValue"])
+                  onSearch: _cache[1] || (_cache[1] = ($event) => getMenuList()),
+                  "show-action": searchShowActionFlag.value,
+                  onFocus: _cache[2] || (_cache[2] = ($event) => searchShowActionFlag.value = true),
+                  onBlur: _cache[3] || (_cache[3] = ($event) => searchShowActionFlag.value = false)
+                }, null, 8, ["modelValue", "show-action"])
               ]),
               vue.createElementVNode("view", { class: "sort-box" }, [
                 vue.createVNode(_component_u_dropdown, {
@@ -3788,7 +3792,7 @@ if (uni.restoreGlobal) {
                             class: "swipe-item items-box",
                             key: item.id,
                             "right-options": swiperOptions.value,
-                            onChange: _cache[2] || (_cache[2] = ($event) => _ctx.swipeChange($event)),
+                            onChange: _cache[4] || (_cache[4] = ($event) => _ctx.swipeChange($event)),
                             onClick: ($event) => swipeClick($event, _ctx.content, item.id)
                           }, {
                             default: vue.withCtx(() => [
@@ -7403,6 +7407,134 @@ if (uni.restoreGlobal) {
   }
   const __easycom_0$6 = /* @__PURE__ */ _export_sfc(_sfc_main$14, [["render", _sfc_render$p], ["__scopeId", "data-v-d31e1c47"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-icons/components/uni-icons/uni-icons.vue"]]);
   const _sfc_main$13 = {
+    name: "u-badge",
+    props: {
+      // primary,warning,success,error,info
+      type: {
+        type: String,
+        default: "error"
+      },
+      // default, mini
+      size: {
+        type: String,
+        default: "default"
+      },
+      //是否是圆点
+      isDot: {
+        type: Boolean,
+        default: false
+      },
+      // 显示的数值内容
+      count: {
+        type: [Number, String]
+      },
+      // 展示封顶的数字值
+      overflowCount: {
+        type: Number,
+        default: 99
+      },
+      // 当数值为 0 时，是否展示 Badge
+      showZero: {
+        type: Boolean,
+        default: false
+      },
+      // 位置偏移
+      offset: {
+        type: Array,
+        default: () => {
+          return [20, 20];
+        }
+      },
+      // 是否开启绝对定位，开启了offset才会起作用
+      absolute: {
+        type: Boolean,
+        default: true
+      },
+      // 字体大小
+      fontSize: {
+        type: [String, Number],
+        default: "24"
+      },
+      // 字体演示
+      color: {
+        type: String,
+        default: "#ffffff"
+      },
+      // badge的背景颜色
+      bgColor: {
+        type: String,
+        default: ""
+      },
+      // 是否让badge组件的中心点和父组件右上角重合，配置的话，offset将会失效
+      isCenter: {
+        type: Boolean,
+        default: false
+      }
+    },
+    computed: {
+      // 是否将badge中心与父组件右上角重合
+      boxStyle() {
+        let style = {};
+        if (this.isCenter) {
+          style.top = 0;
+          style.right = 0;
+          style.transform = "translateY(-50%) translateX(50%)";
+        } else {
+          style.top = this.offset[0] + "rpx";
+          style.right = this.offset[1] + "rpx";
+          style.transform = "translateY(0) translateX(0)";
+        }
+        if (this.size == "mini") {
+          style.transform = style.transform + " scale(0.8)";
+        }
+        return style;
+      },
+      // isDot类型时，不显示文字
+      showText() {
+        if (this.isDot)
+          return "";
+        else {
+          if (this.count > this.overflowCount)
+            return `${this.overflowCount}+`;
+          else
+            return this.count;
+        }
+      },
+      // 是否显示组件
+      show() {
+        if (this.count == 0 && this.showZero == false)
+          return false;
+        else
+          return true;
+      }
+    }
+  };
+  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
+    return $options.show ? (vue.openBlock(), vue.createElementBlock(
+      "view",
+      {
+        key: 0,
+        class: vue.normalizeClass(["u-badge", [
+          $props.isDot ? "u-badge-dot" : "",
+          $props.size == "mini" ? "u-badge-mini" : "",
+          $props.type ? "u-badge--bg--" + $props.type : ""
+        ]]),
+        style: vue.normalizeStyle([{
+          top: $props.offset[0] + "rpx",
+          right: $props.offset[1] + "rpx",
+          fontSize: $props.fontSize + "rpx",
+          position: $props.absolute ? "absolute" : "static",
+          color: $props.color,
+          backgroundColor: $props.bgColor
+        }, $options.boxStyle])
+      },
+      vue.toDisplayString($options.showText),
+      7
+      /* TEXT, CLASS, STYLE */
+    )) : vue.createCommentVNode("v-if", true);
+  }
+  const __easycom_0$5 = /* @__PURE__ */ _export_sfc(_sfc_main$13, [["render", _sfc_render$o], ["__scopeId", "data-v-f84de764"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-badge/u-badge.vue"]]);
+  const _sfc_main$12 = {
     name: "u-loading",
     props: {
       // 动画的类型
@@ -7438,7 +7570,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.show ? (vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -7451,8 +7583,8 @@ if (uni.restoreGlobal) {
       /* CLASS, STYLE */
     )) : vue.createCommentVNode("v-if", true);
   }
-  const __easycom_0$5 = /* @__PURE__ */ _export_sfc(_sfc_main$13, [["render", _sfc_render$o], ["__scopeId", "data-v-32db0ed8"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-loading/u-loading.vue"]]);
-  const _sfc_main$12 = {
+  const __easycom_0$4 = /* @__PURE__ */ _export_sfc(_sfc_main$12, [["render", _sfc_render$n], ["__scopeId", "data-v-32db0ed8"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-loading/u-loading.vue"]]);
+  const _sfc_main$11 = {
     name: "u-switch",
     emits: ["update:modelValue", "input", "change"],
     props: {
@@ -7537,8 +7669,8 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_u_loading = resolveEasycom(vue.resolveDynamicComponent("u-loading"), __easycom_0$5);
+  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_u_loading = resolveEasycom(vue.resolveDynamicComponent("u-loading"), __easycom_0$4);
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -7572,8 +7704,8 @@ if (uni.restoreGlobal) {
       /* CLASS, STYLE */
     );
   }
-  const __easycom_1$5 = /* @__PURE__ */ _export_sfc(_sfc_main$12, [["render", _sfc_render$n], ["__scopeId", "data-v-033901d2"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-switch/u-switch.vue"]]);
-  const _sfc_main$11 = {
+  const __easycom_1$5 = /* @__PURE__ */ _export_sfc(_sfc_main$11, [["render", _sfc_render$m], ["__scopeId", "data-v-033901d2"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-switch/u-switch.vue"]]);
+  const _sfc_main$10 = {
     name: "u-checkbox",
     emits: ["update:modelValue", "input", "change"],
     props: {
@@ -7776,7 +7908,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$7);
     return vue.openBlock(), vue.createElementBlock(
       "view",
@@ -7830,8 +7962,8 @@ if (uni.restoreGlobal) {
       /* STYLE */
     );
   }
-  const __easycom_5$2 = /* @__PURE__ */ _export_sfc(_sfc_main$11, [["render", _sfc_render$m], ["__scopeId", "data-v-cafae08d"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-checkbox/u-checkbox.vue"]]);
-  const _sfc_main$10 = {
+  const __easycom_5$2 = /* @__PURE__ */ _export_sfc(_sfc_main$10, [["render", _sfc_render$l], ["__scopeId", "data-v-cafae08d"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-checkbox/u-checkbox.vue"]]);
+  const _sfc_main$$ = {
     name: "u-checkbox-group",
     emits: ["update:modelValue", "input", "change"],
     mixins: [Emitter],
@@ -7959,7 +8091,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -7972,13 +8104,19 @@ if (uni.restoreGlobal) {
       /* CLASS */
     );
   }
-  const __easycom_6$1 = /* @__PURE__ */ _export_sfc(_sfc_main$10, [["render", _sfc_render$l], ["__scopeId", "data-v-6a8aa283"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-checkbox-group/u-checkbox-group.vue"]]);
-  const _sfc_main$$ = {};
-  function _sfc_render$k(_ctx, _cache) {
+  const __easycom_6$1 = /* @__PURE__ */ _export_sfc(_sfc_main$$, [["render", _sfc_render$k], ["__scopeId", "data-v-6a8aa283"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-checkbox-group/u-checkbox-group.vue"]]);
+  vue.defineProps({
+    width: {
+      type: Number,
+      default: 90
+    }
+  });
+  const _sfc_main$_ = {};
+  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "driver" });
   }
-  const driver = /* @__PURE__ */ _export_sfc(_sfc_main$$, [["render", _sfc_render$k], ["__scopeId", "data-v-4c4c9b0b"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/components/driver.vue"]]);
-  const _sfc_main$_ = {
+  const driver = /* @__PURE__ */ _export_sfc(_sfc_main$_, [["render", _sfc_render$j], ["__scopeId", "data-v-4c4c9b0b"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/components/driver.vue"]]);
+  const _sfc_main$Z = {
     __name: "index",
     emits: "visible",
     setup(__props, { emit: __emit }) {
@@ -7994,21 +8132,36 @@ if (uni.restoreGlobal) {
       const checkList = vue.ref([
         {
           name: "日期",
-          disabled: true
+          disabled: true,
+          checked: false
         },
         {
           name: "项目名称",
-          disabled: true
+          disabled: true,
+          checked: false
         },
         {
           name: "经纬度",
-          disabled: true
+          disabled: true,
+          checked: false
         },
         {
           name: "人员",
-          disabled: true
+          disabled: true,
+          checked: false
         }
       ]);
+      const checkFlag = vue.ref(false);
+      vue.watch(controlFlag, (val) => {
+        formatAppLog("log", "at pages/me/watermark/index.vue:76", val);
+        checkFlag.value = !val;
+        if (!val) {
+          checkList.value = checkList.value.map((item) => ({
+            ...item,
+            checked: val
+          }));
+        }
+      });
       function initData() {
         let watermarkValue = uni.getStorageSync("watermarkValue");
         watermarkValue.forEach((item) => {
@@ -8079,7 +8232,8 @@ if (uni.restoreGlobal) {
                 vue.createElementVNode("text", { class: "check-title" }, "水印显示内容"),
                 vue.createVNode(_component_u_checkbox_group, {
                   shape: "circle",
-                  class: "check-box"
+                  class: "check-box",
+                  disabled: checkFlag.value
                 }, {
                   default: vue.withCtx(() => [
                     (vue.openBlock(true), vue.createElementBlock(
@@ -8111,7 +8265,7 @@ if (uni.restoreGlobal) {
                   ]),
                   _: 1
                   /* STABLE */
-                })
+                }, 8, ["disabled"])
               ])
             ])
           ])
@@ -8119,7 +8273,7 @@ if (uni.restoreGlobal) {
       };
     }
   };
-  const watermark = /* @__PURE__ */ _export_sfc(_sfc_main$_, [["__scopeId", "data-v-073758e1"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/me/watermark/index.vue"]]);
+  const watermark = /* @__PURE__ */ _export_sfc(_sfc_main$Z, [["__scopeId", "data-v-073758e1"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/me/watermark/index.vue"]]);
   function getMenuId(moduleName) {
     let menuList = [];
     if (menuList.length === 0) {
@@ -8278,7 +8432,7 @@ if (uni.restoreGlobal) {
       data
     });
   }
-  const _sfc_main$Z = {
+  const _sfc_main$Y = {
     __name: "index",
     emits: ["visible"],
     setup(__props, { emit: __emit }) {
@@ -8450,8 +8604,8 @@ if (uni.restoreGlobal) {
       };
     }
   };
-  const userInfoPage = /* @__PURE__ */ _export_sfc(_sfc_main$Z, [["__scopeId", "data-v-3a646999"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/me/userInfo/index.vue"]]);
-  const _sfc_main$Y = {
+  const userInfoPage = /* @__PURE__ */ _export_sfc(_sfc_main$Y, [["__scopeId", "data-v-3a646999"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/me/userInfo/index.vue"]]);
+  const _sfc_main$X = {
     name: "u-line-progress",
     props: {
       // 两端是否显示半圆形
@@ -8513,7 +8667,7 @@ if (uni.restoreGlobal) {
     },
     methods: {}
   };
-  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -8558,7 +8712,7 @@ if (uni.restoreGlobal) {
       /* STYLE */
     );
   }
-  const __easycom_1$4 = /* @__PURE__ */ _export_sfc(_sfc_main$Y, [["render", _sfc_render$j], ["__scopeId", "data-v-af2fba7d"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-line-progress/u-line-progress.vue"]]);
+  const __easycom_1$4 = /* @__PURE__ */ _export_sfc(_sfc_main$X, [["render", _sfc_render$i], ["__scopeId", "data-v-af2fba7d"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-line-progress/u-line-progress.vue"]]);
   class MPAnimation {
     constructor(options, _this) {
       this.options = options;
@@ -8671,7 +8825,7 @@ if (uni.restoreGlobal) {
     clearTimeout(_this.timer);
     return new MPAnimation(option, _this);
   }
-  const _sfc_main$X = {
+  const _sfc_main$W = {
     name: "uniTransition",
     emits: ["click", "change"],
     props: {
@@ -8922,7 +9076,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$i(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.withDirectives((vue.openBlock(), vue.createElementBlock("view", {
       ref: "ani",
       animation: $data.animationData,
@@ -8935,8 +9089,8 @@ if (uni.restoreGlobal) {
       [vue.vShow, $data.isShow]
     ]);
   }
-  const __easycom_0$4 = /* @__PURE__ */ _export_sfc(_sfc_main$X, [["render", _sfc_render$i], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-transition/components/uni-transition/uni-transition.vue"]]);
-  const _sfc_main$W = {
+  const __easycom_0$3 = /* @__PURE__ */ _export_sfc(_sfc_main$W, [["render", _sfc_render$h], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-transition/components/uni-transition/uni-transition.vue"]]);
+  const _sfc_main$V = {
     name: "uniPopup",
     components: {},
     emits: ["change", "maskClick"],
@@ -9286,8 +9440,8 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$h(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_uni_transition = resolveEasycom(vue.resolveDynamicComponent("uni-transition"), __easycom_0$4);
+  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
+    const _component_uni_transition = resolveEasycom(vue.resolveDynamicComponent("uni-transition"), __easycom_0$3);
     return $data.showPopup ? (vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -9346,14 +9500,14 @@ if (uni.restoreGlobal) {
       /* CLASS */
     )) : vue.createCommentVNode("v-if", true);
   }
-  const __easycom_1$3 = /* @__PURE__ */ _export_sfc(_sfc_main$W, [["render", _sfc_render$h], ["__scopeId", "data-v-4dd3c44b"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-popup/components/uni-popup/uni-popup.vue"]]);
+  const __easycom_1$3 = /* @__PURE__ */ _export_sfc(_sfc_main$V, [["render", _sfc_render$g], ["__scopeId", "data-v-4dd3c44b"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-popup/components/uni-popup/uni-popup.vue"]]);
   function getLasterVersionNo() {
     return request({
       url: "/api/app/getAppLastVersionNo",
       method: "get"
     });
   }
-  const _sfc_main$V = {
+  const _sfc_main$U = {
     __name: "index",
     props: {
       lastVersion: {
@@ -9484,8 +9638,8 @@ if (uni.restoreGlobal) {
       };
     }
   };
-  const updataPopup = /* @__PURE__ */ _export_sfc(_sfc_main$V, [["__scopeId", "data-v-6f8e61d4"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/me/checkUpdate/index.vue"]]);
-  const _sfc_main$U = {
+  const updataPopup = /* @__PURE__ */ _export_sfc(_sfc_main$U, [["__scopeId", "data-v-6f8e61d4"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/me/checkUpdate/index.vue"]]);
+  const _sfc_main$T = {
     __name: "index",
     setup(__props) {
       const userInfo = vue.ref({});
@@ -9505,7 +9659,7 @@ if (uni.restoreGlobal) {
                 }
               });
             } else if (res.cancel) {
-              formatAppLog("log", "at pages/me/index.vue:104", "用户点击取消");
+              formatAppLog("log", "at pages/me/index.vue:109", "用户点击取消");
             }
           }
         });
@@ -9541,22 +9695,25 @@ if (uni.restoreGlobal) {
           const res = await getLasterVersionNo();
           return res.data;
         } catch (error) {
-          formatAppLog("error", "at pages/me/index.vue:146", "获取最新版本号失败:", error);
+          formatAppLog("error", "at pages/me/index.vue:151", "获取最新版本号失败:", error);
           throw error;
         }
       }
       const lastVersion = vue.ref(null);
       const apkPath = vue.ref(null);
+      const curVersionNo = vue.ref(plus.runtime.version);
+      const updateFlag = vue.ref(false);
+      async function _compareVeresion() {
+        const apkInfo2 = await _getLasterVersionNo();
+        lastVersion.value = apkInfo2.lastVersion;
+        updateFlag.value = compareVersion(lastVersion.value, curVersionNo.value);
+      }
       async function handleUpdate() {
         try {
-          const apkInfo = await _getLasterVersionNo();
-          lastVersion.value = apkInfo.lastVersion;
-          const curVersionNo = plus.runtime.version;
-          const updateFlag = compareVersion(lastVersion.value, curVersionNo);
-          if (updateFlag > 0) {
+          if (updateFlag.value > 0) {
             apkPath.value = apkInfo.url;
             updatePopup.value.updateDialog.open();
-          } else if (updateFlag === 0) {
+          } else if (updateFlag.value === 0) {
             uni.showToast({
               title: "已经是最新版本啦！",
               icon: "error",
@@ -9601,13 +9758,13 @@ if (uni.restoreGlobal) {
                         });
                         accCache();
                       }, function(e2) {
-                        formatAppLog("log", "at pages/me/index.vue:218", e2.message);
+                        formatAppLog("log", "at pages/me/index.vue:224", e2.message);
                       });
                     } else {
                       entry.remove();
                     }
                   }, function(e2) {
-                    formatAppLog("log", "at pages/me/index.vue:224", "文件路径读取失败");
+                    formatAppLog("log", "at pages/me/index.vue:230", "文件路径读取失败");
                   });
                 }
               } else {
@@ -9620,7 +9777,7 @@ if (uni.restoreGlobal) {
                 });
               }
             } else if (res.cancel) {
-              formatAppLog("log", "at pages/me/index.vue:237", "用户点击取消");
+              formatAppLog("log", "at pages/me/index.vue:243", "用户点击取消");
             }
           }
         });
@@ -9639,16 +9796,18 @@ if (uni.restoreGlobal) {
           } else {
             cacheSize.value = (sizeCache / 1073741824).toFixed(2) + "GB";
           }
-          formatAppLog("log", "at pages/me/index.vue:257", cacheSize.value, "--cache");
+          formatAppLog("log", "at pages/me/index.vue:263", cacheSize.value, "--cache");
         });
       }
       onLoad(() => {
         accCache();
         userInfo.value = uni.getStorageSync("userInfo");
+        _compareVeresion();
       });
       return (_ctx, _cache) => {
         const _component_viwe = vue.resolveComponent("viwe");
         const _component_uni_icons = resolveEasycom(vue.resolveDynamicComponent("uni-icons"), __easycom_0$6);
+        const _component_u_badge = resolveEasycom(vue.resolveDynamicComponent("u-badge"), __easycom_0$5);
         const _component_u_button = resolveEasycom(vue.resolveDynamicComponent("u-button"), __easycom_4$2);
         return vue.openBlock(), vue.createElementBlock(
           vue.Fragment,
@@ -9711,7 +9870,8 @@ if (uni.restoreGlobal) {
                     vue.createElementVNode("view", { class: "right-content" }, [
                       vue.createVNode(_component_uni_icons, {
                         type: "right",
-                        size: "30"
+                        size: "30",
+                        color: "#999"
                       })
                     ])
                   ]),
@@ -9719,11 +9879,32 @@ if (uni.restoreGlobal) {
                     class: "message-center link-box",
                     onClick: _cache[1] || (_cache[1] = ($event) => handleUpdate())
                   }, [
-                    vue.createElementVNode("text", { class: "left-text" }, "检查更新"),
+                    vue.createElementVNode("view", { class: "left-content" }, [
+                      vue.createElementVNode("text", { class: "left-text" }, "检查更新"),
+                      updateFlag.value > 0 ? (vue.openBlock(), vue.createBlock(_component_u_badge, {
+                        key: 0,
+                        style: { "margin-left": "10px" },
+                        absolute: false,
+                        color: "white",
+                        bgColor: "red",
+                        count: "new"
+                      })) : vue.createCommentVNode("v-if", true)
+                    ]),
                     vue.createElementVNode("view", { class: "right-content" }, [
+                      vue.createElementVNode(
+                        "text",
+                        {
+                          type: "right",
+                          class: "mini-text"
+                        },
+                        "版本" + vue.toDisplayString(curVersionNo.value),
+                        1
+                        /* TEXT */
+                      ),
                       vue.createVNode(_component_uni_icons, {
                         type: "right",
-                        size: "30"
+                        size: "30",
+                        color: "#999"
                       })
                     ])
                   ]),
@@ -9735,14 +9916,15 @@ if (uni.restoreGlobal) {
                     vue.createElementVNode("view", { class: "right-content" }, [
                       vue.createElementVNode(
                         "text",
-                        { class: "right-text" },
+                        { class: "right-text mini-text" },
                         vue.toDisplayString(cacheSize.value),
                         1
                         /* TEXT */
                       ),
                       vue.createVNode(_component_uni_icons, {
                         type: "right",
-                        size: "30"
+                        size: "30",
+                        color: "#999"
                       })
                     ])
                   ]),
@@ -9753,7 +9935,8 @@ if (uni.restoreGlobal) {
                     vue.createElementVNode("text", { class: "left-text" }, "设置"),
                     vue.createVNode(_component_uni_icons, {
                       type: "right",
-                      size: "30"
+                      size: "30",
+                      color: "#999"
                     })
                   ]),
                   vue.createElementVNode("view", { class: "login-out" }, [
@@ -9791,135 +9974,7 @@ if (uni.restoreGlobal) {
       };
     }
   };
-  const PagesMeIndex = /* @__PURE__ */ _export_sfc(_sfc_main$U, [["__scopeId", "data-v-c8e26b33"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/me/index.vue"]]);
-  const _sfc_main$T = {
-    name: "u-badge",
-    props: {
-      // primary,warning,success,error,info
-      type: {
-        type: String,
-        default: "error"
-      },
-      // default, mini
-      size: {
-        type: String,
-        default: "default"
-      },
-      //是否是圆点
-      isDot: {
-        type: Boolean,
-        default: false
-      },
-      // 显示的数值内容
-      count: {
-        type: [Number, String]
-      },
-      // 展示封顶的数字值
-      overflowCount: {
-        type: Number,
-        default: 99
-      },
-      // 当数值为 0 时，是否展示 Badge
-      showZero: {
-        type: Boolean,
-        default: false
-      },
-      // 位置偏移
-      offset: {
-        type: Array,
-        default: () => {
-          return [20, 20];
-        }
-      },
-      // 是否开启绝对定位，开启了offset才会起作用
-      absolute: {
-        type: Boolean,
-        default: true
-      },
-      // 字体大小
-      fontSize: {
-        type: [String, Number],
-        default: "24"
-      },
-      // 字体演示
-      color: {
-        type: String,
-        default: "#ffffff"
-      },
-      // badge的背景颜色
-      bgColor: {
-        type: String,
-        default: ""
-      },
-      // 是否让badge组件的中心点和父组件右上角重合，配置的话，offset将会失效
-      isCenter: {
-        type: Boolean,
-        default: false
-      }
-    },
-    computed: {
-      // 是否将badge中心与父组件右上角重合
-      boxStyle() {
-        let style = {};
-        if (this.isCenter) {
-          style.top = 0;
-          style.right = 0;
-          style.transform = "translateY(-50%) translateX(50%)";
-        } else {
-          style.top = this.offset[0] + "rpx";
-          style.right = this.offset[1] + "rpx";
-          style.transform = "translateY(0) translateX(0)";
-        }
-        if (this.size == "mini") {
-          style.transform = style.transform + " scale(0.8)";
-        }
-        return style;
-      },
-      // isDot类型时，不显示文字
-      showText() {
-        if (this.isDot)
-          return "";
-        else {
-          if (this.count > this.overflowCount)
-            return `${this.overflowCount}+`;
-          else
-            return this.count;
-        }
-      },
-      // 是否显示组件
-      show() {
-        if (this.count == 0 && this.showZero == false)
-          return false;
-        else
-          return true;
-      }
-    }
-  };
-  function _sfc_render$g(_ctx, _cache, $props, $setup, $data, $options) {
-    return $options.show ? (vue.openBlock(), vue.createElementBlock(
-      "view",
-      {
-        key: 0,
-        class: vue.normalizeClass(["u-badge", [
-          $props.isDot ? "u-badge-dot" : "",
-          $props.size == "mini" ? "u-badge-mini" : "",
-          $props.type ? "u-badge--bg--" + $props.type : ""
-        ]]),
-        style: vue.normalizeStyle([{
-          top: $props.offset[0] + "rpx",
-          right: $props.offset[1] + "rpx",
-          fontSize: $props.fontSize + "rpx",
-          position: $props.absolute ? "absolute" : "static",
-          color: $props.color,
-          backgroundColor: $props.bgColor
-        }, $options.boxStyle])
-      },
-      vue.toDisplayString($options.showText),
-      7
-      /* TEXT, CLASS, STYLE */
-    )) : vue.createCommentVNode("v-if", true);
-  }
-  const __easycom_0$3 = /* @__PURE__ */ _export_sfc(_sfc_main$T, [["render", _sfc_render$g], ["__scopeId", "data-v-f84de764"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-badge/u-badge.vue"]]);
+  const PagesMeIndex = /* @__PURE__ */ _export_sfc(_sfc_main$T, [["__scopeId", "data-v-c8e26b33"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/me/index.vue"]]);
   const _sfc_main$S = {
     name: "u-tabs",
     emits: ["update:modelValue", "input", "change"],
@@ -10188,7 +10243,7 @@ if (uni.restoreGlobal) {
     }
   };
   function _sfc_render$f(_ctx, _cache, $props, $setup, $data, $options) {
-    const _component_u_badge = resolveEasycom(vue.resolveDynamicComponent("u-badge"), __easycom_0$3);
+    const _component_u_badge = resolveEasycom(vue.resolveDynamicComponent("u-badge"), __easycom_0$5);
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -33592,8 +33647,7 @@ ${i3}
         }
         return;
       }
-      function parseFiles(data) {
-        var _data = JSON.parse(JSON.stringify(data));
+      function parseFiles(_data) {
         if (_data.files) {
           _data.files = JSON.stringify(_data.files);
         } else {
@@ -33605,18 +33659,16 @@ ${i3}
         _data.checkUserName = uni.getStorageSync("userInfo").userName;
         _data.projectName = uni.getStorageSync("projectName");
         _data.createUser = uni.getStorageSync("userInfo").userId;
-        return _data;
       }
       function addOrUpdateData() {
         form.value.validate((valid) => {
           if (valid) {
-            dataForm.value = parseFiles(dataForm.value);
+            parseFiles(dataForm.value);
             if (!dataForm.value.id) {
               addQCCheckBase(dataForm.value).then((res) => ToastFn("创建成功"));
             } else {
               updateQCCheckBase(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
             }
-            clearData(dataForm.value);
           }
         });
       }
@@ -33629,20 +33681,19 @@ ${i3}
         });
       }
       const itemId = vue.ref(null);
-      function dataInfo(dataAll) {
-        let _dataAll = dataAll;
+      function dataInfo(_dataAll) {
         if (_dataAll.files) {
           _dataAll.files = JSON.parse(_dataAll.files);
         } else {
           _dataAll.files = [];
         }
-        dataForm.value = _dataAll;
+        return _dataAll;
       }
       function initData() {
         const id = itemId.value;
         if (id) {
           getQCCheckBaseDetail(id).then((res) => {
-            dataInfo(res.data);
+            dataForm.value = dataInfo(res.data);
             confTreeData.value = editorTableData(dataForm.value.detailList);
           });
         } else {
@@ -33815,7 +33866,7 @@ ${i3}
                     vue.createElementVNode("text", {
                       class: "title",
                       style: { "font-size": "16px", "position": "absolute", "left": "50%", "top": "50%", "transform": "translate(-50%,-50%)" }
-                    }, "采样信息"),
+                    }, "质控信息"),
                     vue.createElementVNode("text", {
                       onClick: _cache[1] || (_cache[1] = ($event) => addOrUpdateData()),
                       type: "primary",
@@ -33998,11 +34049,7 @@ ${i3}
         }
       }
       const dataList = vue.ref([]);
-      const query = vue.reactive({
-        id: "",
-        recorderId: "",
-        recordTime: ""
-      });
+      const searchShowActionFlag = vue.ref(false);
       const searchKeyWord = vue.ref();
       const loading = vue.ref(true);
       function getList() {
@@ -34022,7 +34069,6 @@ ${i3}
           holeId: "",
           id: searchKeyWord.value
         };
-        Object.assign(initQuery, query);
         getQCCheckBaseList(initQuery).then((res) => {
           let list = null;
           if (tabCurent.value == 0) {
@@ -34122,7 +34168,7 @@ ${i3}
                     vue.createElementVNode("text", {
                       class: "title",
                       style: { "font-size": "16px", "position": "absolute", "left": "50%", "top": "50%", "transform": "translate(-50%,-50%)" }
-                    }, "质控"),
+                    }, "质控信息"),
                     vue.createVNode(_component_uni_icons, {
                       onClick: _cache[1] || (_cache[1] = ($event) => goAddOrEditorData()),
                       class: "add",
@@ -34143,11 +34189,14 @@ ${i3}
                 ]),
                 vue.createElementVNode("view", { class: "search-box" }, [
                   vue.createVNode(_component_u_search, {
-                    placeholder: "请输入项目编号",
+                    placeholder: "请输入记录编号",
                     modelValue: searchKeyWord.value,
                     "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => searchKeyWord.value = $event),
-                    onSearch: _cache[4] || (_cache[4] = ($event) => getList())
-                  }, null, 8, ["modelValue"])
+                    onSearch: _cache[4] || (_cache[4] = ($event) => getList()),
+                    "show-action": searchShowActionFlag.value,
+                    onFocus: _cache[5] || (_cache[5] = ($event) => searchShowActionFlag.value = true),
+                    onBlur: _cache[6] || (_cache[6] = ($event) => searchShowActionFlag.value = false)
+                  }, null, 8, ["modelValue", "show-action"])
                 ]),
                 vue.createElementVNode("view", { class: "content-box" }, [
                   vue.createVNode(
@@ -34233,7 +34282,7 @@ ${i3}
                 ref_key: "EditorRef",
                 ref: EditorRef,
                 onCurTab: curTab,
-                onEmitVisible: _cache[5] || (_cache[5] = (val) => mainVisible.value = val)
+                onEmitVisible: _cache[7] || (_cache[7] = (val) => mainVisible.value = val)
               },
               null,
               512
@@ -34567,6 +34616,7 @@ ${i3}
             dataForm.value.projectId = uni.getStorageSync("projectId");
             dataForm.value.transUserId = uni.getStorageSync("userInfo").userId;
             dataForm.value.organizeId = uni.getStorageSync("userInfo").organizeId;
+            dataForm.value.domain = "sample";
             const detailList = unSendList.value.filter((item) => item.send).map((item) => ({
               analysisFactorIds: item.analysisFactorIds,
               analysisFactorNames: item.analysisFactorNames,
@@ -34716,7 +34766,6 @@ ${i3}
                       }, {
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_u_input, {
-                            type: "select",
                             onClick: _cache[2] || (_cache[2] = ($event) => showPickerDate("transTime")),
                             modelValue: dataForm.value.transTime,
                             "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => dataForm.value.transTime = $event)
@@ -35307,6 +35356,7 @@ ${i3}
                       }, {
                         default: vue.withCtx(() => [
                           vue.createVNode(_component_u_input, {
+                            type: "select",
                             onClick: _cache[3] || (_cache[3] = ($event) => showPickerDate("receiveTime")),
                             modelValue: dataForm.value.receiveTime,
                             "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => dataForm.value.receiveTime = $event)
@@ -35415,7 +35465,7 @@ ${i3}
                       onClick: submitData
                     }, {
                       default: vue.withCtx(() => [
-                        vue.createTextVNode("确认采样")
+                        vue.createTextVNode("确认收样")
                       ]),
                       _: 1
                       /* STABLE */
@@ -35666,403 +35716,6 @@ ${i3}
   };
   const PagesSampleDetectionReceiveSampleIndex = /* @__PURE__ */ _export_sfc(_sfc_main$r, [["__scopeId", "data-v-43f4092f"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/receiveSample/index.vue"]]);
   const _sfc_main$q = {
-    name: "u-numberbox",
-    emits: ["update:modelValue", "input", "change", "blur", "plus", "minus"],
-    props: {
-      // 预显示的数字
-      value: {
-        type: Number,
-        default: 1
-      },
-      modelValue: {
-        type: Number,
-        default: 1
-      },
-      // 背景颜色
-      bgColor: {
-        type: String,
-        default: "#F2F3F5"
-      },
-      // 最小值
-      min: {
-        type: Number,
-        default: 0
-      },
-      // 最大值
-      max: {
-        type: Number,
-        default: 99999
-      },
-      // 步进值，每次加或减的值
-      step: {
-        type: Number,
-        default: 1
-      },
-      // 步进值，首次增加或最后减的值
-      stepFirst: {
-        type: Number,
-        default: 0
-      },
-      // 是否只能输入 step 的倍数
-      stepStrictly: {
-        type: Boolean,
-        default: false
-      },
-      // 是否禁用加减操作
-      disabled: {
-        type: Boolean,
-        default: false
-      },
-      // input的字体大小，单位rpx
-      size: {
-        type: [Number, String],
-        default: 26
-      },
-      // 加减图标的颜色
-      color: {
-        type: String,
-        default: "#323233"
-      },
-      // input宽度，单位rpx
-      inputWidth: {
-        type: [Number, String],
-        default: 80
-      },
-      // input高度，单位rpx
-      inputHeight: {
-        type: [Number, String],
-        default: 50
-      },
-      // index索引，用于列表中使用，让用户知道是哪个numberbox发生了变化，一般使用for循环出来的index值即可
-      index: {
-        type: [Number, String],
-        default: ""
-      },
-      // 是否禁用输入框，与disabled作用于输入框时，为OR的关系，即想要禁用输入框，又可以加减的话
-      // 设置disabled为false，disabledInput为true即可
-      disabledInput: {
-        type: Boolean,
-        default: false
-      },
-      // 输入框于键盘之间的距离
-      cursorSpacing: {
-        type: [Number, String],
-        default: 100
-      },
-      // 是否开启长按连续递增或递减
-      longPress: {
-        type: Boolean,
-        default: true
-      },
-      // 开启长按触发后，每触发一次需要多久
-      pressTime: {
-        type: [Number, String],
-        default: 250
-      },
-      // 是否只能输入大于或等于0的整数(正整数)
-      positiveInteger: {
-        type: Boolean,
-        default: true
-      }
-    },
-    watch: {
-      valueCom(v1, v2) {
-        if (!this.changeFromInner) {
-          this.inputVal = v1;
-          this.$nextTick(function() {
-            this.changeFromInner = false;
-          });
-        }
-      },
-      inputVal(v1, v2) {
-        if (v1 == "")
-          return;
-        let value = 0;
-        let tmp = this.isNumber(v1);
-        if (tmp && v1 >= this.min && v1 <= this.max)
-          value = v1;
-        else
-          value = v2;
-        if (this.positiveInteger) {
-          if (v1 < 0 || String(v1).indexOf(".") !== -1) {
-            value = v2;
-            this.$nextTick(() => {
-              this.inputVal = v2;
-            });
-          }
-        }
-        this.handleChange(value, "change");
-      },
-      min(v1) {
-        if (v1 !== void 0 && v1 != "" && this.valueCom < v1) {
-          this.$emit("input", v1);
-        }
-      },
-      max(v1) {
-        if (v1 !== void 0 && v1 != "" && this.valueCom > v1) {
-          this.$emit("input", v1);
-        }
-      }
-    },
-    data() {
-      return {
-        inputVal: 1,
-        // 输入框中的值，不能直接使用props中的value，因为应该改变props的状态
-        timer: null,
-        // 用作长按的定时器
-        changeFromInner: false,
-        // 值发生变化，是来自内部还是外部
-        innerChangeTimer: null
-        // 内部定时器
-      };
-    },
-    created() {
-      this.inputVal = Number(this.valueCom);
-    },
-    mounted() {
-    },
-    computed: {
-      getCursorSpacing() {
-        return Number(uni.upx2px(this.cursorSpacing));
-      },
-      valueCom() {
-        return this.modelValue;
-      }
-    },
-    methods: {
-      // 点击退格键
-      btnTouchStart(callback) {
-        this[callback]();
-        if (!this.longPress)
-          return;
-        clearInterval(this.timer);
-        this.timer = null;
-        this.timer = setInterval(() => {
-          this[callback]();
-        }, this.pressTime);
-      },
-      clearTimer() {
-        this.$nextTick(() => {
-          clearInterval(this.timer);
-          this.timer = null;
-        });
-      },
-      minus() {
-        this.computeVal("minus");
-      },
-      plus() {
-        this.computeVal("plus");
-      },
-      // 为了保证小数相加减出现精度溢出的问题
-      calcPlus(num1, num2) {
-        let baseNum, baseNum1, baseNum2;
-        try {
-          baseNum1 = num1.toString().split(".")[1].length;
-        } catch (e2) {
-          baseNum1 = 0;
-        }
-        try {
-          baseNum2 = num2.toString().split(".")[1].length;
-        } catch (e2) {
-          baseNum2 = 0;
-        }
-        baseNum = Math.pow(10, Math.max(baseNum1, baseNum2));
-        let precision = baseNum1 >= baseNum2 ? baseNum1 : baseNum2;
-        return ((num1 * baseNum + num2 * baseNum) / baseNum).toFixed(precision);
-      },
-      // 为了保证小数相加减出现精度溢出的问题
-      calcMinus(num1, num2) {
-        let baseNum, baseNum1, baseNum2;
-        try {
-          baseNum1 = num1.toString().split(".")[1].length;
-        } catch (e2) {
-          baseNum1 = 0;
-        }
-        try {
-          baseNum2 = num2.toString().split(".")[1].length;
-        } catch (e2) {
-          baseNum2 = 0;
-        }
-        baseNum = Math.pow(10, Math.max(baseNum1, baseNum2));
-        let precision = baseNum1 >= baseNum2 ? baseNum1 : baseNum2;
-        return ((num1 * baseNum - num2 * baseNum) / baseNum).toFixed(precision);
-      },
-      computeVal(type2) {
-        uni.hideKeyboard();
-        if (this.disabled)
-          return;
-        let value = 0;
-        if (type2 === "minus") {
-          if (this.stepFirst > 0 && this.inputVal == this.stepFirst) {
-            value = this.min;
-          } else {
-            value = this.calcMinus(this.inputVal, this.step);
-          }
-        } else if (type2 === "plus") {
-          if (this.stepFirst > 0 && this.inputVal < this.stepFirst) {
-            value = this.stepFirst;
-          } else {
-            value = this.calcPlus(this.inputVal, this.step);
-          }
-        }
-        if (this.stepStrictly) {
-          let strictly = value % this.step;
-          if (strictly > 0) {
-            value -= strictly;
-          }
-          if (this.stepFirst > 0 && value > 0 && value < this.stepFirst) {
-            if (type2 === "minus") {
-              value = 0;
-            } else if (type2 === "plus") {
-              value = this.stepFirst + (this.step - this.stepFirst % this.step);
-            }
-          }
-        }
-        if (value > this.max) {
-          value = this.max;
-        } else if (value < this.min) {
-          value = this.min;
-        }
-        this.inputVal = value;
-        this.handleChange(value, type2);
-      },
-      // 处理用户手动输入的情况
-      onBlur(event) {
-        let val = 0;
-        let value = event.detail.value;
-        if (!/(^\d+$)/.test(value) || value[0] == 0)
-          val = this.min;
-        val = +value;
-        if (this.stepFirst > 0 && this.inputVal < this.stepFirst && this.inputVal > 0) {
-          val = this.stepFirst;
-        }
-        if (this.stepStrictly) {
-          let strictly = val % this.step;
-          if (strictly > 0) {
-            val -= strictly;
-          }
-          if (this.stepFirst > 0 && val > 0 && val < this.stepFirst) {
-            val = this.stepFirst + (this.step - this.stepFirst % this.step);
-          }
-        }
-        if (val > this.max) {
-          val = this.max;
-        } else if (val < this.min) {
-          val = this.min;
-        }
-        this.$nextTick(() => {
-          this.inputVal = val;
-        });
-        this.handleChange(val, "blur");
-      },
-      handleChange(value, type2) {
-        if (this.disabled)
-          return;
-        if (this.innerChangeTimer) {
-          clearTimeout(this.innerChangeTimer);
-          this.innerChangeTimer = null;
-        }
-        this.changeFromInner = true;
-        this.innerChangeTimer = setTimeout(() => {
-          this.changeFromInner = false;
-        }, 150);
-        this.$emit("input", Number(value));
-        this.$emit("update:modelValue", Number(value));
-        this.$emit(type2, {
-          // 转为Number类型
-          value: Number(value),
-          index: this.index
-        });
-      },
-      /**
-       * 验证十进制数字
-       */
-      isNumber(value) {
-        return /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value);
-      }
-    }
-  };
-  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "u-numberbox" }, [
-      vue.createElementVNode(
-        "view",
-        {
-          class: vue.normalizeClass(["u-icon-minus", { "u-icon-disabled": $props.disabled || $data.inputVal <= $props.min }]),
-          onTouchstart: _cache[0] || (_cache[0] = vue.withModifiers(($event) => $options.btnTouchStart("minus"), ["prevent"])),
-          onTouchend: _cache[1] || (_cache[1] = vue.withModifiers((...args) => $options.clearTimer && $options.clearTimer(...args), ["stop", "prevent"])),
-          style: vue.normalizeStyle({
-            background: $props.bgColor,
-            height: $props.inputHeight + "rpx",
-            color: $props.color,
-            fontSize: $props.size + "rpx",
-            minHeight: "1.4em"
-          })
-        },
-        [
-          vue.createElementVNode(
-            "view",
-            {
-              style: vue.normalizeStyle("font-size:" + (Number($props.size) + 10) + "rpx"),
-              class: "num-btn"
-            },
-            "－",
-            4
-            /* STYLE */
-          )
-        ],
-        38
-        /* CLASS, STYLE, NEED_HYDRATION */
-      ),
-      vue.withDirectives(vue.createElementVNode("input", {
-        disabled: $props.disabledInput || $props.disabled,
-        "cursor-spacing": $options.getCursorSpacing,
-        class: vue.normalizeClass([{ "u-input-disabled": $props.disabled }, "u-number-input"]),
-        "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.inputVal = $event),
-        onBlur: _cache[3] || (_cache[3] = (...args) => $options.onBlur && $options.onBlur(...args)),
-        type: "number",
-        style: vue.normalizeStyle({
-          color: $props.color,
-          fontSize: $props.size + "rpx",
-          background: $props.bgColor,
-          height: $props.inputHeight + "rpx",
-          width: $props.inputWidth + "rpx"
-        })
-      }, null, 46, ["disabled", "cursor-spacing"]), [
-        [vue.vModelText, $data.inputVal]
-      ]),
-      vue.createElementVNode(
-        "view",
-        {
-          class: vue.normalizeClass(["u-icon-plus", { "u-icon-disabled": $props.disabled || $data.inputVal >= $props.max }]),
-          onTouchstart: _cache[4] || (_cache[4] = vue.withModifiers(($event) => $options.btnTouchStart("plus"), ["prevent"])),
-          onTouchend: _cache[5] || (_cache[5] = vue.withModifiers((...args) => $options.clearTimer && $options.clearTimer(...args), ["stop", "prevent"])),
-          style: vue.normalizeStyle({
-            background: $props.bgColor,
-            height: $props.inputHeight + "rpx",
-            color: $props.color,
-            fontSize: $props.size + "rpx",
-            minHeight: "1.4em"
-          })
-        },
-        [
-          vue.createElementVNode(
-            "view",
-            {
-              style: vue.normalizeStyle("font-size:" + (Number($props.size) + 10) + "rpx"),
-              class: "num-btn"
-            },
-            "＋",
-            4
-            /* STYLE */
-          )
-        ],
-        38
-        /* CLASS, STYLE, NEED_HYDRATION */
-      )
-    ]);
-  }
-  const __easycom_7 = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$2], ["__scopeId", "data-v-2bb8fbb0"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-number-box/u-number-box.vue"]]);
-  const _sfc_main$p = {
     emits: ["update:modelValue", "input", "confirm"],
     props: {
       // 通过双向绑定控制组件的弹出与收起
@@ -36341,7 +35994,7 @@ ${i3}
       }
     }
   };
-  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$2(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_popup = resolveEasycom(vue.resolveDynamicComponent("u-popup"), __easycom_5$1);
     return vue.openBlock(), vue.createElementBlock("view", { class: "u-select" }, [
       vue.createCommentVNode(` <view class="u-select__action" :class="{\r
@@ -36461,8 +36114,8 @@ ${i3}
       }, 8, ["blur", "maskCloseAble", "modelValue", "safeAreaInsetBottom", "onClose", "z-index"])
     ]);
   }
-  const __easycom_6 = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["render", _sfc_render$1], ["__scopeId", "data-v-2ab5fcb0"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-select/u-select.vue"]]);
-  const _sfc_main$o = {
+  const __easycom_6 = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$2], ["__scopeId", "data-v-2ab5fcb0"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-select/u-select.vue"]]);
+  const _sfc_main$p = {
     __name: "tMap",
     emits: ["emitLocation", "emitVisible"],
     setup(__props, { emit: __emit }) {
@@ -36500,8 +36153,8 @@ ${i3}
       };
     }
   };
-  const tMap = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/monitorPoint/tMap.vue"]]);
-  const _sfc_main$n = {
+  const tMap = /* @__PURE__ */ _export_sfc(_sfc_main$p, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/monitorPoint/tMap.vue"]]);
+  const _sfc_main$o = {
     __name: "addOrEditor",
     setup(__props) {
       const form = vue.ref(null);
@@ -36581,8 +36234,7 @@ ${i3}
       function showPickerDate(value) {
         curTimeKey.value = value, selectTimeVisible.value = true;
       }
-      function parseData(data) {
-        var _data = JSON.parse(JSON.stringify(data));
+      function parseData(_data) {
         if (_data.files) {
           _data.files = JSON.stringify(_data.files);
         } else {
@@ -36590,12 +36242,11 @@ ${i3}
         }
         _data.projectId = uni.getStorageSync("projectId");
         _data.id = uni.getStorageSync("holeId");
-        return _data;
       }
       function addOrUpdateData() {
         form.value.validate((valid) => {
           if (valid) {
-            dataForm.value = parseData(dataForm.value);
+            parseData(dataForm.value);
             if (!dataForm.value.id) {
               addHoleBaseDetail(dataForm.value).then((res) => ToastFn("创建成功"));
             } else {
@@ -36616,7 +36267,7 @@ ${i3}
         const id = uni.getStorageSync("holeId");
         if (id) {
           getHoleBaseDetail(id).then((res) => {
-            dataInfo(res.data);
+            dataForm.value = dataInfo(res.data);
           });
         }
       }
@@ -36629,21 +36280,19 @@ ${i3}
           delta: 1
         });
       }
-      function dataInfo(dataAll) {
-        let _dataAll = dataAll;
+      function dataInfo(_dataAll) {
         if (_dataAll.files) {
           _dataAll.files = JSON.parse(_dataAll.files);
         } else {
           _dataAll.files = [];
         }
-        dataForm.value = _dataAll;
+        return _dataAll;
       }
       return (_ctx, _cache) => {
         const _component_uni_icons = resolveEasycom(vue.resolveDynamicComponent("uni-icons"), __easycom_0$6);
         const _component_u_toast = resolveEasycom(vue.resolveDynamicComponent("u-toast"), __easycom_1);
         const _component_u_input = resolveEasycom(vue.resolveDynamicComponent("u-input"), __easycom_1$6);
         const _component_u_form_item = resolveEasycom(vue.resolveDynamicComponent("u-form-item"), __easycom_2$2);
-        const _component_u_number_box = resolveEasycom(vue.resolveDynamicComponent("u-number-box"), __easycom_7);
         const _component_u_form = resolveEasycom(vue.resolveDynamicComponent("u-form"), __easycom_3$1);
         const _component_u_picker = resolveEasycom(vue.resolveDynamicComponent("u-picker"), __easycom_4$1);
         const _component_u_select = resolveEasycom(vue.resolveDynamicComponent("u-select"), __easycom_6);
@@ -36788,11 +36437,12 @@ ${i3}
                   prop: "diameter"
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createVNode(_component_u_number_box, {
-                      "positive-integer": false,
+                    vue.createVNode(_component_u_input, {
+                      type: "number",
                       modelValue: vue.unref(dataForm).diameter,
                       "onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => vue.unref(dataForm).diameter = $event)
-                    }, null, 8, ["modelValue"])
+                    }, null, 8, ["modelValue"]),
+                    vue.createElementVNode("span", null, "(单位: cm)")
                   ]),
                   _: 1
                   /* STABLE */
@@ -36803,11 +36453,12 @@ ${i3}
                   prop: "sWaterLevel"
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createVNode(_component_u_number_box, {
-                      "positive-integer": false,
+                    vue.createVNode(_component_u_input, {
+                      type: "number",
                       modelValue: vue.unref(dataForm).sWaterLevel,
                       "onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => vue.unref(dataForm).sWaterLevel = $event)
-                    }, null, 8, ["modelValue"])
+                    }, null, 8, ["modelValue"]),
+                    vue.createElementVNode("span", null, "(单位: m)")
                   ]),
                   _: 1
                   /* STABLE */
@@ -36818,11 +36469,12 @@ ${i3}
                   prop: "elevation"
                 }, {
                   default: vue.withCtx(() => [
-                    vue.createVNode(_component_u_number_box, {
-                      "positive-integer": false,
+                    vue.createVNode(_component_u_input, {
+                      type: "number",
                       modelValue: vue.unref(dataForm).elevation,
                       "onUpdate:modelValue": _cache[14] || (_cache[14] = ($event) => vue.unref(dataForm).elevation = $event)
-                    }, null, 8, ["modelValue"])
+                    }, null, 8, ["modelValue"]),
+                    vue.createElementVNode("span", null, "(单位: m)")
                   ]),
                   _: 1
                   /* STABLE */
@@ -36901,8 +36553,8 @@ ${i3}
       };
     }
   };
-  const PagesSampleDetectionSamplingMonitorPointAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/monitorPoint/addOrEditor.vue"]]);
-  const _sfc_main$m = {
+  const PagesSampleDetectionSamplingMonitorPointAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$o, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/monitorPoint/addOrEditor.vue"]]);
+  const _sfc_main$n = {
     emits: ["select-change"],
     name: "ba-tree-picker",
     props: {
@@ -37261,7 +36913,7 @@ ${i3}
       }, 500);
     }
   };
-  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$1(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", null, [
       vue.createElementVNode(
         "view",
@@ -37461,8 +37113,8 @@ ${i3}
       )
     ]);
   }
-  const __easycom_8 = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["render", _sfc_render], ["__scopeId", "data-v-c951339f"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/components/ba-tree-picker/ba-tree-picker.vue"]]);
-  const _sfc_main$l = {
+  const __easycom_7$1 = /* @__PURE__ */ _export_sfc(_sfc_main$n, [["render", _sfc_render$1], ["__scopeId", "data-v-c951339f"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/components/ba-tree-picker/ba-tree-picker.vue"]]);
+  const _sfc_main$m = {
     __name: "addOrEditor",
     setup(__props) {
       const form = vue.ref(null);
@@ -37592,8 +37244,7 @@ ${i3}
         files: [],
         analysisFactorIds: ""
       });
-      function parseData(data) {
-        var _data = JSON.parse(JSON.stringify(data));
+      function parseData(_data) {
         if (_data.files) {
           _data.files = JSON.stringify(_data.files);
         } else {
@@ -37601,12 +37252,11 @@ ${i3}
         }
         _data.projectId = uni.getStorageSync("projectId");
         _data.id = uni.getStorageSync("QCSampleId");
-        return _data;
       }
       function addOrUpdateData() {
         form.value.validate((valid) => {
           if (valid) {
-            dataForm.value = parseData(dataForm.value);
+            parseData(dataForm.value);
             if (!dataForm.value.id) {
               addQCSample(dataForm.value).then((res) => ToastFn("创建成功"));
             } else {
@@ -37627,7 +37277,7 @@ ${i3}
         const id = uni.getStorageSync("QCSampleId");
         if (id) {
           getQCSampleDetail(id).then((res) => {
-            dataInfo(res.data);
+            dataForm.value = dataInfo(res.data);
             handelAnalysisFactorIds();
           });
         }
@@ -37643,14 +37293,13 @@ ${i3}
           delta: 1
         });
       }
-      function dataInfo(dataAll) {
-        let _dataAll = dataAll;
+      function dataInfo(_dataAll) {
         if (_dataAll.files) {
           _dataAll.files = JSON.parse(_dataAll.files);
         } else {
           _dataAll.files = [];
         }
-        dataForm.value = _dataAll;
+        return _dataAll;
       }
       return (_ctx, _cache) => {
         const _component_uni_icons = resolveEasycom(vue.resolveDynamicComponent("uni-icons"), __easycom_0$6);
@@ -37658,7 +37307,7 @@ ${i3}
         const _component_u_input = resolveEasycom(vue.resolveDynamicComponent("u-input"), __easycom_1$6);
         const _component_u_form_item = resolveEasycom(vue.resolveDynamicComponent("u-form-item"), __easycom_2$2);
         const _component_u_form = resolveEasycom(vue.resolveDynamicComponent("u-form"), __easycom_3$1);
-        const _component_ba_tree_picker = resolveEasycom(vue.resolveDynamicComponent("ba-tree-picker"), __easycom_8);
+        const _component_ba_tree_picker = resolveEasycom(vue.resolveDynamicComponent("ba-tree-picker"), __easycom_7$1);
         const _component_u_picker = resolveEasycom(vue.resolveDynamicComponent("u-picker"), __easycom_4$1);
         const _component_u_select = resolveEasycom(vue.resolveDynamicComponent("u-select"), __easycom_6);
         return vue.openBlock(), vue.createElementBlock(
@@ -37884,8 +37533,8 @@ ${i3}
       };
     }
   };
-  const PagesSampleDetectionSamplingQualitySampleAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/qualitySample/addOrEditor.vue"]]);
-  const _sfc_main$k = {
+  const PagesSampleDetectionSamplingQualitySampleAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$m, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/qualitySample/addOrEditor.vue"]]);
+  const _sfc_main$l = {
     __name: "index",
     setup(__props) {
       const dataList = vue.ref([]);
@@ -38033,8 +37682,8 @@ ${i3}
       };
     }
   };
-  const holeRecord = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-c1f483e5"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/holeRecord/index.vue"]]);
-  const _sfc_main$j = {
+  const holeRecord = /* @__PURE__ */ _export_sfc(_sfc_main$l, [["__scopeId", "data-v-c1f483e5"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/holeRecord/index.vue"]]);
+  const _sfc_main$k = {
     __name: "index",
     setup(__props) {
       const dataList = vue.ref([]);
@@ -38195,8 +37844,8 @@ ${i3}
       };
     }
   };
-  const soilSample = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-ce33b5fb"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/index.vue"]]);
-  const _sfc_main$i = {
+  const soilSample = /* @__PURE__ */ _export_sfc(_sfc_main$k, [["__scopeId", "data-v-ce33b5fb"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/index.vue"]]);
+  const _sfc_main$j = {
     __name: "index",
     setup(__props) {
       const dataList = vue.ref([]);
@@ -38357,8 +38006,8 @@ ${i3}
       };
     }
   };
-  const waterSample = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-441656ae"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/waterSample/index.vue"]]);
-  const _sfc_main$h = {
+  const waterSample = /* @__PURE__ */ _export_sfc(_sfc_main$j, [["__scopeId", "data-v-441656ae"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/waterSample/index.vue"]]);
+  const _sfc_main$i = {
     __name: "index",
     setup(__props) {
       const dataList = vue.ref([]);
@@ -38519,8 +38168,8 @@ ${i3}
       };
     }
   };
-  const wellBase = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-c378f9fd"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/wellBase/index.vue"]]);
-  const _sfc_main$g = {
+  const wellBase = /* @__PURE__ */ _export_sfc(_sfc_main$i, [["__scopeId", "data-v-c378f9fd"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/wellBase/index.vue"]]);
+  const _sfc_main$h = {
     __name: "index",
     setup(__props) {
       const dataList = vue.ref([]);
@@ -38683,8 +38332,8 @@ ${i3}
       };
     }
   };
-  const wellWashRecord = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-7411be3c"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/wellWashRecord/index.vue"]]);
-  const _sfc_main$f = {
+  const wellWashRecord = /* @__PURE__ */ _export_sfc(_sfc_main$h, [["__scopeId", "data-v-7411be3c"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/wellWashRecord/index.vue"]]);
+  const _sfc_main$g = {
     __name: "index",
     setup(__props) {
       const linkOptions = vue.ref([
@@ -38898,21 +38547,56 @@ ${i3}
       };
     }
   };
-  const PagesSampleDetectionSamplingPageMonitoringPointIndex = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__scopeId", "data-v-232f9d69"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/index.vue"]]);
-  const _sfc_main$e = {
+  const PagesSampleDetectionSamplingPageMonitoringPointIndex = /* @__PURE__ */ _export_sfc(_sfc_main$g, [["__scopeId", "data-v-232f9d69"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/index.vue"]]);
+  const _sfc_main$f = {
     __name: "addOrEditor",
     setup(__props) {
+      const checkDepthValue = vue.ref(0);
+      const loading = vue.ref(false);
+      function getList() {
+        return new Promise((resolve) => {
+          loading.value = true;
+          let menuId = getMenuId("项目列表");
+          const projectId = uni.getStorageSync("projectId");
+          const holeId = uni.getStorageSync("holeId");
+          let query = {
+            currentPage: 1,
+            pageSize: 0,
+            sort: "desc",
+            sidx: "",
+            menuId,
+            projectId,
+            holeId
+          };
+          getHoleRecordList(query).then((res) => {
+            let tempMaxDepth = 0;
+            const id = uni.getStorageSync("holeRecordId");
+            res.data.list.filter((item) => item.id !== id).forEach((item) => {
+              if (item.endDepth > tempMaxDepth) {
+                tempMaxDepth = item.endDepth;
+              }
+            });
+            checkDepthValue.value = tempMaxDepth;
+            loading.value = false;
+            resolve();
+          }).finally(() => {
+            loading.value = false;
+          });
+        });
+      }
+      function validityDepth() {
+        if (dataForm.value.endDepth <= dataForm.value.startDepth) {
+          uni.showToast({
+            title: `请入大于${dataForm.value.startDepth}的结束深度`,
+            icon: "error",
+            duration: 1e3
+          });
+          return 0;
+        } else {
+          return 1;
+        }
+      }
       const form = vue.ref(null);
-      const rules2 = vue.reactive({
-        solumType: [{
-          required: true,
-          message: "请输入图层类型",
-          trigger: "blur"
-        }]
-      });
-      onReady(() => {
-        form.value.setRules(rules2);
-      });
       let dataForm = vue.ref({
         projectId: "",
         holeId: "",
@@ -38926,6 +38610,27 @@ ${i3}
         solumPlasticity: "",
         pollutionDesc: "",
         files: []
+      });
+      const rules2 = vue.reactive({
+        endDepth: [{
+          validator: (rule, value, callback) => {
+            if (!value) {
+              callback(new Error("请入结束深度"));
+            } else {
+              callback();
+            }
+          },
+          message: "请入结束深度",
+          trigger: ["change", "blur"]
+        }],
+        solumType: [{
+          required: true,
+          message: "请输入图层类型",
+          trigger: "blur"
+        }]
+      });
+      onReady(() => {
+        form.value.setRules(rules2);
       });
       let solumTypeOptions = vue.reactive({
         show: false,
@@ -38996,8 +38701,7 @@ ${i3}
           solumPlasticityOptions.list = res.data.list;
         });
       }
-      function parseFiles(data) {
-        var _data = JSON.parse(JSON.stringify(data));
+      function parseFiles(_data) {
         if (_data.files) {
           _data.files = JSON.stringify(_data.files);
         } else {
@@ -39006,21 +38710,19 @@ ${i3}
         _data.projectId = uni.getStorageSync("projectId");
         _data.holeId = uni.getStorageSync("holeId");
         _data.id = uni.getStorageSync("holeRecordId");
-        return _data;
       }
       function addOrUpdateData() {
-        formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/holeRecord/addOrEditor.vue:202", dataForm.value);
+        formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/holeRecord/addOrEditor.vue:270", dataForm.value);
         form.value.validate((valid) => {
-          formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/holeRecord/addOrEditor.vue:205", valid);
-          if (valid) {
-            const data = parseFiles(dataForm.value);
+          if (valid && validityDepth()) {
+            parseFiles(dataForm.value);
             const id = uni.getStorageSync("holeRecordId");
             if (!id) {
-              addHoleRecord(data).then((res) => {
+              addHoleRecord(dataForm.value).then((res) => {
                 ToastFn("创建成功");
               });
             } else {
-              updateHoleRecord(id, data).then((res) => {
+              updateHoleRecord(id, dataForm.value).then((res) => {
                 ToastFn("修改成功");
               });
             }
@@ -39035,24 +38737,27 @@ ${i3}
           duration: 2e3
         });
       }
-      function dataInfo(dataAll) {
-        let _dataAll = dataAll;
+      function dataInfo(_dataAll) {
         if (_dataAll.files) {
           _dataAll.files = JSON.parse(_dataAll.files);
         } else {
           _dataAll.files = [];
         }
-        dataForm.value = _dataAll;
+        return _dataAll;
       }
       function initData() {
         const id = uni.getStorageSync("holeRecordId");
         if (id) {
           getHoleRecordDetail(id).then((res) => {
-            dataInfo(res.data);
+            dataForm.value = dataInfo(res.data);
           });
+        } else {
+          dataForm.value.startDepth = checkDepthValue.value;
+          dataForm.value.endDepth = checkDepthValue.value + 1;
         }
       }
-      onLoad(() => {
+      onLoad(async () => {
+        await getList();
         initData();
         getsolumHumidityOptions();
         getSolumCompactnessOptions();
@@ -39067,9 +38772,8 @@ ${i3}
       }
       return (_ctx, _cache) => {
         const _component_uni_icons = resolveEasycom(vue.resolveDynamicComponent("uni-icons"), __easycom_0$6);
-        const _component_u_number_box = resolveEasycom(vue.resolveDynamicComponent("u-number-box"), __easycom_7);
-        const _component_u_form_item = resolveEasycom(vue.resolveDynamicComponent("u-form-item"), __easycom_2$2);
         const _component_u_input = resolveEasycom(vue.resolveDynamicComponent("u-input"), __easycom_1$6);
+        const _component_u_form_item = resolveEasycom(vue.resolveDynamicComponent("u-form-item"), __easycom_2$2);
         const _component_u_form = resolveEasycom(vue.resolveDynamicComponent("u-form"), __easycom_3$1);
         const _component_u_select = resolveEasycom(vue.resolveDynamicComponent("u-select"), __easycom_6);
         return vue.openBlock(), vue.createElementBlock(
@@ -39120,11 +38824,12 @@ ${i3}
                     prop: "startDepth"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        disabled: "",
                         modelValue: vue.unref(dataForm).startDepth,
                         "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => vue.unref(dataForm).startDepth = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", { style: { "margin-left": "5px" } }, "(单位: m)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -39135,11 +38840,11 @@ ${i3}
                     prop: "endDepth"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
                         modelValue: vue.unref(dataForm).endDepth,
                         "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => vue.unref(dataForm).endDepth = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: m)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -39311,8 +39016,8 @@ ${i3}
       };
     }
   };
-  const PagesSampleDetectionSamplingPageMonitoringPointHoleRecordAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/holeRecord/addOrEditor.vue"]]);
-  const _sfc_main$d = {
+  const PagesSampleDetectionSamplingPageMonitoringPointHoleRecordAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$f, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/holeRecord/addOrEditor.vue"]]);
+  const _sfc_main$e = {
     __name: "editorXRF",
     emits: ["curConfData", "emitVisible"],
     setup(__props, { expose: __expose, emit: __emit }) {
@@ -39560,8 +39265,8 @@ ${i3}
       };
     }
   };
-  const editorXRF = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-b18390e9"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/editorXRF.vue"]]);
-  const _sfc_main$c = {
+  const editorXRF = /* @__PURE__ */ _export_sfc(_sfc_main$e, [["__scopeId", "data-v-b18390e9"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/editorXRF.vue"]]);
+  const _sfc_main$d = {
     __name: "addOrEditor",
     setup(__props) {
       const form = vue.ref(null);
@@ -39796,25 +39501,23 @@ ${i3}
         xrfDetailsList: [],
         files: []
       });
-      function parseData(data) {
-        var _data = JSON.parse(JSON.stringify(data));
+      function parseData(_data) {
         if (_data.files) {
           _data.files = JSON.stringify(_data.files);
         } else {
           _data.files = "[]";
         }
         _data.xrfDetailsList = XRFConfList.value;
-        _data.analysisFactorIds = data.analysisFactorIds.toString();
+        _data.analysisFactorIds = _data.analysisFactorIds.toString();
         _data.projectId = uni.getStorageSync("projectId");
         _data.holeId = uni.getStorageSync("holeId");
         _data.id = uni.getStorageSync("wellBaseId");
-        return _data;
       }
       function addOrUpdateData() {
         form.value.validate((valid) => {
           if (valid) {
             const id = uni.getStorageSync("soilSampleId");
-            dataForm.value = parseData(dataForm.value);
+            parseData(dataForm.value);
             if (!id) {
               addSoilRecord(dataForm.value).then((res) => ToastFn("创建成功"));
             } else {
@@ -39831,8 +39534,7 @@ ${i3}
           duration: 2e3
         });
       }
-      function dataInfo(dataAll) {
-        let _dataAll = dataAll;
+      function dataInfo(_dataAll) {
         if (_dataAll.files) {
           _dataAll.files = JSON.parse(_dataAll.files);
         } else {
@@ -39840,14 +39542,14 @@ ${i3}
         }
         _dataAll.hasParallelSample = _dataAll.hasParallelSample == "true" ? "1" : "0";
         _dataAll.isInspection = _dataAll.isInspection == "true" ? "1" : "0";
-        dataForm.value = _dataAll;
+        return _dataAll;
       }
       function initData() {
         return new Promise((resolve) => {
           const id = uni.getStorageSync("soilSampleId");
           if (id) {
             getSoilRecordDetail(id).then((res) => {
-              dataInfo(res.data);
+              dataForm.value = dataInfo(res.data);
               judgeFlag(res.data);
               curSampleNameList.value = curSampleNameList.value.filter((item) => {
                 return item !== dataForm.value.sampleName;
@@ -39888,12 +39590,11 @@ ${i3}
         const _component_uni_icons = resolveEasycom(vue.resolveDynamicComponent("uni-icons"), __easycom_0$6);
         const _component_u_input = resolveEasycom(vue.resolveDynamicComponent("u-input"), __easycom_1$6);
         const _component_u_form_item = resolveEasycom(vue.resolveDynamicComponent("u-form-item"), __easycom_2$2);
-        const _component_u_number_box = resolveEasycom(vue.resolveDynamicComponent("u-number-box"), __easycom_7);
         const _component_u_radio = resolveEasycom(vue.resolveDynamicComponent("u-radio"), __easycom_4);
         const _component_u_radio_group = resolveEasycom(vue.resolveDynamicComponent("u-radio-group"), __easycom_5);
         const _component_u_form = resolveEasycom(vue.resolveDynamicComponent("u-form"), __easycom_3$1);
         const _component_u_button = resolveEasycom(vue.resolveDynamicComponent("u-button"), __easycom_4$2);
-        const _component_ba_tree_picker = resolveEasycom(vue.resolveDynamicComponent("ba-tree-picker"), __easycom_8);
+        const _component_ba_tree_picker = resolveEasycom(vue.resolveDynamicComponent("ba-tree-picker"), __easycom_7$1);
         const _component_u_picker = resolveEasycom(vue.resolveDynamicComponent("u-picker"), __easycom_4$1);
         const _component_u_select = resolveEasycom(vue.resolveDynamicComponent("u-select"), __easycom_6);
         return vue.openBlock(), vue.createElementBlock(
@@ -39962,8 +39663,8 @@ ${i3}
                       prop: "sampleDepth"
                     }, {
                       default: vue.withCtx(() => [
-                        vue.createVNode(_component_u_number_box, {
-                          "positive-integer": false,
+                        vue.createVNode(_component_u_input, {
+                          type: "number",
                           modelValue: vue.unref(dataForm).sampleDepth,
                           "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => vue.unref(dataForm).sampleDepth = $event)
                         }, null, 8, ["modelValue"])
@@ -39977,8 +39678,8 @@ ${i3}
                       prop: "pidReading"
                     }, {
                       default: vue.withCtx(() => [
-                        vue.createVNode(_component_u_number_box, {
-                          "positive-integer": false,
+                        vue.createVNode(_component_u_input, {
+                          type: "number",
                           modelValue: vue.unref(dataForm).pidReading,
                           "onUpdate:modelValue": _cache[4] || (_cache[4] = ($event) => vue.unref(dataForm).pidReading = $event)
                         }, null, 8, ["modelValue"])
@@ -39988,7 +39689,7 @@ ${i3}
                     }),
                     vue.createVNode(_component_u_form_item, {
                       "label-width": "100px",
-                      label: "开始时间",
+                      label: "采样开始时间",
                       prop: "startTime"
                     }, {
                       default: vue.withCtx(() => [
@@ -40004,7 +39705,7 @@ ${i3}
                     }),
                     vue.createVNode(_component_u_form_item, {
                       "label-width": "100px",
-                      label: "结束时间",
+                      label: "采样结束时间",
                       prop: "endTime"
                     }, {
                       default: vue.withCtx(() => [
@@ -40280,8 +39981,8 @@ ${i3}
       };
     }
   };
-  const PagesSampleDetectionSamplingPageMonitoringPointSoilSampleAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__scopeId", "data-v-26e8eeda"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/addOrEditor.vue"]]);
-  const _sfc_main$b = {
+  const PagesSampleDetectionSamplingPageMonitoringPointSoilSampleAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$d, [["__scopeId", "data-v-26e8eeda"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/soilSample/addOrEditor.vue"]]);
+  const _sfc_main$c = {
     __name: "addOrEditor",
     setup(__props) {
       const form = vue.ref(null);
@@ -40361,8 +40062,7 @@ ${i3}
         waterBarrierBottomDepth: 0,
         files: []
       });
-      function parseData(data) {
-        var _data = JSON.parse(JSON.stringify(data));
+      function parseData(_data) {
         if (_data.files) {
           _data.files = JSON.stringify(_data.files);
         } else {
@@ -40371,12 +40071,11 @@ ${i3}
         _data.projectId = uni.getStorageSync("projectId");
         _data.holeId = uni.getStorageSync("holeId");
         _data.id = uni.getStorageSync("wellBaseId");
-        return _data;
       }
       function addOrUpdateData() {
         form.value.validate((valid) => {
           if (valid) {
-            dataForm.value = parseData(dataForm.value);
+            parseData(dataForm.value);
             if (!dataForm.value.id) {
               addWellBase(dataForm.value).then((res) => ToastFn("创建成功"));
             } else {
@@ -40393,20 +40092,19 @@ ${i3}
           duration: 2e3
         });
       }
-      function dataInfo(dataAll) {
-        let _dataAll = dataAll;
+      function dataInfo(_dataAll) {
         if (_dataAll.files) {
           _dataAll.files = JSON.parse(_dataAll.files);
         } else {
           _dataAll.files = [];
         }
-        dataForm.value = _dataAll;
+        return _dataAll;
       }
       function initData() {
         const id = uni.getStorageSync("wellBaseId");
         if (id) {
           getWellBaseDetail(id).then((res) => {
-            dataInfo(res.data);
+            dataForm.value = dataInfo(res.data);
           });
         }
       }
@@ -40424,7 +40122,6 @@ ${i3}
         const _component_uni_icons = resolveEasycom(vue.resolveDynamicComponent("uni-icons"), __easycom_0$6);
         const _component_u_input = resolveEasycom(vue.resolveDynamicComponent("u-input"), __easycom_1$6);
         const _component_u_form_item = resolveEasycom(vue.resolveDynamicComponent("u-form-item"), __easycom_2$2);
-        const _component_u_number_box = resolveEasycom(vue.resolveDynamicComponent("u-number-box"), __easycom_7);
         const _component_u_form = resolveEasycom(vue.resolveDynamicComponent("u-form"), __easycom_3$1);
         const _component_u_picker = resolveEasycom(vue.resolveDynamicComponent("u-picker"), __easycom_4$1);
         const _component_u_select = resolveEasycom(vue.resolveDynamicComponent("u-select"), __easycom_6);
@@ -40503,7 +40200,7 @@ ${i3}
                   vue.createCommentVNode(` <u-form-item label-width='100px' label="土层类型" prop="startTime"><u-input v-model="dataForm.startTime" /></u-form-item> `),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
-                    label: "开始时间",
+                    label: "建井开始时间",
                     prop: "startTime"
                   }, {
                     default: vue.withCtx(() => [
@@ -40519,7 +40216,7 @@ ${i3}
                   }),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
-                    label: "结束时间",
+                    label: "建井结束时间",
                     prop: "endTime"
                   }, {
                     default: vue.withCtx(() => [
@@ -40533,16 +40230,19 @@ ${i3}
                     _: 1
                     /* STABLE */
                   }),
+                  vue.createVNode(driver, { style: { "margin-top": "20px", "width": "95vw" } }),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
                     label: "井深",
                     prop: "wellDepth"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).wellDepth,
                         "onUpdate:modelValue": _cache[9] || (_cache[9] = ($event) => vue.unref(dataForm).wellDepth = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: m)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -40553,10 +40253,12 @@ ${i3}
                     prop: "wellDiameter"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).wellDiameter,
                         "onUpdate:modelValue": _cache[10] || (_cache[10] = ($event) => vue.unref(dataForm).wellDiameter = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: cm)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -40564,28 +40266,32 @@ ${i3}
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
                     label: "井口高程",
-                    prop: "swaterLevelDepth"
+                    prop: "wellElevation"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).wellElevation,
                         "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => vue.unref(dataForm).wellElevation = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: m)")
                     ]),
                     _: 1
                     /* STABLE */
                   }),
-                  vue.createCommentVNode(" <text>监测井信息</text> "),
+                  vue.createVNode(driver, { style: { "margin-top": "20px", "width": "95vw" } }),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
                     label: "筛管切缝尺寸",
                     prop: "sieveTubeSlitSize"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).sieveTubeSlitSize,
                         "onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => vue.unref(dataForm).sieveTubeSlitSize = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: mm)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -40596,10 +40302,12 @@ ${i3}
                     prop: "sieveTubeTopDepth"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).sieveTubeTopDepth,
                         "onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => vue.unref(dataForm).sieveTubeTopDepth = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: m)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -40610,14 +40318,17 @@ ${i3}
                     prop: "sieveTubeBottomDepth"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).sieveTubeBottomDepth,
                         "onUpdate:modelValue": _cache[14] || (_cache[14] = ($event) => vue.unref(dataForm).sieveTubeBottomDepth = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: m)")
                     ]),
                     _: 1
                     /* STABLE */
                   }),
+                  vue.createVNode(driver, { style: { "margin-top": "20px", "width": "95vw" } }),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
                     label: "过滤层类型",
@@ -40639,10 +40350,12 @@ ${i3}
                     prop: "filterLayerTopDepth"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).filterLayerTopDepth,
                         "onUpdate:modelValue": _cache[16] || (_cache[16] = ($event) => vue.unref(dataForm).filterLayerTopDepth = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: m)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -40653,24 +40366,26 @@ ${i3}
                     prop: "filterLayerBottomDepth"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).filterLayerBottomDepth,
                         "onUpdate:modelValue": _cache[17] || (_cache[17] = ($event) => vue.unref(dataForm).filterLayerBottomDepth = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: m)")
                     ]),
                     _: 1
                     /* STABLE */
                   }),
+                  vue.createVNode(driver, { style: { "margin-top": "20px", "width": "95vw" } }),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
-                    label: "隔水层类型",
-                    prop: "waterBarrierType"
+                    label: "过滤层类型",
+                    prop: "filterLayerType"
                   }, {
                     default: vue.withCtx(() => [
                       vue.createVNode(_component_u_input, {
-                        type: "number",
-                        modelValue: vue.unref(dataForm).waterBarrierType,
-                        "onUpdate:modelValue": _cache[18] || (_cache[18] = ($event) => vue.unref(dataForm).waterBarrierType = $event)
+                        modelValue: vue.unref(dataForm).filterLayerType,
+                        "onUpdate:modelValue": _cache[18] || (_cache[18] = ($event) => vue.unref(dataForm).filterLayerType = $event)
                       }, null, 8, ["modelValue"])
                     ]),
                     _: 1
@@ -40679,13 +40394,15 @@ ${i3}
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
                     label: "顶部深度",
-                    prop: "filterLayerTopDepth"
+                    prop: "waterBarrierTopDepth"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        modelValue: vue.unref(dataForm).filterLayerTopDepth,
-                        "onUpdate:modelValue": _cache[19] || (_cache[19] = ($event) => vue.unref(dataForm).filterLayerTopDepth = $event)
-                      }, null, 8, ["modelValue"])
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
+                        modelValue: vue.unref(dataForm).waterBarrierTopDepth,
+                        "onUpdate:modelValue": _cache[19] || (_cache[19] = ($event) => vue.unref(dataForm).waterBarrierTopDepth = $event)
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: m)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -40693,13 +40410,15 @@ ${i3}
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
                     label: "底部深度",
-                    prop: "filterLayerBottomDepth"
+                    prop: "waterBarrierBottomDepth"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        modelValue: vue.unref(dataForm).filterLayerBottomDepth,
-                        "onUpdate:modelValue": _cache[20] || (_cache[20] = ($event) => vue.unref(dataForm).filterLayerBottomDepth = $event)
-                      }, null, 8, ["modelValue"])
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
+                        modelValue: vue.unref(dataForm).waterBarrierBottomDepth,
+                        "onUpdate:modelValue": _cache[20] || (_cache[20] = ($event) => vue.unref(dataForm).waterBarrierBottomDepth = $event)
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: m)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -40749,8 +40468,8 @@ ${i3}
       };
     }
   };
-  const PagesSampleDetectionSamplingPageMonitoringPointWellBaseAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/wellBase/addOrEditor.vue"]]);
-  const _sfc_main$a = {
+  const PagesSampleDetectionSamplingPageMonitoringPointWellBaseAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$c, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/wellBase/addOrEditor.vue"]]);
+  const _sfc_main$b = {
     __name: "addOrEditor",
     setup(__props) {
       const form = vue.ref(null);
@@ -40869,23 +40588,20 @@ ${i3}
           washModeOptions.list = res.data.list;
         });
       }
-      function parseFiles(data) {
-        var _data = JSON.parse(JSON.stringify(data));
+      function parseFiles(_data) {
         if (_data.files) {
           _data.files = JSON.stringify(_data.files);
         } else {
           _data.files = "[]";
         }
-        formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/wellWashRecord/addOrEditor.vue:227", _data.files);
         _data.projectId = uni.getStorageSync("projectId");
         _data.holeId = uni.getStorageSync("holeId");
         _data.id = uni.getStorageSync("wellWashRecordId");
-        return _data;
       }
       function addOrUpdateData() {
         form.value.validate((valid) => {
           if (valid) {
-            dataForm.value = parseFiles(dataForm.value);
+            parseFiles(dataForm.value);
             if (!dataForm.value.id) {
               addWellWashRecord(dataForm.value).then((res) => ToastFn("创建成功"));
             } else {
@@ -40902,21 +40618,20 @@ ${i3}
           duration: 2e3
         });
       }
-      function dataInfo(dataAll) {
-        let _dataAll = dataAll;
+      function dataInfo(_dataAll) {
         if (_dataAll.files) {
           _dataAll.files = JSON.parse(_dataAll.files);
         } else {
           _dataAll.files = [];
         }
         _dataAll.hasNapl = _dataAll.hasNapl == "true" ? "1" : "0";
-        dataForm.value = _dataAll;
+        return _dataAll;
       }
       function initData() {
         const id = uni.getStorageSync("wellWashRecordId");
         if (id) {
           getWellWashRecordDetail(id).then((res) => {
-            dataInfo(res.data);
+            dataForm.value = dataInfo(res.data);
           });
         }
       }
@@ -40938,7 +40653,6 @@ ${i3}
         const _component_u_toast = resolveEasycom(vue.resolveDynamicComponent("u-toast"), __easycom_1);
         const _component_u_input = resolveEasycom(vue.resolveDynamicComponent("u-input"), __easycom_1$6);
         const _component_u_form_item = resolveEasycom(vue.resolveDynamicComponent("u-form-item"), __easycom_2$2);
-        const _component_u_number_box = resolveEasycom(vue.resolveDynamicComponent("u-number-box"), __easycom_7);
         const _component_u_radio = resolveEasycom(vue.resolveDynamicComponent("u-radio"), __easycom_4);
         const _component_u_radio_group = resolveEasycom(vue.resolveDynamicComponent("u-radio-group"), __easycom_5);
         const _component_u_form = resolveEasycom(vue.resolveDynamicComponent("u-form"), __easycom_3$1);
@@ -41012,7 +40726,7 @@ ${i3}
                   vue.createCommentVNode(` <u-form-item label-width='100px' label="洗井类型" prop="washMode"><u-input  v-model="dataForm.washMode" type="select" @click="washModeOptions.show=true" /></u-form-item> `),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
-                    label: "监测井类型",
+                    label: "洗井类型",
                     prop: "washMode"
                   }, {
                     default: vue.withCtx(() => [
@@ -41028,7 +40742,7 @@ ${i3}
                   }),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
-                    label: "开始时间",
+                    label: "洗井开始时间",
                     prop: "startTime"
                   }, {
                     default: vue.withCtx(() => [
@@ -41044,7 +40758,7 @@ ${i3}
                   }),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
-                    label: "结束时间",
+                    label: "洗井结束时间",
                     prop: "endTime"
                   }, {
                     default: vue.withCtx(() => [
@@ -41079,11 +40793,12 @@ ${i3}
                     prop: "waterVolume"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).waterVolume,
                         "onUpdate:modelValue": _cache[11] || (_cache[11] = ($event) => vue.unref(dataForm).waterVolume = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: L)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41094,11 +40809,12 @@ ${i3}
                     prop: "waterTemperature"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).waterTemperature,
                         "onUpdate:modelValue": _cache[12] || (_cache[12] = ($event) => vue.unref(dataForm).waterTemperature = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: ℃)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41109,11 +40825,12 @@ ${i3}
                     prop: "waterPh"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).waterPh,
                         "onUpdate:modelValue": _cache[13] || (_cache[13] = ($event) => vue.unref(dataForm).waterPh = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: 无量纲)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41124,11 +40841,12 @@ ${i3}
                     prop: "waterConductivity"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).waterConductivity,
                         "onUpdate:modelValue": _cache[14] || (_cache[14] = ($event) => vue.unref(dataForm).waterConductivity = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: μS/cm)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41139,11 +40857,12 @@ ${i3}
                     prop: "oxReductionPotential"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).oxReductionPotential,
                         "onUpdate:modelValue": _cache[15] || (_cache[15] = ($event) => vue.unref(dataForm).oxReductionPotential = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: mV)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41154,11 +40873,12 @@ ${i3}
                     prop: "dissolvedOxygen"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).dissolvedOxygen,
                         "onUpdate:modelValue": _cache[16] || (_cache[16] = ($event) => vue.unref(dataForm).dissolvedOxygen = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: mg/L)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41169,11 +40889,12 @@ ${i3}
                     prop: "waterTurbidity"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).waterTurbidity,
                         "onUpdate:modelValue": _cache[17] || (_cache[17] = ($event) => vue.unref(dataForm).waterTurbidity = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: NTU)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41287,8 +41008,8 @@ ${i3}
       };
     }
   };
-  const PagesSampleDetectionSamplingPageMonitoringPointWellWashRecordAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/wellWashRecord/addOrEditor.vue"]]);
-  const _sfc_main$9 = {
+  const PagesSampleDetectionSamplingPageMonitoringPointWellWashRecordAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$b, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/wellWashRecord/addOrEditor.vue"]]);
+  const _sfc_main$a = {
     __name: "addOrEditor",
     setup(__props) {
       const form = vue.ref(null);
@@ -41383,7 +41104,7 @@ ${i3}
       function handelAnalysisFactorIds() {
         if (dataForm.value.analysisFactorIds) {
           initAnalysisFactorIds.value = dataForm.value.analysisFactorIds.split(",");
-          formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/waterSample/addOrEditor.vue:222", initAnalysisFactorIds.value);
+          formatAppLog("log", "at pages/sampleDetection/sampling/pageMonitoringPoint/waterSample/addOrEditor.vue:238", initAnalysisFactorIds.value);
         }
       }
       onLoad(() => {
@@ -41544,14 +41265,13 @@ ${i3}
         }
         _data.projectId = uni.getStorageSync("projectId");
         _data.holeId = uni.getStorageSync("holeId");
-        _data.id = uni.getStorageSync("water");
-        return _data;
+        _data.id = uni.getStorageSync("waterSampleId");
       }
       function addOrUpdateData() {
         form.value.validate((valid) => {
           if (valid) {
-            dataForm.value = parseData(dataForm.value);
-            if (!dataForm.id) {
+            parseData(dataForm.value);
+            if (!dataForm.value.id) {
               addWaterSample(dataForm.value).then((res) => ToastFn("创建成功"));
             } else {
               updateWaterSample(dataForm.value.id, dataForm.value).then((res) => ToastFn("修改成功"));
@@ -41572,7 +41292,7 @@ ${i3}
           const id = uni.getStorageSync("waterSampleId");
           if (id) {
             getWaterSampleDetail(id).then((res) => {
-              dataInfo(res.data);
+              dataForm.value = dataInfo(res.data);
               judgeFlag(res.data);
               curSampleNameList.value = curSampleNameList.value.filter((item) => {
                 return item !== dataForm.value.sampleName;
@@ -41607,8 +41327,7 @@ ${i3}
           delta: 1
         });
       }
-      function dataInfo(dataAll) {
-        let _dataAll = dataAll;
+      function dataInfo(_dataAll) {
         if (_dataAll.files) {
           _dataAll.files = JSON.parse(_dataAll.files);
         } else {
@@ -41617,7 +41336,7 @@ ${i3}
         _dataAll.hasParallelSample = _dataAll.hasParallelSample == "true" ? "1" : "0";
         _dataAll.isInspection = _dataAll.isInspection == "true" ? "1" : "0";
         _dataAll.hasNapl = _dataAll.hasNapl == "true" ? "1" : "0";
-        dataForm.value = _dataAll;
+        return _dataAll;
       }
       return (_ctx, _cache) => {
         const _component_uni_icons = resolveEasycom(vue.resolveDynamicComponent("uni-icons"), __easycom_0$6);
@@ -41626,9 +41345,8 @@ ${i3}
         const _component_u_form_item = resolveEasycom(vue.resolveDynamicComponent("u-form-item"), __easycom_2$2);
         const _component_u_radio = resolveEasycom(vue.resolveDynamicComponent("u-radio"), __easycom_4);
         const _component_u_radio_group = resolveEasycom(vue.resolveDynamicComponent("u-radio-group"), __easycom_5);
-        const _component_u_number_box = resolveEasycom(vue.resolveDynamicComponent("u-number-box"), __easycom_7);
         const _component_u_form = resolveEasycom(vue.resolveDynamicComponent("u-form"), __easycom_3$1);
-        const _component_ba_tree_picker = resolveEasycom(vue.resolveDynamicComponent("ba-tree-picker"), __easycom_8);
+        const _component_ba_tree_picker = resolveEasycom(vue.resolveDynamicComponent("ba-tree-picker"), __easycom_7$1);
         const _component_u_picker = resolveEasycom(vue.resolveDynamicComponent("u-picker"), __easycom_4$1);
         const _component_u_select = resolveEasycom(vue.resolveDynamicComponent("u-select"), __easycom_6);
         return vue.openBlock(), vue.createElementBlock(
@@ -41712,7 +41430,7 @@ ${i3}
                   }),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
-                    label: "开始时间",
+                    label: "采样开始时间",
                     prop: "startTime"
                   }, {
                     default: vue.withCtx(() => [
@@ -41728,7 +41446,7 @@ ${i3}
                   }),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
-                    label: "结束时间",
+                    label: "采样结束时间",
                     prop: "endTime"
                   }, {
                     default: vue.withCtx(() => [
@@ -41916,11 +41634,12 @@ ${i3}
                     prop: "waterTemperature"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).waterTemperature,
                         "onUpdate:modelValue": _cache[18] || (_cache[18] = ($event) => vue.unref(dataForm).waterTemperature = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: ℃)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41931,11 +41650,12 @@ ${i3}
                     prop: "waterPh"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).waterPh,
                         "onUpdate:modelValue": _cache[19] || (_cache[19] = ($event) => vue.unref(dataForm).waterPh = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: 无量纲)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41946,11 +41666,12 @@ ${i3}
                     prop: "waterConductivity"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).waterConductivity,
                         "onUpdate:modelValue": _cache[20] || (_cache[20] = ($event) => vue.unref(dataForm).waterConductivity = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: μS/cm)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41961,11 +41682,12 @@ ${i3}
                     prop: "oxReductionPotential"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).oxReductionPotential,
                         "onUpdate:modelValue": _cache[21] || (_cache[21] = ($event) => vue.unref(dataForm).oxReductionPotential = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: mV)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41976,11 +41698,12 @@ ${i3}
                     prop: "dissolvedOxygen"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).dissolvedOxygen,
                         "onUpdate:modelValue": _cache[22] || (_cache[22] = ($event) => vue.unref(dataForm).dissolvedOxygen = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: mg/L)")
                     ]),
                     _: 1
                     /* STABLE */
@@ -41991,18 +41714,19 @@ ${i3}
                     prop: "waterTurbidity"
                   }, {
                     default: vue.withCtx(() => [
-                      vue.createVNode(_component_u_number_box, {
-                        "positive-integer": false,
+                      vue.createVNode(_component_u_input, {
+                        type: "number",
                         modelValue: vue.unref(dataForm).waterTurbidity,
                         "onUpdate:modelValue": _cache[23] || (_cache[23] = ($event) => vue.unref(dataForm).waterTurbidity = $event)
-                      }, null, 8, ["modelValue"])
+                      }, null, 8, ["modelValue"]),
+                      vue.createElementVNode("span", null, "(单位: NTU)")
                     ]),
                     _: 1
                     /* STABLE */
                   }),
                   vue.createVNode(_component_u_form_item, {
                     "label-width": "100px",
-                    label: "发现NAPL",
+                    label: "是否发现NAPL",
                     prop: "hasNapl"
                   }, {
                     default: vue.withCtx(() => [
@@ -42108,8 +41832,7 @@ ${i3}
                 "label-name": "sampleNo",
                 list: relationSampleIdOptions.list,
                 onConfirm: onRelationSampleIdOptions
-              }, null, 8, ["modelValue", "list"]),
-              vue.createCommentVNode(' 	<u-select v-model="deviceIdOptions.show" value-name="enCode" label-name="fullName" :list="deviceIdOptions.list"\n			@confirm="onDeviceIdOptions"></u-select> ')
+              }, null, 8, ["modelValue", "list"])
             ])
           ],
           64
@@ -42118,7 +41841,404 @@ ${i3}
       };
     }
   };
-  const PagesSampleDetectionSamplingPageMonitoringPointWaterSampleAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/waterSample/addOrEditor.vue"]]);
+  const PagesSampleDetectionSamplingPageMonitoringPointWaterSampleAddOrEditor = /* @__PURE__ */ _export_sfc(_sfc_main$a, [["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/pages/sampleDetection/sampling/pageMonitoringPoint/waterSample/addOrEditor.vue"]]);
+  const _sfc_main$9 = {
+    name: "u-numberbox",
+    emits: ["update:modelValue", "input", "change", "blur", "plus", "minus"],
+    props: {
+      // 预显示的数字
+      value: {
+        type: Number,
+        default: 1
+      },
+      modelValue: {
+        type: Number,
+        default: 1
+      },
+      // 背景颜色
+      bgColor: {
+        type: String,
+        default: "#F2F3F5"
+      },
+      // 最小值
+      min: {
+        type: Number,
+        default: 0
+      },
+      // 最大值
+      max: {
+        type: Number,
+        default: 99999
+      },
+      // 步进值，每次加或减的值
+      step: {
+        type: Number,
+        default: 1
+      },
+      // 步进值，首次增加或最后减的值
+      stepFirst: {
+        type: Number,
+        default: 0
+      },
+      // 是否只能输入 step 的倍数
+      stepStrictly: {
+        type: Boolean,
+        default: false
+      },
+      // 是否禁用加减操作
+      disabled: {
+        type: Boolean,
+        default: false
+      },
+      // input的字体大小，单位rpx
+      size: {
+        type: [Number, String],
+        default: 26
+      },
+      // 加减图标的颜色
+      color: {
+        type: String,
+        default: "#323233"
+      },
+      // input宽度，单位rpx
+      inputWidth: {
+        type: [Number, String],
+        default: 80
+      },
+      // input高度，单位rpx
+      inputHeight: {
+        type: [Number, String],
+        default: 50
+      },
+      // index索引，用于列表中使用，让用户知道是哪个numberbox发生了变化，一般使用for循环出来的index值即可
+      index: {
+        type: [Number, String],
+        default: ""
+      },
+      // 是否禁用输入框，与disabled作用于输入框时，为OR的关系，即想要禁用输入框，又可以加减的话
+      // 设置disabled为false，disabledInput为true即可
+      disabledInput: {
+        type: Boolean,
+        default: false
+      },
+      // 输入框于键盘之间的距离
+      cursorSpacing: {
+        type: [Number, String],
+        default: 100
+      },
+      // 是否开启长按连续递增或递减
+      longPress: {
+        type: Boolean,
+        default: true
+      },
+      // 开启长按触发后，每触发一次需要多久
+      pressTime: {
+        type: [Number, String],
+        default: 250
+      },
+      // 是否只能输入大于或等于0的整数(正整数)
+      positiveInteger: {
+        type: Boolean,
+        default: true
+      }
+    },
+    watch: {
+      valueCom(v1, v2) {
+        if (!this.changeFromInner) {
+          this.inputVal = v1;
+          this.$nextTick(function() {
+            this.changeFromInner = false;
+          });
+        }
+      },
+      inputVal(v1, v2) {
+        if (v1 == "")
+          return;
+        let value = 0;
+        let tmp = this.isNumber(v1);
+        if (tmp && v1 >= this.min && v1 <= this.max)
+          value = v1;
+        else
+          value = v2;
+        if (this.positiveInteger) {
+          if (v1 < 0 || String(v1).indexOf(".") !== -1) {
+            value = v2;
+            this.$nextTick(() => {
+              this.inputVal = v2;
+            });
+          }
+        }
+        this.handleChange(value, "change");
+      },
+      min(v1) {
+        if (v1 !== void 0 && v1 != "" && this.valueCom < v1) {
+          this.$emit("input", v1);
+        }
+      },
+      max(v1) {
+        if (v1 !== void 0 && v1 != "" && this.valueCom > v1) {
+          this.$emit("input", v1);
+        }
+      }
+    },
+    data() {
+      return {
+        inputVal: 1,
+        // 输入框中的值，不能直接使用props中的value，因为应该改变props的状态
+        timer: null,
+        // 用作长按的定时器
+        changeFromInner: false,
+        // 值发生变化，是来自内部还是外部
+        innerChangeTimer: null
+        // 内部定时器
+      };
+    },
+    created() {
+      this.inputVal = Number(this.valueCom);
+    },
+    mounted() {
+    },
+    computed: {
+      getCursorSpacing() {
+        return Number(uni.upx2px(this.cursorSpacing));
+      },
+      valueCom() {
+        return this.modelValue;
+      }
+    },
+    methods: {
+      // 点击退格键
+      btnTouchStart(callback) {
+        this[callback]();
+        if (!this.longPress)
+          return;
+        clearInterval(this.timer);
+        this.timer = null;
+        this.timer = setInterval(() => {
+          this[callback]();
+        }, this.pressTime);
+      },
+      clearTimer() {
+        this.$nextTick(() => {
+          clearInterval(this.timer);
+          this.timer = null;
+        });
+      },
+      minus() {
+        this.computeVal("minus");
+      },
+      plus() {
+        this.computeVal("plus");
+      },
+      // 为了保证小数相加减出现精度溢出的问题
+      calcPlus(num1, num2) {
+        let baseNum, baseNum1, baseNum2;
+        try {
+          baseNum1 = num1.toString().split(".")[1].length;
+        } catch (e2) {
+          baseNum1 = 0;
+        }
+        try {
+          baseNum2 = num2.toString().split(".")[1].length;
+        } catch (e2) {
+          baseNum2 = 0;
+        }
+        baseNum = Math.pow(10, Math.max(baseNum1, baseNum2));
+        let precision = baseNum1 >= baseNum2 ? baseNum1 : baseNum2;
+        return ((num1 * baseNum + num2 * baseNum) / baseNum).toFixed(precision);
+      },
+      // 为了保证小数相加减出现精度溢出的问题
+      calcMinus(num1, num2) {
+        let baseNum, baseNum1, baseNum2;
+        try {
+          baseNum1 = num1.toString().split(".")[1].length;
+        } catch (e2) {
+          baseNum1 = 0;
+        }
+        try {
+          baseNum2 = num2.toString().split(".")[1].length;
+        } catch (e2) {
+          baseNum2 = 0;
+        }
+        baseNum = Math.pow(10, Math.max(baseNum1, baseNum2));
+        let precision = baseNum1 >= baseNum2 ? baseNum1 : baseNum2;
+        return ((num1 * baseNum - num2 * baseNum) / baseNum).toFixed(precision);
+      },
+      computeVal(type2) {
+        uni.hideKeyboard();
+        if (this.disabled)
+          return;
+        let value = 0;
+        if (type2 === "minus") {
+          if (this.stepFirst > 0 && this.inputVal == this.stepFirst) {
+            value = this.min;
+          } else {
+            value = this.calcMinus(this.inputVal, this.step);
+          }
+        } else if (type2 === "plus") {
+          if (this.stepFirst > 0 && this.inputVal < this.stepFirst) {
+            value = this.stepFirst;
+          } else {
+            value = this.calcPlus(this.inputVal, this.step);
+          }
+        }
+        if (this.stepStrictly) {
+          let strictly = value % this.step;
+          if (strictly > 0) {
+            value -= strictly;
+          }
+          if (this.stepFirst > 0 && value > 0 && value < this.stepFirst) {
+            if (type2 === "minus") {
+              value = 0;
+            } else if (type2 === "plus") {
+              value = this.stepFirst + (this.step - this.stepFirst % this.step);
+            }
+          }
+        }
+        if (value > this.max) {
+          value = this.max;
+        } else if (value < this.min) {
+          value = this.min;
+        }
+        this.inputVal = value;
+        this.handleChange(value, type2);
+      },
+      // 处理用户手动输入的情况
+      onBlur(event) {
+        let val = 0;
+        let value = event.detail.value;
+        if (!/(^\d+$)/.test(value) || value[0] == 0)
+          val = this.min;
+        val = +value;
+        if (this.stepFirst > 0 && this.inputVal < this.stepFirst && this.inputVal > 0) {
+          val = this.stepFirst;
+        }
+        if (this.stepStrictly) {
+          let strictly = val % this.step;
+          if (strictly > 0) {
+            val -= strictly;
+          }
+          if (this.stepFirst > 0 && val > 0 && val < this.stepFirst) {
+            val = this.stepFirst + (this.step - this.stepFirst % this.step);
+          }
+        }
+        if (val > this.max) {
+          val = this.max;
+        } else if (val < this.min) {
+          val = this.min;
+        }
+        this.$nextTick(() => {
+          this.inputVal = val;
+        });
+        this.handleChange(val, "blur");
+      },
+      handleChange(value, type2) {
+        if (this.disabled)
+          return;
+        if (this.innerChangeTimer) {
+          clearTimeout(this.innerChangeTimer);
+          this.innerChangeTimer = null;
+        }
+        this.changeFromInner = true;
+        this.innerChangeTimer = setTimeout(() => {
+          this.changeFromInner = false;
+        }, 150);
+        this.$emit("input", Number(value));
+        this.$emit("update:modelValue", Number(value));
+        this.$emit(type2, {
+          // 转为Number类型
+          value: Number(value),
+          index: this.index
+        });
+      },
+      /**
+       * 验证十进制数字
+       */
+      isNumber(value) {
+        return /^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/.test(value);
+      }
+    }
+  };
+  function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
+    return vue.openBlock(), vue.createElementBlock("view", { class: "u-numberbox" }, [
+      vue.createElementVNode(
+        "view",
+        {
+          class: vue.normalizeClass(["u-icon-minus", { "u-icon-disabled": $props.disabled || $data.inputVal <= $props.min }]),
+          onTouchstart: _cache[0] || (_cache[0] = vue.withModifiers(($event) => $options.btnTouchStart("minus"), ["prevent"])),
+          onTouchend: _cache[1] || (_cache[1] = vue.withModifiers((...args) => $options.clearTimer && $options.clearTimer(...args), ["stop", "prevent"])),
+          style: vue.normalizeStyle({
+            background: $props.bgColor,
+            height: $props.inputHeight + "rpx",
+            color: $props.color,
+            fontSize: $props.size + "rpx",
+            minHeight: "1.4em"
+          })
+        },
+        [
+          vue.createElementVNode(
+            "view",
+            {
+              style: vue.normalizeStyle("font-size:" + (Number($props.size) + 10) + "rpx"),
+              class: "num-btn"
+            },
+            "－",
+            4
+            /* STYLE */
+          )
+        ],
+        38
+        /* CLASS, STYLE, NEED_HYDRATION */
+      ),
+      vue.withDirectives(vue.createElementVNode("input", {
+        disabled: $props.disabledInput || $props.disabled,
+        "cursor-spacing": $options.getCursorSpacing,
+        class: vue.normalizeClass([{ "u-input-disabled": $props.disabled }, "u-number-input"]),
+        "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => $data.inputVal = $event),
+        onBlur: _cache[3] || (_cache[3] = (...args) => $options.onBlur && $options.onBlur(...args)),
+        type: "number",
+        style: vue.normalizeStyle({
+          color: $props.color,
+          fontSize: $props.size + "rpx",
+          background: $props.bgColor,
+          height: $props.inputHeight + "rpx",
+          width: $props.inputWidth + "rpx"
+        })
+      }, null, 46, ["disabled", "cursor-spacing"]), [
+        [vue.vModelText, $data.inputVal]
+      ]),
+      vue.createElementVNode(
+        "view",
+        {
+          class: vue.normalizeClass(["u-icon-plus", { "u-icon-disabled": $props.disabled || $data.inputVal >= $props.max }]),
+          onTouchstart: _cache[4] || (_cache[4] = vue.withModifiers(($event) => $options.btnTouchStart("plus"), ["prevent"])),
+          onTouchend: _cache[5] || (_cache[5] = vue.withModifiers((...args) => $options.clearTimer && $options.clearTimer(...args), ["stop", "prevent"])),
+          style: vue.normalizeStyle({
+            background: $props.bgColor,
+            height: $props.inputHeight + "rpx",
+            color: $props.color,
+            fontSize: $props.size + "rpx",
+            minHeight: "1.4em"
+          })
+        },
+        [
+          vue.createElementVNode(
+            "view",
+            {
+              style: vue.normalizeStyle("font-size:" + (Number($props.size) + 10) + "rpx"),
+              class: "num-btn"
+            },
+            "＋",
+            4
+            /* STYLE */
+          )
+        ],
+        38
+        /* CLASS, STYLE, NEED_HYDRATION */
+      )
+    ]);
+  }
+  const __easycom_7 = /* @__PURE__ */ _export_sfc(_sfc_main$9, [["render", _sfc_render], ["__scopeId", "data-v-2bb8fbb0"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-number-box/u-number-box.vue"]]);
   const _sfc_main$8 = {
     __name: "addMateriel",
     emits: ["emitVisible"],
@@ -42607,6 +42727,7 @@ ${i3}
     __name: "index",
     setup(__props) {
       const searchKeyWord = vue.ref();
+      const searchShowActionFlag = vue.ref(false);
       const dataList = vue.ref([]);
       const listQuery = vue.reactive({
         currentPage: 1,
@@ -42728,8 +42849,12 @@ ${i3}
                   vue.createVNode(_component_u_search, {
                     placeholder: "请输入物料名称",
                     modelValue: searchKeyWord.value,
-                    "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => searchKeyWord.value = $event)
-                  }, null, 8, ["modelValue"])
+                    "onUpdate:modelValue": _cache[2] || (_cache[2] = ($event) => searchKeyWord.value = $event),
+                    onSearch: _cache[3] || (_cache[3] = ($event) => getList()),
+                    "show-action": searchShowActionFlag.value,
+                    onFocus: _cache[4] || (_cache[4] = ($event) => searchShowActionFlag.value = true),
+                    onBlur: _cache[5] || (_cache[5] = ($event) => searchShowActionFlag.value = false)
+                  }, null, 8, ["modelValue", "show-action"])
                 ]),
                 vue.createElementVNode("view", { class: "content-box" }, [
                   (vue.openBlock(true), vue.createElementBlock(
@@ -42791,7 +42916,7 @@ ${i3}
               {
                 ref_key: "addRef",
                 ref: addRef,
-                onEmitVisible: _cache[3] || (_cache[3] = (val) => mainVisible.value = val)
+                onEmitVisible: _cache[6] || (_cache[6] = (val) => mainVisible.value = val)
               },
               null,
               512
@@ -43734,6 +43859,7 @@ ${i3}
     setup(__props) {
       const dataList = vue.ref([]);
       const searchKeyWord = vue.ref();
+      const searchShowActionFlag = vue.ref(false);
       const listQuery = vue.reactive({
         currentPage: 1,
         pageSize: 20,
@@ -43906,8 +44032,11 @@ ${i3}
                     placeholder: "搜索申请单号",
                     modelValue: searchKeyWord.value,
                     "onUpdate:modelValue": _cache[3] || (_cache[3] = ($event) => searchKeyWord.value = $event),
-                    onSearch: _cache[4] || (_cache[4] = ($event) => getList())
-                  }, null, 8, ["modelValue"])
+                    onSearch: _cache[4] || (_cache[4] = ($event) => getList()),
+                    "show-action": searchShowActionFlag.value,
+                    onFocus: _cache[5] || (_cache[5] = ($event) => searchShowActionFlag.value = true),
+                    onBlur: _cache[6] || (_cache[6] = ($event) => searchShowActionFlag.value = false)
+                  }, null, 8, ["modelValue", "show-action"])
                 ]),
                 vue.createElementVNode("view", { class: "content-box" }, [
                   vue.createVNode(
@@ -43992,7 +44121,7 @@ ${i3}
               {
                 ref_key: "detailRef",
                 ref: detailRef,
-                onEmitVisible: _cache[5] || (_cache[5] = (val) => mainVisible.value = val)
+                onEmitVisible: _cache[7] || (_cache[7] = (val) => mainVisible.value = val)
               },
               null,
               512
@@ -44003,7 +44132,7 @@ ${i3}
               {
                 ref_key: "addRef",
                 ref: addRef,
-                onEmitVisible: _cache[6] || (_cache[6] = (val) => mainVisible.value = val)
+                onEmitVisible: _cache[8] || (_cache[8] = (val) => mainVisible.value = val)
               },
               null,
               512
@@ -44093,7 +44222,7 @@ ${i3}
                 vue.createElementVNode("text", {
                   class: "title",
                   style: { "font-size": "16px", "position": "absolute", "left": "50%", "top": "50%", "transform": "translate(-50%,-50%)" }
-                }, "土样记录")
+                }, "门禁远程控制")
               ])
             ]),
             vue.createVNode(_component_u_form, {

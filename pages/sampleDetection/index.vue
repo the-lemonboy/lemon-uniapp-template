@@ -6,7 +6,7 @@
 	<!-- #endif -->
 	<view class="sp-container">
 		<view class="search-box">
-			<u-search placeholder="请输入项目名称" v-model="searchKeyWord" @search="getMenuList()"></u-search>
+			<u-search placeholder="请输入项目名称" v-model="searchKeyWord" @search="getMenuList()" :show-action="searchShowActionFlag" @focus="searchShowActionFlag=true" @blur="searchShowActionFlag=false"></u-search>
 		</view>
 		<view class="sort-box">
 			<u-dropdown ref="dropdown1" @open="open" @close="close">
@@ -112,6 +112,7 @@
 		getMenuList()
 	}
 	// 搜索
+	const searchShowActionFlag = ref(false)
 	const searchKeyWord = ref()
 	function swipeClick(e, ctx, id) {
 		uni.showModal({

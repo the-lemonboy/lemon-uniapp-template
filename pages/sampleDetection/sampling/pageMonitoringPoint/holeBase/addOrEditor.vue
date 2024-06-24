@@ -28,7 +28,7 @@
 			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select"
 					@click="showPickerDate('endTime')" v-model="dataForm.endTime" /></u-form-item>
 			<u-form-item label-width='100px' label="钻孔直径" prop="diameter"><u-number-box :positive-integer="false"
-					v-model="dataForm.diameter"></u-number-box></u-form-item>
+					v-model="dataForm.diameter"></u-number-box>test</u-form-item>
 			<u-form-item label-width='100px' label="初见水位埋深" prop="sWaterLevel"><u-number-box :positive-integer="false"
 					v-model="dataForm.sWaterLevel"></u-number-box></u-form-item>
 			<u-form-item label-width='100px' label="地面高程" prop="elevation"><u-number-box :positive-integer="false"
@@ -87,7 +87,7 @@
 	function onwellTypeOptions(arr) {
 		let current = arr[0];
 		wellTypeOptions.current = current;
-		dataForm.wellType = current.label;
+		dataForm.value.wellType = current.label;
 	}
 	// 选择时间
 	const timeParams = reactive({
@@ -107,13 +107,13 @@
 	}
 
 	function getTime(e) {
-		if (curTimeKey.value === 'startTime') dataForm.startTime =
+		if (curTimeKey.value === 'startTime') dataForm.value.startTime =
 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
-		else if (curTimeKey.value === 'endTime') dataForm.endTime =
+		else if (curTimeKey.value === 'endTime') dataForm.value.endTime =
 			`${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`
 	}
 
-	let dataForm = reactive({
+	let dataForm = ref({
 		projectId: '',
 		holeNo: '',
 		holeType: '',
@@ -141,13 +141,11 @@
 	}
 
 	function addOrUpdateData() {
-		// dataForm.files = parseFiles(dataForm.files)
-		// dataForm = (dataForm)
-		parseData(dataForm)
-		if (!dataForm.id) {
-			addHoleRecord(dataForm).then(res => console.log('success!'))
+		parseData(dataForm.value)
+		if (!dataForm.value.id) {
+			addHoleRecord(dataForm.value).then(res => console.log('success!'))
 		} else {
-			updateHoleRecord(dataForm.id, dataForm)
+			updateHoleRecord(dataForm.value.id, dataForm.value)
 		}
 		uni.$emit('refresh')
 	}
@@ -157,7 +155,7 @@
 		if (id) {
 			getHoleRecordDetail(id).then(res => {
 				// Object.assign(dataForm,res.data)
-				dataForm = dataInfo(res.data)
+				dataForm.value = dataInfo(res.data)
 			})
 		}
 	}

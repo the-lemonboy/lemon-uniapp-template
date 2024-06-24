@@ -19,13 +19,17 @@
 			<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
 				<u-form-item label-width='100px' label="样品名称" prop="sampleName"><u-input
 						v-model="dataForm.sampleName" /></u-form-item>
-				<u-form-item label-width='100px' label="采样深度" prop="sampleDepth"><u-number-box :positive-integer="false"
-						v-model="dataForm.sampleDepth"></u-number-box></u-form-item>
-				<u-form-item label-width='100px' label="PID读数" prop="pidReading"><u-number-box :positive-integer="false"
-						v-model="dataForm.pidReading"></u-number-box></u-form-item>
-				<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input
+				<u-form-item label-width='100px' label="采样深度" prop="sampleDepth">
+					<u-input type="number" v-model="dataForm.sampleDepth"></u-input>
+				</u-form-item>
+
+				<u-form-item label-width='100px' label="PID读数" prop="pidReading">
+					<u-input type="number" v-model="dataForm.pidReading"></u-input>
+				</u-form-item>
+
+				<u-form-item label-width='100px' label="采样开始时间" prop="startTime"><u-input
 						@click="showPickerDate('startTime')" type="select" v-model="dataForm.startTime" /></u-form-item>
-				<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input @click="showPickerDate('endTime')"
+				<u-form-item label-width='100px' label="采样结束时间" prop="endTime"><u-input @click="showPickerDate('endTime')"
 						type="select" v-model="dataForm.endTime" /></u-form-item>
 				<u-form-item label-width="150" label="送检" prop="isInspection">
 					<u-radio-group v-model="dataForm.isInspection">
@@ -36,21 +40,22 @@
 				<u-form-item v-if="isInspectionFlag" label-width='100px' label="样品编号" prop="sampleNo"><u-input
 						v-model="sampleNoOptions.current.label" type="select"
 						@click="sampleNoOptions.show=true" /></u-form-item>
-				<u-form-item v-if="isInspectionFlag" label-width='100px' label="样品保存方式" prop="storageMethod"><u-input type='number'
-						v-model="dataForm.storageMethod" /></u-form-item>
+				<u-form-item v-if="isInspectionFlag" label-width='100px' label="样品保存方式" prop="storageMethod"><u-input
+						type='number' v-model="dataForm.storageMethod" /></u-form-item>
 				<u-form-item v-if="isInspectionFlag" label-width="150" label="添加平行样" prop="hasParallelSample">
 					<u-radio-group v-model="dataForm.hasParallelSample">
 						<u-radio :name="val.value" :disabled="val.disabled" @change="hasParallelSampleChange"
 							v-for="(val,index) of hasParallelSampleRadio" :key="index">{{val.name}}</u-radio>
 					</u-radio-group>
 				</u-form-item>
-				<u-form-item v-if="isInspectionFlag && hasParallelSampleFlag" label-width='120px' label="平行样样品编号" prop="relationSampleId"><u-input
-						v-model="relationSampleIdOptions.current.label" type="select"
+				<u-form-item v-if="isInspectionFlag && hasParallelSampleFlag" label-width='120px' label="平行样样品编号"
+					prop="relationSampleId"><u-input v-model="relationSampleIdOptions.current.label" type="select"
 						@click="relationSampleIdOptions.show=true" /></u-form-item>
-				<u-form-item v-if="isInspectionFlag && hasParallelSampleFlag" label-width='100px' label="平行样样品名称" prop="relationSampleName"><u-input type='number'
+				<u-form-item v-if="isInspectionFlag && hasParallelSampleFlag" label-width='100px' label="平行样样品名称"
+					prop="relationSampleName"><u-input type='number'
 						v-model="dataForm.relationSampleName" /></u-form-item>
-				<u-form-item v-if="isInspectionFlag" label-width="100px" label="分析指标"><u-input type="select" v-model="selectName"
-						@click="showPicker" /></u-form-item>
+				<u-form-item v-if="isInspectionFlag" label-width="100px" label="分析指标"><u-input type="select"
+						v-model="selectName" @click="showPicker" /></u-form-item>
 				<u-form-item label-width='100px' label="上传图片" prop="file">
 					<upload :watermark='true' @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files">
 					</upload>
@@ -58,7 +63,8 @@
 			</u-form>
 			<u-button class="xrf-btn" type="primary" @click="goXrfConf">编辑xrf</u-button>
 			<ba-tree-picker ref="treePicker" :multiple='true' @select-change="selectChange" title="选择分析指标"
-			@initDataName="initDataName" :propsInitId="initAnalysisFactorIds" :selectParent="false"	:localdata="factorTreeList" valueKey="id" textKey="factorName" childrenKey="children" />
+				@initDataName="initDataName" :propsInitId="initAnalysisFactorIds" :selectParent="false"
+				:localdata="factorTreeList" valueKey="id" textKey="factorName" childrenKey="children" />
 			<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 				:default-time='getCurrentTime()'></u-picker>
 			<u-select v-model="sampleNoOptions.show" value-name="sampleNo" label-name="sampleNo"
@@ -139,7 +145,7 @@
 	const curSampleNameList = ref([])
 
 	function getCurSampleNameList() {
-		return new Promise(resolve=>{
+		return new Promise(resolve => {
 			let _query = {
 				currentPage: 1,
 				projectId: uni.getStorageSync('projectId'),
@@ -150,9 +156,9 @@
 			}
 			getSoilRecordList(_query).then(res => {
 				curSampleNameList.value = res.data.list.map(item => {
-				          return item.sampleName
-				        })
-						resolve()
+					return item.sampleName
+				})
+				resolve()
 			})
 		})
 	}
@@ -178,13 +184,14 @@
 			disabled: false
 		}
 	])
-	function isInspectionChange(val){
-		if(val == 0){
+
+	function isInspectionChange(val) {
+		if (val == 0) {
 			isInspectionFlag.value = false
-		}else{
+		} else {
 			isInspectionFlag.value = true
 		}
-		
+
 	}
 	const hasParallelSampleRadio = ref([{
 			name: "是",
@@ -197,10 +204,11 @@
 			disabled: false
 		}
 	])
-	function hasParallelSampleChange(val){
-		if(val == 0){
+
+	function hasParallelSampleChange(val) {
+		if (val == 0) {
 			hasParallelSampleFlag.value = false
-		}else{
+		} else {
 			hasParallelSampleFlag.value = true
 		}
 	}
@@ -224,18 +232,19 @@
 	//监听选择（ids为数组）
 	function selectChange(ids, names) {
 		let resulteIds = ids.map(item => BigInt(item))
-		 resulteIds = resulteIds.join(',')
+		resulteIds = resulteIds.join(',')
 		dataForm.value.analysisFactorIds = ids
 		selectName.value = names
 	}
-	function initDataName(val){
-		if(!selectName.value.length){
-			val.forEach((item,index)=>{
-					if(index<val.length-1){
-						selectName.value += item + '/'
-					}else{
-						selectName.value += item
-					}
+
+	function initDataName(val) {
+		if (!selectName.value.length) {
+			val.forEach((item, index) => {
+				if (index < val.length - 1) {
+					selectName.value += item + '/'
+				} else {
+					selectName.value += item
+				}
 			})
 		}
 	}
@@ -243,11 +252,12 @@
 		getfactorTypeOptions()
 		// initDataName()
 	})
-	 // initData里面执行
+	// initData里面执行
 	const initAnalysisFactorIds = ref([])
-	function handelAnalysisFactorIds(){
-		if(dataForm.value.analysisFactorIds){
-		initAnalysisFactorIds.value = dataForm.value.analysisFactorIds.split(",")
+
+	function handelAnalysisFactorIds() {
+		if (dataForm.value.analysisFactorIds) {
+			initAnalysisFactorIds.value = dataForm.value.analysisFactorIds.split(",")
 		}
 	}
 	// 样品编号
@@ -401,11 +411,11 @@
 	}
 
 	function initData() {
-		return new Promise(resolve=>{
+		return new Promise(resolve => {
 			const id = uni.getStorageSync('soilSampleId')
 			if (id) {
 				getSoilRecordDetail(id).then(res => {
-					dataForm.value =  dataInfo(res.data)
+					dataForm.value = dataInfo(res.data)
 					judgeFlag(res.data)
 					curSampleNameList.value = curSampleNameList.value.filter(item => {
 						return item !== dataForm.value.sampleName
@@ -419,23 +429,25 @@
 			}
 		})
 	}
-	function judgeFlag(dataForm){
-		if(dataForm.isInspection === 'false' || dataForm.isInspection == 0 || dataForm.isInspection === false  ){
+
+	function judgeFlag(dataForm) {
+		if (dataForm.isInspection === 'false' || dataForm.isInspection == 0 || dataForm.isInspection === false) {
 			isInspectionFlag.value = false
-		}else{
+		} else {
 			isInspectionFlag.value = true
 		}
-		if(dataForm.hasParallelSample === 'false' || dataForm.hasParallelSample == 0 || dataForm.hasParallelSample === false  ){
+		if (dataForm.hasParallelSample === 'false' || dataForm.hasParallelSample == 0 || dataForm.hasParallelSample ===
+			false) {
 			hasParallelSampleFlag.value = false
-		}else{
+		} else {
 			hasParallelSampleFlag.value = true
 		}
 	}
-	onLoad(async() => {
+	onLoad(async () => {
 		await getCurSampleNameList()
 		await initData()
 		getSampleNoOptions()
-		
+
 	})
 
 	function goToBack() {

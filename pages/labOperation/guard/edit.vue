@@ -11,7 +11,7 @@
 					style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
 					<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
 					<text class="title"
-						style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">土样记录</text>
+						style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">门禁远程控制</text>
 				</view>
 			</view>
 			<u-form :model="doorInfo" ref="form"  style="margin:20px auto; width: 90%;">

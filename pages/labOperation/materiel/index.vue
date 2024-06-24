@@ -15,7 +15,7 @@
 		</view>
 		</view>
 		<view class="search-box">
-			<u-search placeholder="请输入物料名称" v-model="searchKeyWord"></u-search>
+			<u-search placeholder="请输入物料名称" v-model="searchKeyWord" @search="getList()" :show-action="searchShowActionFlag" @focus="searchShowActionFlag=true" @blur="searchShowActionFlag=false"></u-search>
 		</view>
 		<view class="content-box">
 							<view class="item-box" v-for="item in dataList" :key="item.id">
@@ -55,6 +55,7 @@
 	} from '@/utils/getMenuId.js'
 	import addMateriel from './addMateriel.vue';
 	const searchKeyWord = ref()
+	const searchShowActionFlag = ref(false)
 	const dataList = ref([])
 	const listQuery = reactive({
 		currentPage: 1,
