@@ -217,24 +217,21 @@
 		})
 	}
 
-	function parseFiles(data) {
-		var _data = JSON.parse(JSON.stringify(data))
+	function parseFiles(_data) {
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
 		} else {
 			_data.files = '[]'
 		}
-		console.log(_data.files)
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.holeId = uni.getStorageSync('holeId')
 		_data.id = uni.getStorageSync('wellWashRecordId')
-		return _data
 	}
 
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid) {
-		dataForm.value = parseFiles(dataForm.value)
+		parseFiles(dataForm.value)
 		if (!dataForm.value.id) {
 			addWellWashRecord(dataForm.value).then(res => ToastFn('创建成功'))
 		} else {
@@ -253,22 +250,21 @@
 		});
 	}
 
-	function dataInfo(dataAll) {
-		let _dataAll = dataAll
+	function dataInfo(_dataAll) {
 		if (_dataAll.files) {
 			_dataAll.files = JSON.parse(_dataAll.files)
 		} else {
 			_dataAll.files = []
 		}
 		_dataAll.hasNapl = _dataAll.hasNapl == "true" ? "1" : "0"
-		dataForm.value = _dataAll
+		return _dataAll
 	}
 
 	function initData() {
 		const id = uni.getStorageSync('wellWashRecordId')
 		if (id) {
 			getWellWashRecordDetail(id).then(res => {
-				dataInfo(res.data)
+				dataForm.value = dataInfo(res.data)
 			})
 		}
 	}

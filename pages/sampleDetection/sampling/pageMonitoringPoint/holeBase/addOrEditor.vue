@@ -129,8 +129,7 @@
 		files: []
 	})
 
-	function parseData(data) {
-		var _data = JSON.parse(JSON.stringify(data))
+	function parseData(_data) {
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
 		} else {
@@ -139,13 +138,12 @@
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.holeId = uni.getStorageSync('holeId')
 		_data.id = uni.getStorageSync('wellBaseId')
-		return _data
 	}
 
 	function addOrUpdateData() {
 		// dataForm.files = parseFiles(dataForm.files)
 		// dataForm = (dataForm)
-		dataForm = parseData(dataForm)
+		parseData(dataForm)
 		if (!dataForm.id) {
 			addHoleRecord(dataForm).then(res => console.log('success!'))
 		} else {
@@ -159,7 +157,7 @@
 		if (id) {
 			getHoleRecordDetail(id).then(res => {
 				// Object.assign(dataForm,res.data)
-				dataInfo(res.data)
+				dataForm = dataInfo(res.data)
 			})
 		}
 	}
@@ -176,15 +174,14 @@
 	}
 	const files = ref([])
 
-	function dataInfo(dataAll) {
-		let _dataAll = dataAll
+	function dataInfo(_dataAll) {
 		if (_dataAll.files) {
 			_dataAll.files = JSON.parse(_dataAll.files)
 		} else {
 			_dataAll.files = []
 		}
 		files.value = _dataAll.files
-		dataForm = _dataAll
+		return _dataAll
 	}
 </script>
 

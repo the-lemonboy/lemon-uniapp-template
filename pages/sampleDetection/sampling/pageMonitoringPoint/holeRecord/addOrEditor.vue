@@ -185,8 +185,7 @@
 		})
 	}
 
-	function parseFiles(data) {
-		var _data = JSON.parse(JSON.stringify(data))
+	function parseFiles(_data) {
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
 		} else {
@@ -195,23 +194,21 @@
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.holeId = uni.getStorageSync('holeId')
 		_data.id = uni.getStorageSync('holeRecordId')
-		return _data
 	}
 
 	function addOrUpdateData() {
 		console.log(dataForm.value)
 		
 		form.value.validate(valid => {
-			console.log(valid)
 			if (valid) {
-				const data = parseFiles(dataForm.value)
+				 parseFiles(dataForm.value)
 				const id = uni.getStorageSync('holeRecordId')
 				if (!id) {
-					addHoleRecord(data).then(res => {
+					addHoleRecord(dataForm.value).then(res => {
 						ToastFn('创建成功')
 					})
 				} else {
-					updateHoleRecord(id, data).then(res => {
+					updateHoleRecord(id, dataForm.value).then(res => {
 						ToastFn('修改成功')
 					})
 				}
@@ -228,21 +225,20 @@
 		});
 	}
 
-	function dataInfo(dataAll) {
-		let _dataAll = dataAll
+	function dataInfo(_dataAll) {
 		if (_dataAll.files) {
 			_dataAll.files = JSON.parse(_dataAll.files)
 		} else {
 			_dataAll.files = []
 		}
-		dataForm.value = _dataAll
+		return _dataAll
 	}
 
 	function initData() {
 		const id = uni.getStorageSync('holeRecordId')
 		if (id) {
 			getHoleRecordDetail(id).then(res => {
-				dataInfo(res.data)
+				dataForm.value = dataInfo(res.data)
 			})
 		}
 	}

@@ -21,7 +21,7 @@
 					<u-form-item label-width='100px' label="批次编号" prop="transNo"><u-input
 							v-model="dataForm.transNo" /></u-form-item>
 					<u-form-item label-width='100px' label="送样时间" prop="transTime"><u-input
-						type="select"	@click="showPickerDate('transTime')" v-model="dataForm.transTime" /></u-form-item>
+							@click="showPickerDate('transTime')" v-model="dataForm.transTime" /></u-form-item>
 				</u-form>
 				<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 					:default-time='getCurrentTime()'></u-picker>
@@ -235,7 +235,8 @@
 		dataForm.value.projectId = uni.getStorageSync('projectId')
 		dataForm.value.transUserId = uni.getStorageSync('userInfo').userId
 		dataForm.value.organizeId = uni.getStorageSync('userInfo').organizeId
-		detailList: [] // 详细列表
+		detailList: [] ,// 详细列表
+		dataForm.value.domain="sample"
 	    const detailList = unSendList.value
 	        .filter(item => item.send)
 	        .map(item => ({

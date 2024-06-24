@@ -219,8 +219,7 @@
 		analysisFactorIds: ''
 	})
 
-	function parseData(data) {
-		var _data = JSON.parse(JSON.stringify(data))
+	function parseData(_data) {
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
 		} else {
@@ -228,13 +227,12 @@
 		}
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.id = uni.getStorageSync('QCSampleId')
-		return _data
 	}
 
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid) {
-		dataForm.value = parseData(dataForm.value)
+		parseData(dataForm.value)
 		if (!dataForm.value.id) {
 			addQCSample(dataForm.value).then(res =>ToastFn('创建成功'))
 		} else {
@@ -255,7 +253,7 @@ function ToastFn(text){
 		const id = uni.getStorageSync('QCSampleId')
 		if (id) {
 			getQCSampleDetail(id).then(res => {
-				dataInfo(res.data)
+				dataForm.value = dataInfo(res.data)
 				handelAnalysisFactorIds()
 			})
 		}
@@ -273,14 +271,14 @@ function ToastFn(text){
 		})
 	}
 
-	function dataInfo(dataAll) {
+	function dataInfo(_dataAll) {
 		let _dataAll = dataAll
 		if (_dataAll.files) {
 			_dataAll.files = JSON.parse(_dataAll.files)
 		} else {
 			_dataAll.files = []
 		}
-		dataForm.value = _dataAll
+		return _dataAll
 	}
 </script>
 

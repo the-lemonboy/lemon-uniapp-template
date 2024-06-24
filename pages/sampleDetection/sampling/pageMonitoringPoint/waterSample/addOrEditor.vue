@@ -393,15 +393,14 @@
 		}
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.holeId = uni.getStorageSync('holeId')
-		_data.id = uni.getStorageSync('water')
-		return _data
+		_data.id = uni.getStorageSync('waterSampleId')
 	}
 
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid) {
-				dataForm.value = parseData(dataForm.value)
-				if (!dataForm.id) {
+				parseData(dataForm.value)
+				if (!dataForm.value.id) {
 					addWaterSample(dataForm.value).then(res => ToastFn('创建成功'))
 				} else {
 					updateWaterSample(dataForm.value.id, dataForm.value).then(res => ToastFn('修改成功'))
@@ -424,7 +423,7 @@
 			const id = uni.getStorageSync('waterSampleId')
 			if (id) {
 				getWaterSampleDetail(id).then(res => {
-					dataInfo(res.data)
+					dataForm.value = dataInfo(res.data)
 					judgeFlag(res.data)
 					curSampleNameList.value = curSampleNameList.value.filter(item => {
 						return item !== dataForm.value.sampleName
@@ -464,8 +463,7 @@
 		})
 	}
 
-	function dataInfo(dataAll) {
-		let _dataAll = dataAll
+	function dataInfo(_dataAll) {
 		if (_dataAll.files) {
 			_dataAll.files = JSON.parse(_dataAll.files)
 		} else {
@@ -474,7 +472,7 @@
 		_dataAll.hasParallelSample = _dataAll.hasParallelSample == "true" ? "1" : "0"
 		_dataAll.isInspection = _dataAll.isInspection == "true" ? "1" : "0"
 		_dataAll.hasNapl = _dataAll.hasNapl == "true" ? "1" : "0"
-		dataForm.value = _dataAll
+		return _dataAll
 	}
 </script>
 

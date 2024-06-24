@@ -162,8 +162,7 @@
 		})
 	}
 
-	function parseFiles(data) {
-		var _data = JSON.parse(JSON.stringify(data))
+	function parseFiles(_data) {
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
 		} else {
@@ -175,24 +174,23 @@
 		_data.checkUserName = uni.getStorageSync('userInfo').userName
 		_data.projectName = uni.getStorageSync('projectName')
 		_data.createUser = uni.getStorageSync('userInfo').userId
-		return _data
 	}
 
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid) {
-				dataForm.value = parseFiles(dataForm.value)
+				parseFiles(dataForm.value)
 				if (!dataForm.value.id) {
 					addQCCheckBase(dataForm.value).then(res => ToastFn('创建成功'))
 				} else {
 					updateQCCheckBase(dataForm.value.id, dataForm.value).then(res => ToastFn('修改成功'))
 				}
-				clearData(dataForm.value)
 			}
 		});
 	}
 
 	function ToastFn(text) {
+		// debugger
 		uni.$emit('refresh', checkType.value)
 		goToBack()
 		uni.showToast({
@@ -202,21 +200,20 @@
 	}
 	const itemId = ref(null)
 
-	function dataInfo(dataAll) {
-		let _dataAll = dataAll
+	function dataInfo(_dataAll) {
 		if (_dataAll.files) {
 			_dataAll.files = JSON.parse(_dataAll.files)
 		} else {
 			_dataAll.files = []
 		}
-		dataForm.value = _dataAll
+		return _dataAll
 	}
 
 	function initData() {
 		const id = itemId.value
 		if (id) {
 			getQCCheckBaseDetail(id).then(res => {
-				dataInfo(res.data)
+				dataForm.value = dataInfo(res.data)
 				confTreeData.value = editorTableData(dataForm.value.detailList)
 			})
 		} else {

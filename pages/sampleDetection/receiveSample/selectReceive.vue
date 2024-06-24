@@ -20,7 +20,7 @@
 				<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
 					<u-form-item label-width='100px' label="批次编号" prop="transNo"><u-input
 						disabled="true"	v-model="dataForm.transNo" /></u-form-item>
-					<u-form-item label-width='100px' label="收样时间" prop="receiveTime"><u-input
+					<u-form-item label-width='100px' label="收样时间" prop="receiveTime"><u-input type="select"
 							@click="showPickerDate('receiveTime')" v-model="dataForm.receiveTime" /></u-form-item>
 				</u-form>
 				<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"

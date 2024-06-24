@@ -353,26 +353,24 @@
 		files: []
 	})
 
-	function parseData(data) {
-		var _data = JSON.parse(JSON.stringify(data))
+	function parseData(_data) {
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
 		} else {
 			_data.files = '[]'
 		}
 		_data.xrfDetailsList = XRFConfList.value
-		_data.analysisFactorIds = data.analysisFactorIds.toString()
+		_data.analysisFactorIds = _data.analysisFactorIds.toString()
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.holeId = uni.getStorageSync('holeId')
 		_data.id = uni.getStorageSync('wellBaseId')
-		return _data
 	}
 
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid) {
 				const id = uni.getStorageSync('soilSampleId')
-				dataForm.value = parseData(dataForm.value)
+				parseData(dataForm.value)
 				if (!id) {
 					addSoilRecord(dataForm.value).then(res => ToastFn('创建成功'))
 				} else {
@@ -391,8 +389,7 @@
 		});
 	}
 
-	function dataInfo(dataAll) {
-		let _dataAll = dataAll
+	function dataInfo(_dataAll) {
 		if (_dataAll.files) {
 			_dataAll.files = JSON.parse(_dataAll.files)
 		} else {
@@ -400,7 +397,7 @@
 		}
 		_dataAll.hasParallelSample = _dataAll.hasParallelSample == "true" ? "1" : "0"
 		_dataAll.isInspection = _dataAll.isInspection == "true" ? "1" : "0"
-		dataForm.value = _dataAll
+		return _dataAll
 	}
 
 	function initData() {
@@ -408,7 +405,7 @@
 			const id = uni.getStorageSync('soilSampleId')
 			if (id) {
 				getSoilRecordDetail(id).then(res => {
-					dataInfo(res.data)
+					dataForm.value =  dataInfo(res.data)
 					judgeFlag(res.data)
 					curSampleNameList.value = curSampleNameList.value.filter(item => {
 						return item !== dataForm.value.sampleName
