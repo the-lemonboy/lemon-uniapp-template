@@ -25,19 +25,20 @@
 						<uni-icons type="right" size="30" color="#999"></uni-icons>
 					</view>
 				</view>
-
+				<!-- #ifdef APP-PLUS -->
 				<view class="message-center link-box" @click="handleUpdate()">
 
 					<view class="left-content">
 						<text class="left-text">检查更新</text>
-						<u-badge v-if="updateFlag>0" style="margin-left: 10px;" :absolute="false" color="white" bgColor="red" count="new"></u-badge>
+						<u-badge v-if="updateFlag>0" style="margin-left: 10px;" :absolute="false" color="white"
+							bgColor="red" count="new"></u-badge>
 					</view>
 					<view class="right-content">
 						<text type="right" class="mini-text">版本{{curVersionNo}}</text>
 						<uni-icons type="right" size="30" color="#999"></uni-icons>
 					</view>
 				</view>
-
+				<!-- #endif -->
 				<!-- #ifdef APP-PLUS -->
 				<view class="clear-cache link-box" @click="clearCache">
 					<text class="left-text">清除缓存</text>
@@ -142,6 +143,8 @@
 		})
 	}
 	// const checkUpdateVisible = ref(false)
+	
+	// #ifdef APP-PLUS
 	const updatePopup = ref(null)
 	async function _getLasterVersionNo() {
 		try {
@@ -156,19 +159,15 @@
 	const apkPath = ref(null)
 	const curVersionNo = ref(plus.runtime.version)
 	const updateFlag = ref(false)
-	async function _compareVeresion(){
+	async function _compareVeresion() {
 		const apkInfo = await _getLasterVersionNo()
 		lastVersion.value = apkInfo.lastVersion;
-		updateFlag.value = compareVersion(lastVersion.value, curVersionNo.value); 
+		apkPath.value = apkInfo.url
+		console.log(curVersionNo.value)
+		updateFlag.value = compareVersion(lastVersion.value, curVersionNo.value);
 	}
-	async function handleUpdate() {
-		try {
-			// const apkInfo = await _getLasterVersionNo()
-			// lastVersion.value = apkInfo.lastVersion;
-			// curVersionNo.value = plus.runtime.version; // 获取当前版本号
-			// const updateFlag = compareVersion(lastVersion.value, curVersionNo.value); // 比较版本号
+	 function handleUpdate() {
 			if (updateFlag.value > 0) {
-				apkPath.value = apkInfo.url
 				updatePopup.value.updateDialog.open()
 				// 执行更新操作，例如提示用户下载并安装新版本
 			} else if (updateFlag.value === 0) {
@@ -184,15 +183,9 @@
 					duration: 2000
 				});
 			}
-		} catch (error) {
-			uni.showToast({
-				title: error + '系统错误',
-				icon: 'error',
-				duration: 2000
-
-			});
-		}
+		
 	}
+	// #endif
 	// #ifdef APP-PLUS
 	const cacheSize = ref()
 

@@ -1,8 +1,8 @@
 <template>
 	<!-- #ifdef APP-PLUS -->
-	<view class="status_bar">  
-	    <view class="top_view"></view>  
-	</view>  
+	<view class="status_bar">
+		<view class="top_view"></view>
+	</view>
 	<!-- #endif -->
 	<view class="logo-v">
 		<view class="logo-hd u-flex-col">
@@ -54,101 +54,113 @@
 	// 	getProjBase
 	// } from '@/api/sample.js'
 	import {
-			getCurrentUser
-		} from '@/api/common.js'
-	import {reactive, ref} from 'vue'
-	import {onLoad,onReady} from '@dcloudio/uni-app'
-	import { useStore } from 'vuex'
-		const imgUrl = ref('')
-		const loading = ref(false)
-		const formData = reactive({
-					account: "",
-					password: "",
-					code: "",
-					origin: 'password'
-				})
-		const needCode = ref(false)
-		const codeLength = ref(4)
-		const isCode = ref(false)
-		const timestamp = ref()
-		const rules = reactive({
-					account: [{
-						required: true,
-						message: '请输入账号',
-						trigger: 'blur',
-					}],
-					password: [{
-						required: true,
-						message: '请输入密码',
-						trigger: 'blur',
-					}],
-				})
-	    const sysConfigInfo = reactive({})
-		const appIcon = ref('')	
-		const sysName = ref('')
-		const form = ref()
-		const store = useStore()
-		function onFocus(e) {
-				getConfig(e)
+		getCurrentUser
+	} from '@/api/common.js'
+	import {
+		reactive,
+		ref
+	} from 'vue'
+	import {
+		onLoad,
+		onReady
+	} from '@dcloudio/uni-app'
+	import {
+		useStore
+	} from 'vuex'
+	const imgUrl = ref('')
+	const loading = ref(false)
+	const formData = reactive({
+		account: "",
+		password: "",
+		code: "",
+		origin: 'password'
+	})
+	const needCode = ref(false)
+	const codeLength = ref(4)
+	const isCode = ref(false)
+	const timestamp = ref()
+	const rules = reactive({
+		account: [{
+			required: true,
+			message: '请输入账号',
+			trigger: 'blur',
+		}],
+		password: [{
+			required: true,
+			message: '请输入密码',
+			trigger: 'blur',
+		}],
+	})
+	const sysConfigInfo = reactive({})
+	const appIcon = ref('')
+	const sysName = ref('')
+	const form = ref()
+	const store = useStore()
+
+	function onFocus(e) {
+		getConfig(e)
+	}
+
+	function onBlur(e) {
+		getConfig(e)
+	}
+
+	function getConfig(val) {
+		if (!val) return
+		getDefaultConfig(formData.account).then(res => {
+			needCode.value = !!res.data.enableVerificationCode
+			if (needCode.value) {
+				codeLength.value = res.data.verificationCodeNumber || 4
+				changeCode()
 			}
-		function onBlur(e) {
-				getConfig(e)
-			}
-		
-		function getConfig(val) {
-				if (!val) return
-				getDefaultConfig(formData.account).then(res => {
-					needCode.value = !!res.data.enableVerificationCode
-					if (needCode.value) {
-						codeLength.value = res.data.verificationCodeNumber || 4
-						changeCode()
-					}
-				})
-			}
-		function changeCode() {
-				let timestamp = Math.random()
-				timestamp.value = timestamp
-				imgUrl.value = `/api/oauth/ImageCode/${codeLength.value || 4}/${timestamp}`
-			}
-		function loginFn() {
-				form.value.validate(valid => {
-					if (valid) {
-						loading.value = true
-						let query = {
-							account: formData.account,
-							password: md5Libs.md5(formData.password),
-							timestamp: timestamp.value,
-							code: formData.code,
-							origin: formData.origin
-						}
-						// #ifdef  APP-PLUS
-						const clientId = plus.push.getClientInfo().clientid;
-						query.clientId = clientId
-						// #endif
-						login(query).then(res => {
-							loading.value = false
-							let token = res.data.token
-							store.commit('user/SET_TOKEN', token)
-							uni.setStorageSync('token', token)
-							uni.switchTab({
-								url: '/pages/sampleDetection/index'
-							});
-						store.dispatch('user/getCurrentUser')
-						}).catch((err) => {
-							loading.value = false
-						})
-					}
-				});
-			}
-		onReady(()=>{
-			form.value.setRules(rules);
-			// 			setTimeout(()=>{
-			// 				store.dispatch('user/getCurrentUser')
-			// 			},1000)
 		})
-		onLoad(()=>{
-			formData.password = ''
-		})
+	}
+
+	function changeCode() {
+		let timestamp = Math.random()
+		timestamp.value = timestamp
+		imgUrl.value = `/api/oauth/ImageCode/${codeLength.value || 4}/${timestamp}`
+	}
+
+	function loginFn() {
+		form.value.validate(valid => {
+			if (valid) {
+				loading.value = true
+				let query = {
+					account: formData.account,
+					password: md5Libs.md5(formData.password),
+					timestamp: timestamp.value,
+					code: formData.code,
+					origin: formData.origin
+				}
+				// #ifdef  APP-PLUS
+				const clientId = plus.push.getClientInfo().clientid;
+				query.clientId = clientId
+				// #endif
+				login(query).then(res => {
+					loading.value = false
+					let token = res.data.token
+					store.commit('user/SET_TOKEN', token)
+					uni.setStorageSync('token', token)
+					uni.switchTab({
+						url: '/pages/sampleDetection/index'
+					});
+					store.dispatch('user/getCurrentUser')
+				}).catch((err) => {
+					loading.value = false
+				})
+			}
+		});
+	}
+	onReady(() => {
+		form.value.setRules(rules);
+		// 			setTimeout(()=>{
+		// 				store.dispatch('user/getCurrentUser')
+		// 			},1000)
+	})
+	onLoad(() => {
+		formData.password = ''
+	})
 </script>
 
 <style lang="scss">
@@ -255,13 +267,14 @@
 			}
 		}
 	}
-	.copyright{
-		position: absolute;
+
+	.copyright {
+		position: fixed;
 		width: auto;
 		bottom: 10px;
 		left: 50%;
 		transform: translateX(-50%);
-		 white-space: nowrap;
+		white-space: nowrap;
 		color: #41abaf;
 	}
 </style>

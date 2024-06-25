@@ -8131,17 +8131,12 @@ if (uni.restoreGlobal) {
       }
       const checkList = vue.ref([
         {
-          name: "日期",
-          disabled: true,
-          checked: false
-        },
-        {
-          name: "项目名称",
-          disabled: true,
-          checked: false
-        },
-        {
           name: "经纬度",
+          disabled: true,
+          checked: false
+        },
+        {
+          name: "日期",
           disabled: true,
           checked: false
         },
@@ -8149,16 +8144,27 @@ if (uni.restoreGlobal) {
           name: "人员",
           disabled: true,
           checked: false
+        },
+        {
+          name: "项目名称",
+          disabled: true,
+          checked: false
         }
       ]);
       const checkFlag = vue.ref(false);
       vue.watch(controlFlag, (val) => {
-        formatAppLog("log", "at pages/me/watermark/index.vue:76", val);
         checkFlag.value = !val;
         if (!val) {
           checkList.value = checkList.value.map((item) => ({
             ...item,
             checked: val
+          }));
+        } else {
+          const tempCheckList = uni.getStorageSync("watermarkValue");
+          checkList.value = tempCheckList.map((item) => ({
+            name: item.name,
+            disabled: false,
+            checked: item.flag
           }));
         }
       });
@@ -9659,7 +9665,7 @@ if (uni.restoreGlobal) {
                 }
               });
             } else if (res.cancel) {
-              formatAppLog("log", "at pages/me/index.vue:109", "用户点击取消");
+              formatAppLog("log", "at pages/me/index.vue:110", "用户点击取消");
             }
           }
         });
@@ -9695,7 +9701,7 @@ if (uni.restoreGlobal) {
           const res = await getLasterVersionNo();
           return res.data;
         } catch (error) {
-          formatAppLog("error", "at pages/me/index.vue:151", "获取最新版本号失败:", error);
+          formatAppLog("error", "at pages/me/index.vue:154", "获取最新版本号失败:", error);
           throw error;
         }
       }
@@ -9704,31 +9710,24 @@ if (uni.restoreGlobal) {
       const curVersionNo = vue.ref(plus.runtime.version);
       const updateFlag = vue.ref(false);
       async function _compareVeresion() {
-        const apkInfo2 = await _getLasterVersionNo();
-        lastVersion.value = apkInfo2.lastVersion;
+        const apkInfo = await _getLasterVersionNo();
+        lastVersion.value = apkInfo.lastVersion;
+        apkPath.value = apkInfo.url;
+        formatAppLog("log", "at pages/me/index.vue:166", curVersionNo.value);
         updateFlag.value = compareVersion(lastVersion.value, curVersionNo.value);
       }
-      async function handleUpdate() {
-        try {
-          if (updateFlag.value > 0) {
-            apkPath.value = apkInfo.url;
-            updatePopup.value.updateDialog.open();
-          } else if (updateFlag.value === 0) {
-            uni.showToast({
-              title: "已经是最新版本啦！",
-              icon: "error",
-              duration: 2e3
-            });
-          } else {
-            uni.showToast({
-              title: "当前版本高于最新版本",
-              icon: "error",
-              duration: 2e3
-            });
-          }
-        } catch (error) {
+      function handleUpdate() {
+        if (updateFlag.value > 0) {
+          updatePopup.value.updateDialog.open();
+        } else if (updateFlag.value === 0) {
           uni.showToast({
-            title: error + "系统错误",
+            title: "已经是最新版本啦！",
+            icon: "error",
+            duration: 2e3
+          });
+        } else {
+          uni.showToast({
+            title: "当前版本高于最新版本",
             icon: "error",
             duration: 2e3
           });
@@ -9758,13 +9757,13 @@ if (uni.restoreGlobal) {
                         });
                         accCache();
                       }, function(e2) {
-                        formatAppLog("log", "at pages/me/index.vue:224", e2.message);
+                        formatAppLog("log", "at pages/me/index.vue:217", e2.message);
                       });
                     } else {
                       entry.remove();
                     }
                   }, function(e2) {
-                    formatAppLog("log", "at pages/me/index.vue:230", "文件路径读取失败");
+                    formatAppLog("log", "at pages/me/index.vue:223", "文件路径读取失败");
                   });
                 }
               } else {
@@ -9777,7 +9776,7 @@ if (uni.restoreGlobal) {
                 });
               }
             } else if (res.cancel) {
-              formatAppLog("log", "at pages/me/index.vue:243", "用户点击取消");
+              formatAppLog("log", "at pages/me/index.vue:236", "用户点击取消");
             }
           }
         });
@@ -9796,7 +9795,7 @@ if (uni.restoreGlobal) {
           } else {
             cacheSize.value = (sizeCache / 1073741824).toFixed(2) + "GB";
           }
-          formatAppLog("log", "at pages/me/index.vue:263", cacheSize.value, "--cache");
+          formatAppLog("log", "at pages/me/index.vue:256", cacheSize.value, "--cache");
         });
       }
       onLoad(() => {

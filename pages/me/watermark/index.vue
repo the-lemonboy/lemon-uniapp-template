@@ -41,6 +41,7 @@
 	import {ref,defineEmits,watch} from 'vue'
 	import {onLoad,onPullDownRefresh} from '@dcloudio/uni-app'
 	import driver from '@/components/driver.vue'
+import { disable } from 'ol/rotationconstraint';
 	const emits = defineEmits('visible')
 	function goToBack(){
 		emits('visible',false)
@@ -52,36 +53,43 @@ function control(val){
 }
 const checkList = ref([
 				{
+					name: '经纬度',
+					disabled: true,
+					checked:false
+				},
+				{
 					name: '日期',
 					disabled: true,
 					checked:false
 				},
 				{
-					name: '项目名称',
-					disabled: true,
-					checked:false
-				},
-				{
-					name: '经纬度',
+					name: '人员',
 					disabled: true,
 					checked:false
 				},{
-					name: '人员',
+					name: '项目名称',
 					disabled: true,
 					checked:false
 				}
 			])
 const checkFlag = ref(false)
 watch(controlFlag, (val) => {
-  console.log(val);
   checkFlag.value = !val;
   if (!val) {
     checkList.value = checkList.value.map(item => ({
       ...item,
       checked: val
     }));
+  } else {
+    const tempCheckList = uni.getStorageSync('watermarkValue');
+    checkList.value = tempCheckList.map(item => ({
+      name: item.name,
+      disabled: false,
+      checked: item.flag
+    }));
   }
 });
+
   function initData(){
 	  let watermarkValue = uni.getStorageSync('watermarkValue')
 	  watermarkValue.forEach(item=>{
