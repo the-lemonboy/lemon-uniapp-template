@@ -9,7 +9,7 @@
 			<u-search placeholder="请输入项目名称" v-model="searchKeyWord" @search="getMenuList()" :show-action="searchShowActionFlag" @focus="searchShowActionFlag=true" @blur="searchShowActionFlag=false"></u-search>
 		</view>
 		<view class="sort-box">
-			<u-dropdown ref="dropdown1" @open="open" @close="close">
+			<u-dropdown ref="dropdown1">
 				<u-dropdown-item v-for="(item,index) of dropdownValue" :key="index" :title="item.title" :options="item.options" @change="dropChange"></u-dropdown-item>
 			</u-dropdown>
 		</view>

@@ -75,6 +75,7 @@
 		onReady
 	} from '@dcloudio/uni-app'
 	import upload from '@/components/cityk-upload.vue';
+	import CoordinateTransformation from './coordinateTransformation.js';
 	import {
 		getMenuId,
 		getCurrentTime
@@ -115,8 +116,12 @@
 
 	function emitLocation(val) {
 		location.value = val
-		dataForm.value.longitude = val.latlng.lng
-		dataForm.value.latitude = val.latlng.lat
+		var ct=new CoordinateTransformation()
+		// console.log(res.data.longitude+","+res.data.latitude)
+		var newPt=ct.gcj02towgs84(val.latlng.lng,val.latlng.lat)
+		// console.log(newPt[0]+","+newPt[1])
+		dataForm.value.longitude = newPt[0]
+		dataForm.value.latitude =newPt[1]
 	}
 	// 监测井类型
 	const holeTypeOptions = reactive({

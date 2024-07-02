@@ -2,7 +2,7 @@
 			<view class="driver"></view>
 </template>
 
-<script>
+<script setup>
 	import {defineProps} from 'vue'
 	const props = defineProps({
 		width:{

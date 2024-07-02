@@ -243,7 +243,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$D(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -296,7 +296,7 @@ if (uni.restoreGlobal) {
       /* CLASS, STYLE */
     );
   }
-  const __easycom_0$7 = /* @__PURE__ */ _export_sfc(_sfc_main$1l, [["render", _sfc_render$D], ["__scopeId", "data-v-5de67484"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-icon/u-icon.vue"]]);
+  const __easycom_0$7 = /* @__PURE__ */ _export_sfc(_sfc_main$1l, [["render", _sfc_render$C], ["__scopeId", "data-v-5de67484"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-icon/u-icon.vue"]]);
   const ON_SHOW = "onShow";
   const ON_LAUNCH = "onLaunch";
   const ON_LOAD = "onLoad";
@@ -539,7 +539,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$C(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$7);
     return vue.openBlock(), vue.createElementBlock(
       "view",
@@ -624,7 +624,7 @@ if (uni.restoreGlobal) {
       /* STYLE */
     );
   }
-  const __easycom_1$a = /* @__PURE__ */ _export_sfc(_sfc_main$1k, [["render", _sfc_render$C], ["__scopeId", "data-v-3cb29fc1"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-search/u-search.vue"]]);
+  const __easycom_1$a = /* @__PURE__ */ _export_sfc(_sfc_main$1k, [["render", _sfc_render$B], ["__scopeId", "data-v-3cb29fc1"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-search/u-search.vue"]]);
   const _sfc_main$1j = {
     name: "u-cell-item",
     emits: ["click"],
@@ -765,7 +765,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$B(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$7);
     return vue.openBlock(), vue.createElementBlock("view", {
       onClick: _cache[0] || (_cache[0] = (...args) => $options.click && $options.click(...args)),
@@ -880,7 +880,7 @@ if (uni.restoreGlobal) {
       }, null, 8, ["style"])) : vue.createCommentVNode("v-if", true)
     ], 14, ["hover-class"]);
   }
-  const __easycom_1$9 = /* @__PURE__ */ _export_sfc(_sfc_main$1j, [["render", _sfc_render$B], ["__scopeId", "data-v-e5554f60"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-cell-item/u-cell-item.vue"]]);
+  const __easycom_1$9 = /* @__PURE__ */ _export_sfc(_sfc_main$1j, [["render", _sfc_render$A], ["__scopeId", "data-v-e5554f60"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-cell-item/u-cell-item.vue"]]);
   const _sfc_main$1i = {
     name: "u-cell-group",
     props: {
@@ -909,7 +909,7 @@ if (uni.restoreGlobal) {
       };
     }
   };
-  function _sfc_render$A(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "u-cell-box" }, [
       $props.title ? (vue.openBlock(), vue.createElementBlock(
         "view",
@@ -935,7 +935,7 @@ if (uni.restoreGlobal) {
       )
     ]);
   }
-  const __easycom_2$5 = /* @__PURE__ */ _export_sfc(_sfc_main$1i, [["render", _sfc_render$A], ["__scopeId", "data-v-dd1e88cb"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-cell-group/u-cell-group.vue"]]);
+  const __easycom_2$5 = /* @__PURE__ */ _export_sfc(_sfc_main$1i, [["render", _sfc_render$z], ["__scopeId", "data-v-dd1e88cb"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-cell-group/u-cell-group.vue"]]);
   const _sfc_main$1h = {
     name: "u-dropdown-item",
     emits: ["update:modelValue", "input", "change"],
@@ -1032,7 +1032,7 @@ if (uni.restoreGlobal) {
       this.init();
     }
   };
-  function _sfc_render$z(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$7);
     const _component_u_cell_item = resolveEasycom(vue.resolveDynamicComponent("u-cell-item"), __easycom_1$9);
     const _component_u_cell_group = resolveEasycom(vue.resolveDynamicComponent("u-cell-group"), __easycom_2$5);
@@ -1102,7 +1102,7 @@ if (uni.restoreGlobal) {
       /* NEED_HYDRATION */
     )) : vue.createCommentVNode("v-if", true);
   }
-  const __easycom_1$8 = /* @__PURE__ */ _export_sfc(_sfc_main$1h, [["render", _sfc_render$z], ["__scopeId", "data-v-c9b1ed30"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-dropdown-item/u-dropdown-item.vue"]]);
+  const __easycom_1$8 = /* @__PURE__ */ _export_sfc(_sfc_main$1h, [["render", _sfc_render$y], ["__scopeId", "data-v-c9b1ed30"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-dropdown-item/u-dropdown-item.vue"]]);
   const _sfc_main$1g = {
     name: "u-dropdown",
     emits: ["open", "close"],
@@ -1261,7 +1261,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$y(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$7);
     return vue.openBlock(), vue.createElementBlock("view", { class: "u-dropdown" }, [
       vue.createElementVNode(
@@ -1361,7 +1361,7 @@ if (uni.restoreGlobal) {
       )
     ]);
   }
-  const __easycom_2$4 = /* @__PURE__ */ _export_sfc(_sfc_main$1g, [["render", _sfc_render$y], ["__scopeId", "data-v-efa9add2"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-dropdown/u-dropdown.vue"]]);
+  const __easycom_2$4 = /* @__PURE__ */ _export_sfc(_sfc_main$1g, [["render", _sfc_render$x], ["__scopeId", "data-v-efa9add2"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-dropdown/u-dropdown.vue"]]);
   let mpMixins = {};
   mpMixins = {
     data() {
@@ -1503,7 +1503,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$x(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       vue.Fragment,
       null,
@@ -1603,7 +1603,7 @@ if (uni.restoreGlobal) {
     block0(_sfc_main$1f);
   if (typeof block1 === "function")
     block1(_sfc_main$1f);
-  const __easycom_2$3 = /* @__PURE__ */ _export_sfc(_sfc_main$1f, [["render", _sfc_render$x], ["__scopeId", "data-v-8ff2a577"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-swipe-action/components/uni-swipe-action-item/uni-swipe-action-item.vue"]]);
+  const __easycom_2$3 = /* @__PURE__ */ _export_sfc(_sfc_main$1f, [["render", _sfc_render$w], ["__scopeId", "data-v-8ff2a577"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-swipe-action/components/uni-swipe-action-item/uni-swipe-action-item.vue"]]);
   const _sfc_main$1e = {
     name: "uniSwipeAction",
     data() {
@@ -1630,12 +1630,12 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$w(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", null, [
       vue.renderSlot(_ctx.$slots, "default")
     ]);
   }
-  const __easycom_3$2 = /* @__PURE__ */ _export_sfc(_sfc_main$1e, [["render", _sfc_render$w], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-swipe-action/components/uni-swipe-action/uni-swipe-action.vue"]]);
+  const __easycom_3$2 = /* @__PURE__ */ _export_sfc(_sfc_main$1e, [["render", _sfc_render$v], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-swipe-action/components/uni-swipe-action/uni-swipe-action.vue"]]);
   const _sfc_main$1d = {
     name: "u-empty",
     props: {
@@ -1765,7 +1765,7 @@ if (uni.restoreGlobal) {
       };
     }
   };
-  function _sfc_render$v(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$7);
     return $props.show ? (vue.openBlock(), vue.createElementBlock(
       "view",
@@ -1796,7 +1796,7 @@ if (uni.restoreGlobal) {
       /* STYLE */
     )) : vue.createCommentVNode("v-if", true);
   }
-  const __easycom_1$7 = /* @__PURE__ */ _export_sfc(_sfc_main$1d, [["render", _sfc_render$v], ["__scopeId", "data-v-486b9546"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-empty/u-empty.vue"]]);
+  const __easycom_1$7 = /* @__PURE__ */ _export_sfc(_sfc_main$1d, [["render", _sfc_render$u], ["__scopeId", "data-v-486b9546"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-empty/u-empty.vue"]]);
   function getDevtoolsGlobalHook() {
     return getTarget().__VUE_DEVTOOLS_GLOBAL_HOOK__;
   }
@@ -3753,30 +3753,32 @@ if (uni.restoreGlobal) {
                 }, null, 8, ["modelValue", "show-action"])
               ]),
               vue.createElementVNode("view", { class: "sort-box" }, [
-                vue.createVNode(_component_u_dropdown, {
-                  ref: "dropdown1",
-                  onOpen: _ctx.open,
-                  onClose: _ctx.close
-                }, {
-                  default: vue.withCtx(() => [
-                    (vue.openBlock(true), vue.createElementBlock(
-                      vue.Fragment,
-                      null,
-                      vue.renderList(dropdownValue.value, (item, index) => {
-                        return vue.openBlock(), vue.createBlock(_component_u_dropdown_item, {
-                          key: index,
-                          title: item.title,
-                          options: item.options,
-                          onChange: dropChange
-                        }, null, 8, ["title", "options"]);
-                      }),
-                      128
-                      /* KEYED_FRAGMENT */
-                    ))
-                  ]),
-                  _: 1
-                  /* STABLE */
-                }, 8, ["onOpen", "onClose"])
+                vue.createVNode(
+                  _component_u_dropdown,
+                  { ref: "dropdown1" },
+                  {
+                    default: vue.withCtx(() => [
+                      (vue.openBlock(true), vue.createElementBlock(
+                        vue.Fragment,
+                        null,
+                        vue.renderList(dropdownValue.value, (item, index) => {
+                          return vue.openBlock(), vue.createBlock(_component_u_dropdown_item, {
+                            key: index,
+                            title: item.title,
+                            options: item.options,
+                            onChange: dropChange
+                          }, null, 8, ["title", "options"]);
+                        }),
+                        128
+                        /* KEYED_FRAGMENT */
+                      ))
+                    ]),
+                    _: 1
+                    /* STABLE */
+                  },
+                  512
+                  /* NEED_PATCH */
+                )
               ]),
               vue.createElementVNode("view", { class: "content-box" }, [
                 vue.createVNode(
@@ -4159,7 +4161,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$u(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$7);
     return vue.openBlock(), vue.createElementBlock(
       "view",
@@ -4268,7 +4270,7 @@ if (uni.restoreGlobal) {
       /* CLASS, STYLE */
     );
   }
-  const __easycom_1$6 = /* @__PURE__ */ _export_sfc(_sfc_main$1b, [["render", _sfc_render$u], ["__scopeId", "data-v-dc846cb1"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-input/u-input.vue"]]);
+  const __easycom_1$6 = /* @__PURE__ */ _export_sfc(_sfc_main$1b, [["render", _sfc_render$t], ["__scopeId", "data-v-dc846cb1"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-input/u-input.vue"]]);
   function _extends() {
     _extends = Object.assign || function(target) {
       for (var i2 = 1; i2 < arguments.length; i2++) {
@@ -5469,7 +5471,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$t(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$7);
     return vue.openBlock(), vue.createElementBlock(
       "view",
@@ -5584,7 +5586,7 @@ if (uni.restoreGlobal) {
       /* CLASS */
     );
   }
-  const __easycom_2$2 = /* @__PURE__ */ _export_sfc(_sfc_main$1a, [["render", _sfc_render$t], ["__scopeId", "data-v-361fbc0d"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-form-item/u-form-item.vue"]]);
+  const __easycom_2$2 = /* @__PURE__ */ _export_sfc(_sfc_main$1a, [["render", _sfc_render$s], ["__scopeId", "data-v-361fbc0d"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-form-item/u-form-item.vue"]]);
   const _sfc_main$19 = {
     name: "u-image",
     emits: ["click", "error", "load"],
@@ -5748,7 +5750,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$s(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$7);
     return vue.openBlock(), vue.createElementBlock(
       "view",
@@ -5817,7 +5819,7 @@ if (uni.restoreGlobal) {
       /* STYLE */
     );
   }
-  const __easycom_2$1 = /* @__PURE__ */ _export_sfc(_sfc_main$19, [["render", _sfc_render$s], ["__scopeId", "data-v-6ff2fb1e"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-image/u-image.vue"]]);
+  const __easycom_2$1 = /* @__PURE__ */ _export_sfc(_sfc_main$19, [["render", _sfc_render$r], ["__scopeId", "data-v-6ff2fb1e"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-image/u-image.vue"]]);
   const _sfc_main$18 = {
     name: "u-form",
     props: {
@@ -5932,12 +5934,12 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$r(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("view", { class: "u-form" }, [
       vue.renderSlot(_ctx.$slots, "default", {}, void 0, true)
     ]);
   }
-  const __easycom_3$1 = /* @__PURE__ */ _export_sfc(_sfc_main$18, [["render", _sfc_render$r], ["__scopeId", "data-v-000ccc72"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-form/u-form.vue"]]);
+  const __easycom_3$1 = /* @__PURE__ */ _export_sfc(_sfc_main$18, [["render", _sfc_render$q], ["__scopeId", "data-v-000ccc72"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-form/u-form.vue"]]);
   const _sfc_main$17 = {
     name: "u-button",
     emits: ["click", "getphonenumber", "getuserinfo", "error", "opensetting", "launchapp", "chooseavatar"],
@@ -6184,7 +6186,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$q(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock("button", {
       id: "u-wave-btn",
       class: vue.normalizeClass(["u-btn u-line-1 u-fix-ios-appearance", [
@@ -6243,7 +6245,7 @@ if (uni.restoreGlobal) {
       )) : vue.createCommentVNode("v-if", true)
     ], 46, ["hover-start-time", "hover-stay-time", "disabled", "form-type", "open-type", "app-parameter", "hover-stop-propagation", "send-message-title", "lang", "data-name", "session-from", "send-message-img", "show-message-card", "hover-class", "loading"]);
   }
-  const __easycom_4$2 = /* @__PURE__ */ _export_sfc(_sfc_main$17, [["render", _sfc_render$q], ["__scopeId", "data-v-097def2b"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-button/u-button.vue"]]);
+  const __easycom_4$2 = /* @__PURE__ */ _export_sfc(_sfc_main$17, [["render", _sfc_render$p], ["__scopeId", "data-v-097def2b"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-button/u-button.vue"]]);
   const _imports_0 = "/static/images/logo.png";
   var hexcase = 0;
   function hex_md5(s2) {
@@ -7390,7 +7392,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$p(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "text",
       {
@@ -7405,7 +7407,7 @@ if (uni.restoreGlobal) {
       /* CLASS, STYLE */
     );
   }
-  const __easycom_0$6 = /* @__PURE__ */ _export_sfc(_sfc_main$14, [["render", _sfc_render$p], ["__scopeId", "data-v-d31e1c47"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-icons/components/uni-icons/uni-icons.vue"]]);
+  const __easycom_0$6 = /* @__PURE__ */ _export_sfc(_sfc_main$14, [["render", _sfc_render$o], ["__scopeId", "data-v-d31e1c47"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/uni-icons/components/uni-icons/uni-icons.vue"]]);
   const _sfc_main$13 = {
     name: "u-badge",
     props: {
@@ -7509,7 +7511,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$o(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
     return $options.show ? (vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -7533,7 +7535,7 @@ if (uni.restoreGlobal) {
       /* TEXT, CLASS, STYLE */
     )) : vue.createCommentVNode("v-if", true);
   }
-  const __easycom_0$5 = /* @__PURE__ */ _export_sfc(_sfc_main$13, [["render", _sfc_render$o], ["__scopeId", "data-v-f84de764"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-badge/u-badge.vue"]]);
+  const __easycom_0$5 = /* @__PURE__ */ _export_sfc(_sfc_main$13, [["render", _sfc_render$n], ["__scopeId", "data-v-f84de764"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-badge/u-badge.vue"]]);
   const _sfc_main$12 = {
     name: "u-loading",
     props: {
@@ -7570,7 +7572,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$n(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
     return $props.show ? (vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -7583,7 +7585,7 @@ if (uni.restoreGlobal) {
       /* CLASS, STYLE */
     )) : vue.createCommentVNode("v-if", true);
   }
-  const __easycom_0$4 = /* @__PURE__ */ _export_sfc(_sfc_main$12, [["render", _sfc_render$n], ["__scopeId", "data-v-32db0ed8"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-loading/u-loading.vue"]]);
+  const __easycom_0$4 = /* @__PURE__ */ _export_sfc(_sfc_main$12, [["render", _sfc_render$m], ["__scopeId", "data-v-32db0ed8"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-loading/u-loading.vue"]]);
   const _sfc_main$11 = {
     name: "u-switch",
     emits: ["update:modelValue", "input", "change"],
@@ -7669,7 +7671,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$m(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_loading = resolveEasycom(vue.resolveDynamicComponent("u-loading"), __easycom_0$4);
     return vue.openBlock(), vue.createElementBlock(
       "view",
@@ -7704,7 +7706,7 @@ if (uni.restoreGlobal) {
       /* CLASS, STYLE */
     );
   }
-  const __easycom_1$5 = /* @__PURE__ */ _export_sfc(_sfc_main$11, [["render", _sfc_render$m], ["__scopeId", "data-v-033901d2"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-switch/u-switch.vue"]]);
+  const __easycom_1$5 = /* @__PURE__ */ _export_sfc(_sfc_main$11, [["render", _sfc_render$l], ["__scopeId", "data-v-033901d2"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-switch/u-switch.vue"]]);
   const _sfc_main$10 = {
     name: "u-checkbox",
     emits: ["update:modelValue", "input", "change"],
@@ -7908,7 +7910,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$l(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
     const _component_u_icon = resolveEasycom(vue.resolveDynamicComponent("u-icon"), __easycom_0$7);
     return vue.openBlock(), vue.createElementBlock(
       "view",
@@ -7962,7 +7964,7 @@ if (uni.restoreGlobal) {
       /* STYLE */
     );
   }
-  const __easycom_5$2 = /* @__PURE__ */ _export_sfc(_sfc_main$10, [["render", _sfc_render$l], ["__scopeId", "data-v-cafae08d"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-checkbox/u-checkbox.vue"]]);
+  const __easycom_5$2 = /* @__PURE__ */ _export_sfc(_sfc_main$10, [["render", _sfc_render$k], ["__scopeId", "data-v-cafae08d"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-checkbox/u-checkbox.vue"]]);
   const _sfc_main$$ = {
     name: "u-checkbox-group",
     emits: ["update:modelValue", "input", "change"],
@@ -8091,7 +8093,7 @@ if (uni.restoreGlobal) {
       }
     }
   };
-  function _sfc_render$k(_ctx, _cache, $props, $setup, $data, $options) {
+  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
     return vue.openBlock(), vue.createElementBlock(
       "view",
       {
@@ -8104,18 +8106,22 @@ if (uni.restoreGlobal) {
       /* CLASS */
     );
   }
-  const __easycom_6$1 = /* @__PURE__ */ _export_sfc(_sfc_main$$, [["render", _sfc_render$k], ["__scopeId", "data-v-6a8aa283"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-checkbox-group/u-checkbox-group.vue"]]);
-  vue.defineProps({
-    width: {
-      type: Number,
-      default: 90
+  const __easycom_6$1 = /* @__PURE__ */ _export_sfc(_sfc_main$$, [["render", _sfc_render$j], ["__scopeId", "data-v-6a8aa283"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-checkbox-group/u-checkbox-group.vue"]]);
+  const _sfc_main$_ = {
+    __name: "driver",
+    props: {
+      width: {
+        type: Number,
+        default: 90
+      }
+    },
+    setup(__props) {
+      return (_ctx, _cache) => {
+        return vue.openBlock(), vue.createElementBlock("view", { class: "driver" });
+      };
     }
-  });
-  const _sfc_main$_ = {};
-  function _sfc_render$j(_ctx, _cache, $props, $setup, $data, $options) {
-    return vue.openBlock(), vue.createElementBlock("view", { class: "driver" });
-  }
-  const driver = /* @__PURE__ */ _export_sfc(_sfc_main$_, [["render", _sfc_render$j], ["__scopeId", "data-v-4c4c9b0b"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/components/driver.vue"]]);
+  };
+  const driver = /* @__PURE__ */ _export_sfc(_sfc_main$_, [["__scopeId", "data-v-4c4c9b0b"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/components/driver.vue"]]);
   const _sfc_main$Z = {
     __name: "index",
     emits: "visible",
@@ -9537,12 +9543,10 @@ if (uni.restoreGlobal) {
       const progressPercent = vue.ref(0);
       function downloadApp() {
         downloadFlag.value = true;
-        formatAppLog("log", "at pages/me/checkUpdate/index.vue:57", `${frontEndUrl2}${props.apkPath}`);
         const downloadTask = uni.downloadFile({
           // 存放最新安装包的地址
           url: `${frontEndUrl2}${props.apkPath}`,
           success: (downloadResult) => {
-            formatAppLog("log", "at pages/me/checkUpdate/index.vue:62", downloadResult.statusCode);
             if (downloadResult.statusCode === 200) {
               plus.runtime.install(
                 downloadResult.tempFilePath,
@@ -9713,7 +9717,6 @@ if (uni.restoreGlobal) {
         const apkInfo = await _getLasterVersionNo();
         lastVersion.value = apkInfo.lastVersion;
         apkPath.value = apkInfo.url;
-        formatAppLog("log", "at pages/me/index.vue:166", curVersionNo.value);
         updateFlag.value = compareVersion(lastVersion.value, curVersionNo.value);
       }
       function handleUpdate() {
@@ -9757,13 +9760,13 @@ if (uni.restoreGlobal) {
                         });
                         accCache();
                       }, function(e2) {
-                        formatAppLog("log", "at pages/me/index.vue:217", e2.message);
+                        formatAppLog("log", "at pages/me/index.vue:216", e2.message);
                       });
                     } else {
                       entry.remove();
                     }
                   }, function(e2) {
-                    formatAppLog("log", "at pages/me/index.vue:223", "文件路径读取失败");
+                    formatAppLog("log", "at pages/me/index.vue:222", "文件路径读取失败");
                   });
                 }
               } else {
@@ -9776,7 +9779,7 @@ if (uni.restoreGlobal) {
                 });
               }
             } else if (res.cancel) {
-              formatAppLog("log", "at pages/me/index.vue:236", "用户点击取消");
+              formatAppLog("log", "at pages/me/index.vue:235", "用户点击取消");
             }
           }
         });
@@ -9795,7 +9798,6 @@ if (uni.restoreGlobal) {
           } else {
             cacheSize.value = (sizeCache / 1073741824).toFixed(2) + "GB";
           }
-          formatAppLog("log", "at pages/me/index.vue:256", cacheSize.value, "--cache");
         });
       }
       onLoad(() => {
@@ -36114,6 +36116,84 @@ ${i3}
     ]);
   }
   const __easycom_6 = /* @__PURE__ */ _export_sfc(_sfc_main$q, [["render", _sfc_render$2], ["__scopeId", "data-v-2ab5fcb0"], ["__file", "/Users/lemon/Documents/HBuilderProjects/cityk-app/uni_modules/vk-uview-ui/components/u-select/u-select.vue"]]);
+  class CoordinateTransformation {
+    // 定义一个构造函数
+    constructor() {
+      this.x_PI = 3.141592653589793 * 3e3 / 180;
+      this.PI = 3.141592653589793;
+      this.a = 6378245;
+      this.ee = 0.006693421622965943;
+    }
+    /**
+     * WGS84转GCj02
+     * @param lng
+     * @param lat
+     * @returns {*[]}
+     */
+    wgs84togcj02(lng, lat) {
+      if (this.out_of_china(lng, lat)) {
+        return [lng, lat];
+      } else {
+        var dlat = this.transformlat(lng - 105, lat - 35);
+        var dlng = this.transformlng(lng - 105, lat - 35);
+        var radlat = lat / 180 * this.PI;
+        var magic = Math.sin(radlat);
+        magic = 1 - this.ee * magic * magic;
+        var sqrtmagic = Math.sqrt(magic);
+        dlat = dlat * 180 / (this.a * (1 - this.ee) / (magic * sqrtmagic) * this.PI);
+        dlng = dlng * 180 / (this.a / sqrtmagic * Math.cos(radlat) * this.PI);
+        var mglat = lat + dlat;
+        var mglng = lng + dlng;
+        return [mglng, mglat];
+      }
+    }
+    /**
+     * GCJ02 转换为 WGS84
+     * @param lng
+     * @param lat
+     * @returns {*[]}
+     */
+    gcj02towgs84(lng, lat) {
+      if (this.out_of_china(lng, lat)) {
+        return [lng, lat];
+      } else {
+        var dlat = this.transformlat(lng - 105, lat - 35);
+        var dlng = this.transformlng(lng - 105, lat - 35);
+        var radlat = lat / 180 * this.PI;
+        var magic = Math.sin(radlat);
+        magic = 1 - this.ee * magic * magic;
+        var sqrtmagic = Math.sqrt(magic);
+        dlat = dlat * 180 / (this.a * (1 - this.ee) / (magic * sqrtmagic) * this.PI);
+        dlng = dlng * 180 / (this.a / sqrtmagic * Math.cos(radlat) * this.PI);
+        var mglat = lat + dlat;
+        var mglng = lng + dlng;
+        return [lng * 2 - mglng, lat * 2 - mglat];
+      }
+    }
+    transformlat(lng, lat) {
+      var ret = -100 + 2 * lng + 3 * lat + 0.2 * lat * lat + 0.1 * lng * lat + 0.2 * Math.sqrt(Math.abs(lng));
+      ret += (20 * Math.sin(6 * lng * this.PI) + 20 * Math.sin(2 * lng * this.PI)) * 2 / 3;
+      ret += (20 * Math.sin(lat * this.PI) + 40 * Math.sin(lat / 3 * this.PI)) * 2 / 3;
+      ret += (160 * Math.sin(lat / 12 * this.PI) + 320 * Math.sin(lat * this.PI / 30)) * 2 / 3;
+      return ret;
+    }
+    transformlng(lng, lat) {
+      var ret = 300 + lng + 2 * lat + 0.1 * lng * lng + 0.1 * lng * lat + 0.1 * Math.sqrt(Math.abs(lng));
+      ret += (20 * Math.sin(6 * lng * this.PI) + 20 * Math.sin(2 * lng * this.PI)) * 2 / 3;
+      ret += (20 * Math.sin(lng * this.PI) + 40 * Math.sin(lng / 3 * this.PI)) * 2 / 3;
+      ret += (150 * Math.sin(lng / 12 * this.PI) + 300 * Math.sin(lng / 30 * this.PI)) * 2 / 3;
+      return ret;
+    }
+    /**
+     * 判断是否在国内，不在国内则不做偏移
+     * @param lng
+     * @param lat
+     * @returns {boolean}
+     */
+    out_of_china(lng, lat) {
+      return lng < 72.004 || lng > 137.8347 || (lat < 0.8293 || lat > 55.8271 || false);
+    }
+  }
   const _sfc_main$p = {
     __name: "tMap",
     emits: ["emitLocation", "emitVisible"],
@@ -36181,8 +36261,10 @@ ${i3}
       const location2 = vue.ref();
       function emitLocation(val) {
         location2.value = val;
-        dataForm.value.longitude = val.latlng.lng;
-        dataForm.value.latitude = val.latlng.lat;
+        var ct2 = new CoordinateTransformation();
+        var newPt = ct2.gcj02towgs84(val.latlng.lng, val.latlng.lat);
+        dataForm.value.longitude = newPt[0];
+        dataForm.value.latitude = newPt[1];
       }
       const holeTypeOptions = vue.reactive({
         show: false,

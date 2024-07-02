@@ -81,20 +81,6 @@
 		QcInitListTree
 	} from '@/api/sample/qualityControl.js'
 	import editorDetail from './editorDetail.vue';
-	// const baseURL = inject('define').baseURL
-	// 	const comUploadUrl = inject('define').comUploadUrl
-	// 	const type = 'annexpic'
-	// 	const ceshiData =ref([])
-	//   function ceshiUploadSuccess(res) { //上传成功
-	//                 /****************
-	//                 因为上传接口返回的结构不一致，所以以下代码需要根据实际的接口返回结构开发，在此只是展示如果给数组里添加的过程，仅供参考
-	//                 ***************/
-	//                 var _res = JSON.parse(res.data);
-	//                 if (_res.code == 200) {
-	//                     this.ceshiData.push(_res.result);
-	//                 }
-	//                 /*******************************/
-	//             }
 	const form = ref(null)
 	const rules = reactive({
 		checkTime: [{

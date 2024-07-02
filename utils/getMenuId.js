@@ -17,7 +17,6 @@ export function searchId(id){
 	
 	for(let val of menuList){
 		if(val.modelId === id){
-			console.log(val.moduleName) 
 			return
 		}
 	}

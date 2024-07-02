@@ -163,7 +163,6 @@
 		const apkInfo = await _getLasterVersionNo()
 		lastVersion.value = apkInfo.lastVersion;
 		apkPath.value = apkInfo.url
-		console.log(curVersionNo.value)
 		updateFlag.value = compareVersion(lastVersion.value, curVersionNo.value);
 	}
 	 function handleUpdate() {
@@ -253,7 +252,6 @@
 			} else {
 				cacheSize.value = (sizeCache / 1073741824).toFixed(2) + "GB";
 			}
-			console.log(cacheSize.value, "--cache")
 		});
 	}
 	// #endif

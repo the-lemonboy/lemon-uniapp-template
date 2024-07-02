@@ -54,12 +54,10 @@
 
 	function downloadApp() {
 		downloadFlag.value = true
-		console.log(`${frontEndUrl}${props.apkPath}`)
 		const downloadTask = uni.downloadFile({
 			// 存放最新安装包的地址
 			url: `${frontEndUrl}${props.apkPath}`,
 			success: (downloadResult) => {
-				console.log(downloadResult.statusCode)
 				if (downloadResult.statusCode === 200) {
 					plus.runtime.install(
 						downloadResult.tempFilePath, {

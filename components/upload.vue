@@ -93,7 +93,6 @@ const store = useStore()
 	    };
 	    // 使用 Vue 3 中的响应式操作
 	    fileList.value.push(newItem);
-	    console.log(fileList.value, 'is upload');
 	    // 触发 input 事件，并传递更新后的 fileList
 	    emit('update:value', fileList.value);
 	  } else {
