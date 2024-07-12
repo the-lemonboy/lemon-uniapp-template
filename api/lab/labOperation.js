@@ -107,9 +107,9 @@ export function getEquipmentBaseDetail(id){
 	})
 }
 // 打开门禁
-export function openDoor(ip,usename,password){
+export function openDoor(id){
 	return request({
-		url:`/api/device/DeviceOperate/openGate?ip=${ip}&userName=${usename}&password=${password}`,
+		url:`/api/device/DeviceOperate/openGate?id=${id}`,
 		method: 'post'
 	})
 }

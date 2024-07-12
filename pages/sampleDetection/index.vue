@@ -62,7 +62,7 @@
 	    title: "行政区域",
 	    options: [
 	      {
-	        label: '生序',
+	        label: '升序',
 	        value: {type:"provincetext",value:'asc'}
 	      },
 	      {
@@ -75,7 +75,7 @@
 	    title: "项目状态",
 	    options: [
 			{
-	        label: '生序',
+	        label: '升序',
 	        value: {type:"segment",value:'asc'}
 	      },
 	      {
@@ -88,7 +88,7 @@
 	    title: "项目类型",
 	    options: [
 	      {
-	        label: '生序',
+	        label: '升序',
 	         value: {type:"typetext",value:'asc'}
 	      },
 	      {

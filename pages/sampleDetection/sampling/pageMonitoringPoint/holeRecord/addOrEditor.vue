@@ -267,8 +267,6 @@
 	}
 
 	function addOrUpdateData() {
-		console.log(dataForm.value)
-
 		form.value.validate(valid => {
 			if (valid && validityDepth()) {
 				parseFiles(dataForm.value)

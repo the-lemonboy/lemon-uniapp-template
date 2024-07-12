@@ -21,14 +21,14 @@
 				<u-form-item label-width='100px' label="钻孔编号" prop="holeNo"><u-input
 						v-model="dataForm.holeNo" /></u-form-item>
 				<u-form-item label-width='100px' label="采样类型" prop="holeType"><u-input
-						v-model="holeTypeOptions.current.label" type="select"
+						v-model="dataForm.holeType" type="select"
 						@click="holeTypeOptions.show=true" /></u-form-item>
 				<u-form-item label-width='100px' label="经纬度" prop="startTime"><u-input
 						v-model="dataForm.longitude" /><u-input v-model="dataForm.latitude" /><uni-icons
 						@click="mainVisible = false" type="location-filled" size="30"
 						style="color: green;"></uni-icons></u-form-item>
-				<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input type="select"
-						@cick="showPickerDate('startTime')" v-model="dataForm.startTime" /></u-form-item>
+				<u-form-item label-width='100px' label="开始时间" prop="endTime"><u-input type="select"
+						@click="showPickerDate('startTime')" v-model="dataForm.startTime" /></u-form-item>
 				<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select"
 						@click="showPickerDate('endTime')" v-model="dataForm.endTime" /></u-form-item>
 				<u-form-item label-width='100px' label="钻孔直径" prop="diameter">
@@ -89,6 +89,7 @@
 		getDictionaryDataSelector,
 		getDictionaryDataSelectorCascade
 	} from '@/api/dictionary'
+	import tMap from './tMap.vue'
 	const form = ref(null)
 	const rules = reactive({
 		sampleName: [{
@@ -110,18 +111,17 @@
 	onReady(() => {
 		form.value.setRules(rules);
 	})
-	import tMap from './tMap.vue'
 	const mainVisible = ref(true)
 	const location = ref()
 
 	function emitLocation(val) {
 		location.value = val
-		var ct=new CoordinateTransformation()
+		var ct = new CoordinateTransformation()
 		// console.log(res.data.longitude+","+res.data.latitude)
-		var newPt=ct.gcj02towgs84(val.latlng.lng,val.latlng.lat)
+		var newPt = ct.gcj02towgs84(val.latlng.lng, val.latlng.lat)
 		// console.log(newPt[0]+","+newPt[1])
 		dataForm.value.longitude = newPt[0]
-		dataForm.value.latitude =newPt[1]
+		dataForm.value.latitude = newPt[1]
 	}
 	// 监测井类型
 	const holeTypeOptions = reactive({

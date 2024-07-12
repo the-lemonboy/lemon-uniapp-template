@@ -20,7 +20,6 @@
 									<view class="center-zone">
 										<text class="area">门禁id：{{ item.id }}</text>
 									</view>
-									<text class="time">门禁ip：{{item.ip}}</text>
 								</view>
 							</view>
 					<u-empty style="margin-top: 40px;" v-if="dataList.length == 0 && loading == false"  text="暂无数据" mode="list"></u-empty>

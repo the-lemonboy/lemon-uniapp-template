@@ -19,8 +19,6 @@
 					disabled="true"	v-model="doorInfo.name" /></u-form-item>
 				<u-form-item label-width='100px' label="门禁id" prop="sampleDepth"><u-input
 					disabled="true"	v-model="doorInfo.id" /></u-form-item>
-				<u-form-item label-width='100px' label="门禁ip" prop="pidReading"><u-input
-					disabled="true"	v-model="doorInfo.ip" /></u-form-item>
 			</u-form>
 			<u-button class="open-btn" type="success" @click="handelOpenDoor">打开门禁</u-button>
 		</view>
@@ -51,8 +49,8 @@
 	const editVisible = ref(null)
 	const doorInfo = ref(null)
 	function handelOpenDoor() {
-		if (doorInfo.value.ip && doorInfo.value.usename && doorInfo.value.password) {
-			openDoor(doorInfo.value.ip, doorInfo.value.usename, doorInfo.value.password).then(res => {
+		if (doorInfo.value.id) {
+			openDoor(doorInfo.value.id).then(res => {
 				ToastFn("门禁已打开",'success')
 			})
 		} else {

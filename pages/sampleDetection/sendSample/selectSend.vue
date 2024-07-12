@@ -28,8 +28,8 @@
 			</view>
 			<view class="send-box-item" v-for="item of unSendList" :key="item.id">
 				<view class="item-box">
-					<u-checkbox @change="checkboxChange" v-model="item.send" shape="circle" :name="item.id"></u-checkbox>
-					<view class="left-item">
+					<u-checkbox class="left-item" @change="checkboxChange" v-model="item.send" shape="circle" :name="item.id"></u-checkbox>
+					<view class="right-item">
 						<view class="title">采样名称：{{ item.sampleName }}</view>
 						<view class="center-zone">
 							<text class="area">分析指标：{{ item.analysisFactorNames }}</text>
@@ -334,20 +334,24 @@
 
 		.item-box {
 			width: 90%;
-			height: 80px;
+			min-height: 80px;
 			margin: 10px auto;
-			padding: 0 10px;
 			border: 1px solid #e6e6e6;
 			border-radius: 5px;
 			box-shadow: 5px 5px 18px #ebebeb, -5px -5px 18px #fff;
 			display: flex;
-			// justify-content: space-between;
+			justify-content: space-between;
 			align-items: center;
-
-			.left-item {
-				// height: 100%;
-				// display: flex;
-				// flex-direction: column;
+			padding: 10px;
+			.area{
+				  white-space: normal;
+				    word-break: break-word; /* 防止长单词撑破容器 */
+			}
+			.left-item{
+				flex-shrink: 0;
+			}
+			.right-item{
+				flex-grow: 1;
 			}
 		}
 
@@ -362,7 +366,6 @@
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
-
 			.footer-radio {
 				line-height: 60px;
 				margin-left: 10px;
