@@ -28,8 +28,8 @@
 			</view>
 			<view class="send-box-item" v-for="(item,index) of dataForm.detailList" :key="index">
 				<view class="item-box">
-					<u-checkbox @change="checkboxChange" v-model="item.send" shape="circle" :name="item.id"></u-checkbox>
-					<view class="left-item">
+					<u-checkbox class="left-item" @change="checkboxChange" v-model="item.send" shape="circle" :name="item.id"></u-checkbox>
+					<view class="right-item">
 						<view class="title">采样名称:{{ item.sampleNo }}</view>
 						<view class="center-zone">
 							<text class="area">分析指标:{{ item.analysisFactorNames }}</text>
@@ -234,24 +234,28 @@ function ToastFn(text){
 		top: 0;
 		background-color: white;
 
-		.item-box {
-			width: 90%;
-			height: 80px;
-			margin: 10px auto;
-			padding: 0 10px;
-			border: 1px solid #e6e6e6;
-			border-radius: 5px;
-			box-shadow: 5px 5px 18px #ebebeb, -5px -5px 18px #fff;
-			display: flex;
-			// justify-content: space-between;
-			align-items: center;
-
-			.left-item {
-				// height: 100%;
-				// display: flex;
-				// flex-direction: column;
-			}
+	.item-box {
+		width: 90%;
+		min-height: 80px;
+		margin: 10px auto;
+		border: 1px solid #e6e6e6;
+		border-radius: 5px;
+		box-shadow: 5px 5px 18px #ebebeb, -5px -5px 18px #fff;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 10px;
+		.area{
+			  white-space: normal;
+			    word-break: break-word; /* 防止长单词撑破容器 */
 		}
+		.left-item{
+			flex-shrink: 0;
+		}
+		.right-item{
+			flex-grow: 1;
+		}
+	}
 
 		.select-footer {
 			position: fixed;

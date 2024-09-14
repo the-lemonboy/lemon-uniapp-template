@@ -357,7 +357,9 @@
 		dataForm.value.organizeId = uni.getStorageSync('userInfo').organizeId
 		dataForm.value.detailList = InstrumentList.value
 		dataForm.value.useRang = `${useStarTime.value}-${useOverTime.value}`
-		// dataForm.value.useRangArray.push(useStarTime.value,useOverTime.value)
+		dataForm.value.useRangArray.push(useStarTime.value,useOverTime.value)
+		dataForm.value.domain = 'equip'
+		dataForm.value.applyType = 'Use'
 		dataForm.value.detailList.forEach(item => {
 			item.useRang = `${useStarTime.value}-${useOverTime.value}`
 			item.useDay = dataForm.value.useDay

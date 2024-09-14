@@ -20,7 +20,6 @@
 			<view class="content-box">
 				<!-- <uni-navigator url="{{url}}"></uni-navigator> -->
 				<view class="item-box" v-for="(item,index) of props.curConfTreeData" :key="index">
-					<view class="left-item">
 						<view class="title" @click="goToDeatil(item.id)">{{ item.checkItemName }}</view>
 						<u-form :model="item" ref="form1">
 							<u-form-item label-width="150" label="是否检查" prop="name">
@@ -32,7 +31,6 @@
 							<u-form-item label-width="150" label="检查结果" prop="name"><u-input type="textarea"
 									v-model="item.checkResult" /></u-form-item>
 						</u-form>
-					</view>
 				</view>
 			</view>
 		</view>
@@ -139,25 +137,16 @@
 
 	.item-box {
 		width: 90%;
-		height: 180px;
+		min-height: 180px;
 		margin: 10px auto;
 		padding: 10px 10px;
 		border: 1px solid #e6e6e6;
 		border-radius: 5px;
 		box-shadow: 5px 5px 18px #ebebeb, -5px -5px 18px #fff;
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
 	}
 
-	.left-item {
-		height: 100%;
-		display: flex;
-		flex-direction: column;
-
-		.title {
+	.title {
 			font-size: $uni-font-size-base;
 			margin: $uni-spacing-col-sm 0;
 		}
-	}
 </style>

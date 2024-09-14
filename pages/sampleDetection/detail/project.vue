@@ -43,7 +43,6 @@
 	function initData() {
 		let projectId = uni.getStorageSync('projectId')
 		return getProjectDetail(projectId).then(res => {
-			// dataForm = res.data
 			Object.assign(dataForm, res.data);
 		})
 
