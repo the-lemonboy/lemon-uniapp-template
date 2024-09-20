@@ -2343,14 +2343,26 @@
 }
 .send-container .item-box[data-v-5ccd1908] {
   width: 90%;
-  height: 80px;
+  min-height: 80px;
   margin: 10px auto;
-  padding: 0 10px;
   border: 1px solid #e6e6e6;
   border-radius: 5px;
   box-shadow: 5px 5px 18px #ebebeb, -5px -5px 18px #fff;
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 10px;
+}
+.send-container .item-box .area[data-v-5ccd1908] {
+  white-space: normal;
+  word-break: break-word;
+  /* 防止长单词撑破容器 */
+}
+.send-container .item-box .left-item[data-v-5ccd1908] {
+  flex-shrink: 0;
+}
+.send-container .item-box .right-item[data-v-5ccd1908] {
+  flex-grow: 1;
 }
 .send-container .select-footer[data-v-5ccd1908] {
   position: fixed;

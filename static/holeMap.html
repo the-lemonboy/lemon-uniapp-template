@@ -23,11 +23,12 @@
 		<script type="text/javascript" src="https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js">
 		</script>
 		<script type="module">
+			import define from '../utils/define.js'
 			function getProjectDetailValue(data) {
 				return new Promise((resolve, reject) => {
 					const xhr = new XMLHttpRequest();
 
-					xhr.open('POST', `http://106.14.80.181:30019/api/project/HoleBase/getList`);
+					xhr.open('POST', `${define.baseURL}/api/project/HoleBase/getList`);
 					xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
 					xhr.setRequestHeader('cityk-origin', 'app');
 					const token = localStorage.getItem('token'); // 请将 your_token_here 替换为实际的 token

@@ -7,7 +7,7 @@
   "id": "__UNI__111EFBA",
   "name": "cscec",
   "version": {
-    "name": "1.0.0",
+    "name": "1.0.1",
     "code": "100"
   },
   "description": "",
@@ -20,10 +20,10 @@
     "Geolocation": {},
     "Camera": {},
     "Barcode": {},
-    "Push": {},
     "VideoPlayer": {},
     "Contacts": {},
     "Bluetooth": {},
+    "Push": {},
     "UniNView": {
       "description": "UniNView原生渲染"
     }
@@ -130,12 +130,7 @@
           }
         },
         "ad": {},
-        "push": {
-          "unipush": {
-            "version": "2",
-            "offline": false
-          }
-        },
+        "push": {},
         "audio": {
           "mp3": {
             "description": "Android平台录音支持MP3格式文件"

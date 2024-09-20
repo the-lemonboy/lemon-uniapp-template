@@ -2,7 +2,7 @@
     "name" : "cscec",
     "appid" : "__UNI__111EFBA",
     "description" : "",
-    "versionName" : "1.0.0",
+    "versionName" : "1.0.1",
     "versionCode" : "100",
     "transformPx" : false,
     /* 5+App特有相关 */
@@ -24,10 +24,10 @@
             "Geolocation" : {},
             "Camera" : {},
             "Barcode" : {},
-            "Push" : {},
             "VideoPlayer" : {},
             "Contacts" : {},
-            "Bluetooth" : {}
+            "Bluetooth" : {},
+            "Push" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
@@ -70,12 +70,7 @@
                     }
                 },
                 "ad" : {},
-                "push" : {
-                    "unipush" : {
-                        "version" : "2",
-                        "offline" : false
-                    }
-                }
+                "push" : {}
             },
             "icons" : {
                 "android" : {

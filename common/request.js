@@ -1,6 +1,6 @@
 // 引入配置
 // import config from '@/common/config'
-
+import define from '@/utils/define.js'
 const requestInterceptors=(vm)=>{
 	/**
 	 * 请求拦截
@@ -47,7 +47,7 @@ const responseInterceptors=(vm)=>{
 const initRequest=(vm)=>{
 	uni.$u.http.setConfig((defaultConfig) => {
 		/* defaultConfig 为默认全局配置Í */
-		defaultConfig.baseURL = 'http://106.14.80.181:30019' /* 根域名 */
+		defaultConfig.baseURL = define.baseURL /* 根域名 */
 		
 		return defaultConfig
 	})

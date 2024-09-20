@@ -149,6 +149,7 @@
 	async function _getLasterVersionNo() {
 		try {
 			const res = await getLasterVersionNo();
+			console.log(res.data)
 			return res.data;
 		} catch (error) {
 			console.error('获取最新版本号失败:', error);
