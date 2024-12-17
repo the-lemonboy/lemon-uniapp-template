@@ -26,8 +26,10 @@
 					</view>
 				</view>
 				<!-- #ifdef APP-PLUS -->
+		
+				<!-- #endif -->
 				<view class="message-center link-box" @click="handleUpdate()">
-
+				
 					<view class="left-content">
 						<text class="left-text">检查更新</text>
 						<u-badge v-if="updateFlag>0" style="margin-left: 10px;" :absolute="false" color="white"
@@ -38,7 +40,6 @@
 						<uni-icons type="right" size="30" color="#999"></uni-icons>
 					</view>
 				</view>
-				<!-- #endif -->
 				<!-- #ifdef APP-PLUS -->
 				<view class="clear-cache link-box" @click="clearCache">
 					<text class="left-text">清除缓存</text>

@@ -8,37 +8,37 @@
 		<view class="nav-container" style="height: 44px;">
 			<view class="nav-bar"
 				style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
-			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
-			<text class="title"
-				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">质控样品</text>
-			<text @click="addOrUpdateData()" type="primary" class="submit"
-				style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
-		</view>
+				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
+				<text class="title"
+					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">质控样品</text>
+				<text @click="addOrUpdateData()" type="primary" class="submit"
+					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
+			</view>
 		</view>
 		<u-toast ref="uToast" />
 		<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
-			<u-form-item label-width='100px' label="样品编号" prop="sampleNo"><u-input
-					v-model="dataForm.sampleNo" type="select"
-					@click="sampleNoOptions.show=true" /></u-form-item>
+			<u-form-item label-width='100px' label="样品编号" prop="sampleNo"><u-input v-model="dataForm.sampleNo"
+					type="select" @click="sampleNoOptions.show=true" /></u-form-item>
 			<u-form-item label-width='100px' label="样品名称" prop="sampleName"><u-input
 					v-model="dataForm.sampleName" /></u-form-item>
-			<u-form-item label-width='100px' label="质控样品类型" prop="sampleType"><u-input
-					v-model="dataForm.sampleType" type="select"
-					@click="sampleTypeOptions.show=true" /></u-form-item>
-			<u-form-item label-width="100px" label="分析指标"><u-input type="select"
-					v-model="selectName" @click="showPicker"/></u-form-item>
-			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input type="select" @click="showPickerDate('startTime')"
-					v-model="dataForm.startTime" /></u-form-item>
-			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select" @click="showPickerDate('endTime')"
-					v-model="dataForm.endTime" /></u-form-item>
+			<u-form-item label-width='100px' label="质控样品类型" prop="sampleType"><u-input v-model="dataForm.sampleType"
+					type="select" @click="sampleTypeOptions.show=true" /></u-form-item>
+			<u-form-item label-width="100px" label="分析指标"><u-input type="select" v-model="selectName"
+					@click="showPicker" /></u-form-item>
+			<u-form-item label-width='100px' label="开始时间" prop="startTime"><u-input type="select"
+					@click="showPickerDate('startTime')" v-model="dataForm.startTime" /></u-form-item>
+			<u-form-item label-width='100px' label="结束时间" prop="endTime"><u-input type="select"
+					@click="showPickerDate('endTime')" v-model="dataForm.endTime" /></u-form-item>
 			<u-form-item label-width='100px' label="备注" prop="remark"><u-input
 					v-model="dataForm.remark" /></u-form-item>
 			<u-form-item label-width='100px' label="上传图片" prop="file">
-				<upload :watermark='true' @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files"></upload>
+				<upload :watermark='true' @update:value="((val)=>{dataForm.files = val})" :value="dataForm.files">
+				</upload>
 			</u-form-item>
 		</u-form>
 		<ba-tree-picker ref="treePicker" :multiple='true' @select-change="selectChange" title="选择分析指标"
-		  @initDataName="initDataName" :propsInitId="initAnalysisFactorIds" :localdata="factorTreeList" valueKey="id" :selectParent="false" textKey="factorName" childrenKey="children" />
+			@initDataName="initDataName" :propsInitId="initAnalysisFactorIds" :localdata="factorTreeList" valueKey="id"
+			:selectParent="false" textKey="factorName" childrenKey="children" />
 		<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 			:default-time='getCurrentTime()'></u-picker>
 		<u-select v-model="sampleNoOptions.show" value-name="sampleNo" label-name="sampleNo"
@@ -75,7 +75,7 @@
 		getDictionaryDataSelectorCascade,
 		getFactorTreeList
 	} from '@/api/dictionary'
-	
+
 	const form = ref(null)
 	const rules = reactive({
 		sampleNo: [{
@@ -99,47 +99,50 @@
 	})
 	// 分析指标
 	// 显示选择器
-	const factorTreeList = ref([]) 
+	const factorTreeList = ref([])
 	const treePicker = ref()
 	const selectName = ref([])
-	function getfactorTypeOptions(){
+
+	function getfactorTypeOptions() {
 		const _query = {}
 		const id = '505417419548805189'
-		getFactorTreeList(id,_query).then(res=>{
+		getFactorTreeList(id, _query).then(res => {
 			factorTreeList.value = res.data.list
 		})
 	}
+
 	function showPicker() {
-	     treePicker.value._show();
-	 }
-	 //监听选择（ids为数组）
+		treePicker.value._show();
+	}
+	//监听选择（ids为数组）
 	function selectChange(ids, names) {
-		     let resulteIds = ids.map(item => BigInt(item))
-		      resulteIds = resulteIds.join(',')
-		      dataForm.value.analysisFactorIds = resulteIds
-			  selectName.value = names
-	 }
-	 function initDataName(val){
-	 	if(!selectName.value.length){
-	 		val.forEach((item,index)=>{
-	 				if(index<val.length-1){
-	 					selectName.value += item + '/'
-	 				}else{
-	 					selectName.value += item
-	 				}
-	 		})
-	 	}
-	 }
-	 const initAnalysisFactorIds = ref([])
-	  // initData里面执行
-	 function handelAnalysisFactorIds(){
-	 	if(dataForm.value.analysisFactorIds){
+		let resulteIds = ids.map(item => BigInt(item))
+		resulteIds = resulteIds.join(',')
+		dataForm.value.analysisFactorIds = resulteIds
+		selectName.value = names
+	}
+
+	function initDataName(val) {
+		if (!selectName.value.length) {
+			val.forEach((item, index) => {
+				if (index < val.length - 1) {
+					selectName.value += item + '/'
+				} else {
+					selectName.value += item
+				}
+			})
+		}
+	}
+	const initAnalysisFactorIds = ref([])
+	// initData里面执行
+	function handelAnalysisFactorIds() {
+		if (dataForm.value.analysisFactorIds) {
 			initAnalysisFactorIds.value = dataForm.value.analysisFactorIds.split(",")
 		}
-	 }
-	 onLoad(()=>{
-		 getfactorTypeOptions()
-	 })
+	}
+	onLoad(() => {
+		getfactorTypeOptions()
+	})
 	// 样品编号
 	const sampleNoOptions = reactive({
 		show: false,
@@ -170,8 +173,11 @@
 	})
 
 	function getSampleTypeOptions() {
-		getDictionaryDataSelector('497423156592517701').then(res => {
-			sampleTypeOptions.list = res.data.list
+		return new Promise(resolve => {
+			getDictionaryDataSelector('497423156592517701').then(res => {
+				sampleTypeOptions.list = res.data.list
+				resolve()
+			})
 		})
 	}
 
@@ -219,7 +225,8 @@
 		analysisFactorIds: ''
 	})
 
-	function parseData(_data) {
+	function parseData(data) {
+		const _data = data
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
 		} else {
@@ -227,28 +234,34 @@
 		}
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.id = uni.getStorageSync('QCSampleId')
+		const sampleType = sampleTypeOptions?.list?.find(item => item.fullName === _data.sampleType)
+			?.enCode ?? '';
+		_data.sampleType = sampleType
+		return _data
 	}
 
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid) {
-		parseData(dataForm.value)
-		if (!dataForm.value.id) {
-			addQCSample(dataForm.value).then(res =>ToastFn('创建成功'))
-		} else {
-			updateQCSample(dataForm.value.id, dataForm.value).then(res=>ToastFn('修改成功'))
-		}
-		}
+				dataForm.value = parseData(dataForm.value)
+				if (!dataForm.value.id) {
+					addQCSample(dataForm.value).then(res => ToastFn('创建成功'))
+				} else {
+					updateQCSample(dataForm.value.id, dataForm.value).then(res => ToastFn('修改成功'))
+				}
+			}
 		});
 	}
-function ToastFn(text){
-	uni.$emit('refresh')
+
+	function ToastFn(text) {
+		uni.$emit('refresh')
 		goToBack()
 		uni.showToast({
 			title: text,
 			duration: 2000
 		});
 	}
+
 	function initData() {
 		const id = uni.getStorageSync('QCSampleId')
 		if (id) {
@@ -258,10 +271,11 @@ function ToastFn(text){
 			})
 		}
 	}
-	onLoad(() => {
-		initData()
-		getSampleTypeOptions()
+	onLoad(async () => {
+
+		await getSampleTypeOptions()
 		getSampleNoOptions()
+		initData()
 	})
 
 	function goToBack() {
@@ -277,6 +291,9 @@ function ToastFn(text){
 		} else {
 			_dataAll.files = []
 		}
+		const sampleType = sampleTypeOptions?.list?.find(item => item.enCode === _dataAll.sampleType)
+			?.fullName ?? '';
+		_dataAll.sampleType = sampleType
 		return _dataAll
 	}
 </script>

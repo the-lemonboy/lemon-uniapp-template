@@ -44,7 +44,7 @@
 		<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 			:default-time='getCurrentTime()'></u-picker>
 		<u-select v-model="wellTypeOptions.show" value-name="enCode" label-name="fullName" :list="wellTypeOptions.list"
-			@confirm="onWellTypeOptions"></u-select>
+			@confirm="onHoleTypeOptions"></u-select>
 	</view>
 </template>
 
@@ -72,22 +72,22 @@
 		getDictionaryDataSelectorCascade
 	} from '@/api/dictionary'
 	// 监测井类型
-	const wellTypeOptions = reactive({
+	const holeTypeOptions = reactive({
 		show: false,
 		current: {},
 		list: []
 	})
 
-	function getwellTypeOptions() {
+	function getHoleTypeOptions() {
 		getDictionaryDataSelector('497335660487647813').then(res => {
-			wellTypeOptions.list = res.data.list
+			holeTypeOptions.list = res.data.list
 		})
 	}
 
-	function onwellTypeOptions(arr) {
+	function onHoleTypeOptions(arr) {
 		let current = arr[0];
-		wellTypeOptions.current = current;
-		dataForm.value.wellType = current.label;
+		holeTypeOptions.current = current;
+		dataForm.value.holeType = current.label;
 	}
 	// 选择时间
 	const timeParams = reactive({
@@ -138,6 +138,7 @@
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.holeId = uni.getStorageSync('holeId')
 		_data.id = uni.getStorageSync('wellBaseId')
+		_data.holeType = holeTypeOptions.list.find(item=>item.fullName === _data.holeType).encode
 	}
 
 	function addOrUpdateData() {
@@ -161,7 +162,7 @@
 	}
 	onLoad(async () => {
 		// await initData()
-		getwellTypeOptions()
+		getHoleTypeOptions()
 	})
 
 	function goToBack() {

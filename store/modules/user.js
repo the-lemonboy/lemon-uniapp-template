@@ -27,9 +27,6 @@ const actions = {
 				if(res.code == 200){
 					const userInfo = res.data.userInfo || {}
 					const permissionList = res.data.permissionList || []
-					const sysConfigInfo = res.data.sysConfigInfo || {}
-					const sysVersion = sysConfigInfo.sysVersion || ''
-					const copyright = sysConfigInfo.copyright || ''
 					commit('SET_USERINFO', userInfo)
 					uni.setStorageSync('sysVersion', sysVersion)
 					uni.setStorageSync('permissionList', permissionList)

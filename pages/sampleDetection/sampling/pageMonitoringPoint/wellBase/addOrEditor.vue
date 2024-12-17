@@ -154,9 +154,12 @@
 	})
 
 	function getwellTypeOptions() {
-		getDictionaryDataSelector('497335660487647813').then(res => {
-			wellTypeOptions.list = res.data.list
-		})
+			return new Promise(resolve=>{
+				getDictionaryDataSelector('497335660487647813').then(res => {
+					wellTypeOptions.list = res.data.list
+					resolve()
+				})
+			})
 	}
 
 	function onWellTypeOptions(arr) {
@@ -211,7 +214,8 @@
 		files: []
 	})
 
-	function parseData(_data) {
+	function parseData(data) {
+		const _data = data
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
 		} else {
@@ -220,12 +224,16 @@
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.holeId = uni.getStorageSync('holeId')
 		_data.id = uni.getStorageSync('wellBaseId')
+		const wellType = wellTypeOptions?.list?.find(item => item.fullName === _data.wellType)
+			?.enCode ?? '';
+	    _data.wellType = wellType
+		return _data
 	}
 
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid) {
-				parseData(dataForm.value)
+				dataForm.value = parseData(dataForm.value)
 				if (!dataForm.value.id) {
 					addWellBase(dataForm.value).then(res => ToastFn('创建成功'))
 				} else {
@@ -250,6 +258,10 @@
 		} else {
 			_dataAll.files = []
 		}
+		const wellType = wellTypeOptions?.list?.find(item => item.enCode === _dataAll.wellType)
+			?.fullName ?? '';
+		_dataAll.wellType = wellType
+		console.log(wellType,_dataAll,'---')
 		return _dataAll
 	}
 
@@ -261,9 +273,10 @@
 			})
 		}
 	}
-	onLoad(() => {
+	onLoad(async() => {
+		await getwellTypeOptions()
 		initData()
-		getwellTypeOptions()
+		
 	})
 
 	function goToBack() {

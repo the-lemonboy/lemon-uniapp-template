@@ -194,13 +194,15 @@ export function getDataInterfaceRes(id) {
 
 // 用户登录
 export function login(data) {
-	return request({
-		url: '/api/oauth/Login',
-		method: 'post',
-		data,
-		header: {
-			'Content-Type': 'application/x-www-form-urlencoded',
-		}
+	return new Promise(resolve=>{
+		setTimeout(()=>{
+			let res = {
+				data:{
+					token:'token123'
+				}
+			}
+			resolve(res)
+		},1000)
 	})
 }
 
@@ -234,11 +236,23 @@ export function logout() {
 
 // 获取当前用户信息
 export function getCurrentUser() {
-	return request({
-		url: '/api/oauth/CurrentUser',
-		options: {
-			load: false
-		}
+	return new Promise(resolve=>{
+		setTimeout(()=>{
+			const res = {
+				data:{
+					userInfo:{
+						headIcon:"https://plus.unsplash.com/premium_photo-1726399100072-e04ab2012432?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+						userName:"user1",
+						mobilePhone: 8888888,
+						organizeName:'lemon company'
+					},
+					permissionList:{
+						
+					}
+				},
+			}
+			resolve(res)
+		},1000)
 	})
 }
 

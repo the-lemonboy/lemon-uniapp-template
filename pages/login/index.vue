@@ -38,7 +38,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="copyright">Copyright 上海城勘信息科技有限公司</view>
+		<view class="copyright">Copyright Lemon Uniapp Template</view>
 	</view>
 </template>
 

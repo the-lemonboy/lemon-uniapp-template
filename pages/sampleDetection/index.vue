@@ -235,7 +235,6 @@
 				}
 
 				.project {
-					margin-left: 10px;
 					font-size: $uni-font-size-sm;
 					color: $uni-text-color-grey;
 					margin-bottom: $uni-spacing-col-sm;

@@ -87,19 +87,28 @@
 	}
 
 	function getImgSize(url) {
+		console.log(url)
 		const self = this
 		// #ifdef H5
-		return new Promise(resolve => {
-			setTimeout(() => {
-				const img = new Image();
-				img.src = url;
-				cvHeight.value = img.height;
-				cvWidth.value = img.width;
-				resolve();
-			},100)
-		})
+		  return new Promise((resolve, reject) => {
+		       setTimeout(()=>{
+				   const img = new Image();
+				   img.onload = () => {
+				       cvHeight.value = img.height;
+				       cvWidth.value = img.width;
+				       console.log(cvHeight.value, cvWidth.value);
+				       resolve();
+				   };
+				   img.onerror = (error) => {
+				       console.error("Failed to load image:", error);
+				       reject(error);
+				   };
+				   img.src = url;
+			   },200)
+		    });
+		
 		// #endif
-		// #ifndef H5
+		// #ifndef  APP-PLUS
 		return new Promise(resolve => {
 			setTimeout(() => {
 				uni.getImageInfo({
@@ -110,7 +119,7 @@
 						resolve()
 					}
 				});
-			},100)
+			},200)
 		})
 		// #endif
 	}
@@ -121,6 +130,7 @@
 			const ctx = uni.createCanvasContext('cid');
 			
 			ctx.drawImage(url, 0, 0, width, height);
+			const fontsize = Math.min(width,height)/40
 			ctx.font = '30px Arial';
 			ctx.fillStyle = '#adb5bd';
 			const watermarkValue = uni.getStorageSync('watermarkValue');

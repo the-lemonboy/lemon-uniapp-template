@@ -88,7 +88,7 @@
 	const loading = ref(false)
 
 	function getList() {
-		return new Promise(resolve=>{
+		return new Promise(resolve => {
 			loading.value = true
 			let menuId = getMenuId('项目列表')
 			const projectId = uni.getStorageSync('projectId')
@@ -103,7 +103,7 @@
 				holeId: holeId
 			}
 			getHoleRecordList(query).then(res => {
-			
+
 				let tempMaxDepth = 0
 				const id = uni.getStorageSync('holeRecordId')
 				res.data.list.filter(item => item.id !== id).forEach(item => {
@@ -117,18 +117,19 @@
 			}).finally(() => {
 				loading.value = false
 			})
-			
+
 		})
 	}
+
 	function validityDepth() {
-		 if ( dataForm.value.endDepth <= dataForm.value.startDepth){
+		if (dataForm.value.endDepth <= dataForm.value.startDepth) {
 			uni.showToast({
 				title: `请入大于${dataForm.value.startDepth}的结束深度`,
 				icon: 'error',
 				duration: 1000
 			});
 			return 0
-		}else{
+		} else {
 			return 1
 		}
 
@@ -151,16 +152,16 @@
 	})
 	const rules = reactive({
 		endDepth: [{
-				validator: (rule, value, callback) => {
-					if (!value) {
-						callback(new Error('请入结束深度'))
-					} else {
-						callback()
-					}
-				},
-				message: '请入结束深度',
-				trigger: ['change', 'blur'],
-			}],
+			validator: (rule, value, callback) => {
+				if (!value) {
+					callback(new Error('请入结束深度'))
+				} else {
+					callback()
+				}
+			},
+			message: '请入结束深度',
+			trigger: ['change', 'blur'],
+		}],
 		solumType: [{
 			required: true,
 			message: '请输入图层类型',
@@ -179,9 +180,12 @@
 	})
 
 	function getSolumTypeOptions() {
-		getDictionaryDataSelectorCascade('497318342525198917').then(res => {
-			res.data.list.forEach(item => {
-				changeSolumType(item)
+		return new Promise(resolve=>{
+			getDictionaryDataSelectorCascade('497318342525198917').then(res => {
+				res.data.list.forEach(item => {
+					changeSolumType(item)
+					resolve()
+				})
 			})
 		})
 	}
@@ -226,9 +230,12 @@
 	})
 
 	function getsolumHumidityOptions() {
+	return new Promise(resolve=>{
 		getDictionaryDataSelector('497319923836527173').then(res => {
 			solumHumidityOptions.list = res.data.list
+			resolve()
 		})
+	})
 	}
 	// 密实度
 	const solumCompactnessOptions = reactive({
@@ -238,8 +245,11 @@
 	})
 
 	function getSolumCompactnessOptions() {
-		getDictionaryDataSelector('497320163494863429').then(res => {
-			solumCompactnessOptions.list = res.data.list
+		return new Promise(resolve=>{
+			getDictionaryDataSelector('497320163494863429').then(res => {
+				solumCompactnessOptions.list = res.data.list
+				resolve()
+			})
 		})
 	}
 	// 可塑性
@@ -250,12 +260,16 @@
 	})
 
 	function getsolumPlasticityOptions() {
-		getDictionaryDataSelector('497320786047017541').then(res => {
-			solumPlasticityOptions.list = res.data.list
+		return new Promise(resolve=>{
+			getDictionaryDataSelector('497320786047017541').then(res => {
+				solumPlasticityOptions.list = res.data.list
+				resolve()
+			})
 		})
 	}
 
-	function parseFiles(_data) {
+	function parseFiles(data) {
+		const _data = data
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
 		} else {
@@ -264,12 +278,24 @@
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.holeId = uni.getStorageSync('holeId')
 		_data.id = uni.getStorageSync('holeRecordId')
+		const solumPlasticity = solumPlasticityOptions?.list?.find(item => item.fullName === _data.solumPlasticity)
+			?.enCode ?? '';
+		const solumCompactness = solumCompactnessOptions?.list?.find(item => item.fullName === _data.solumCompactness)
+			?.enCode ?? '';
+		const solumHumidity = solumHumidityOptions?.list?.find(item => item.fullName === _data.solumHumidity)?.enCode ??
+		'';
+		const solumType = solumTypeOptions?.list?.find(item => item.fullName === _data.solumType)?.enCode ?? '';
+		_data.solumPlasticity = solumPlasticity
+		_data.solumCompactness = solumCompactness
+		_data.solumHumidity = solumHumidity
+		_data.solumType = solumType
+		return _data
 	}
 
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid && validityDepth()) {
-				parseFiles(dataForm.value)
+				dataForm.value = parseFiles(dataForm.value)
 				const id = uni.getStorageSync('holeRecordId')
 				if (!id) {
 					addHoleRecord(dataForm.value).then(res => {
@@ -299,6 +325,17 @@
 		} else {
 			_dataAll.files = []
 		}
+		const solumPlasticity = solumPlasticityOptions?.list?.find(item => item.enCode === _dataAll.solumPlasticity)
+			?.fullName ?? '';
+		const solumCompactness = solumCompactnessOptions?.list?.find(item => item.enCode === _dataAll.solumCompactness)
+			?.fullName ?? '';
+		const solumHumidity = solumHumidityOptions?.list?.find(item => item.enCode === _dataAll.solumHumidity)?.fullName ??
+		'';
+		const solumType = solumTypeOptions?.list?.find(item => item.enCode === _dataAll.solumType)?.fullName ?? '';
+		_dataAll.solumPlasticity = solumPlasticity
+		_dataAll.solumCompactness = solumCompactness
+		_dataAll.solumHumidity = solumHumidity
+		_dataAll.solumType = solumType
 		return _dataAll
 	}
 
@@ -308,19 +345,20 @@
 			getHoleRecordDetail(id).then(res => {
 				dataForm.value = dataInfo(res.data)
 			})
-		}else{
+		} else {
 			// 新增
 			dataForm.value.startDepth = checkDepthValue.value
-			dataForm.value.endDepth = checkDepthValue.value+1
+			dataForm.value.endDepth = checkDepthValue.value + 1
 		}
 	}
-	onLoad(async() => {
+	onLoad(async () => {
 		await getList()
+		
+		await getsolumHumidityOptions()
+		await getSolumCompactnessOptions()
+		await getsolumPlasticityOptions()
+		await getSolumTypeOptions()
 		initData()
-		getsolumHumidityOptions()
-		getSolumCompactnessOptions()
-		getsolumPlasticityOptions()
-		getSolumTypeOptions()
 	})
 
 	function goToBack() {

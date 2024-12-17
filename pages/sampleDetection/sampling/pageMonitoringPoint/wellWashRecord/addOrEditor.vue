@@ -8,12 +8,12 @@
 		<view class="nav-container" style="height: 44px;">
 			<view class="nav-bar"
 				style="position: fixed; z-index: 99; background-color: white; box-sizing: border-box; box-sizing: border-box; width: 100vw; height: 44px;">
-			<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
-			<text class="title"
-				style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">洗井记录</text>
-			<text @click="addOrUpdateData()" type="primary" class="submit"
-				style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
-		</view>
+				<uni-icons @click="goToBack()" type="left" size="30" style="line-height: 44px;"></uni-icons>
+				<text class="title"
+					style="font-size: 16px; position:absolute; left: 50%; top:50%; transform: translate(-50%,-50%);">洗井记录</text>
+				<text @click="addOrUpdateData()" type="primary" class="submit"
+					style="color:blue; line-height: 44px; margin-right: 10px; float:right;">保存</text>
+			</view>
 		</view>
 		<u-toast ref="uToast" />
 		<u-form :model="dataForm" ref="form" :rules="rules" style="margin: 10px;">
@@ -30,38 +30,38 @@
 			<u-form-item label-width='100px' label="洗井设备" prop="deviceId"><u-input
 					v-model="dataForm.deviceId" /></u-form-item>
 			<u-form-item label-width='100px' label="井水体积" prop="waterVolume">
-			  <u-input type="number" v-model="dataForm.waterVolume"></u-input>
-			  <span>(单位: L)</span>
+				<u-input type="number" v-model="dataForm.waterVolume"></u-input>
+				<span>(单位: L)</span>
 			</u-form-item>
-			
+
 			<u-form-item label-width='100px' label="水温" prop="waterTemperature">
-			  <u-input type="number" v-model="dataForm.waterTemperature"></u-input>
-			  <span>(单位: ℃)</span>
+				<u-input type="number" v-model="dataForm.waterTemperature"></u-input>
+				<span>(单位: ℃)</span>
 			</u-form-item>
-			
+
 			<u-form-item label-width='100px' label="pH值" prop="waterPh">
-			  <u-input type="number" v-model="dataForm.waterPh"></u-input>
-			  <span>(单位: 无量纲)</span>
+				<u-input type="number" v-model="dataForm.waterPh"></u-input>
+				<span>(单位: 无量纲)</span>
 			</u-form-item>
-			
+
 			<u-form-item label-width='100px' label="电导率" prop="waterConductivity">
-			  <u-input type="number" v-model="dataForm.waterConductivity"></u-input>
-			  <span>(单位: μS/cm)</span>
+				<u-input type="number" v-model="dataForm.waterConductivity"></u-input>
+				<span>(单位: μS/cm)</span>
 			</u-form-item>
-			
+
 			<u-form-item label-width='100px' label="氧化还原电位" prop="oxReductionPotential">
-			  <u-input type="number" v-model="dataForm.oxReductionPotential"></u-input>
-			  <span>(单位: mV)</span>
+				<u-input type="number" v-model="dataForm.oxReductionPotential"></u-input>
+				<span>(单位: mV)</span>
 			</u-form-item>
-			
+
 			<u-form-item label-width='100px' label="溶解氧" prop="dissolvedOxygen">
-			  <u-input type="number" v-model="dataForm.dissolvedOxygen"></u-input>
-			  <span>(单位: mg/L)</span>
+				<u-input type="number" v-model="dataForm.dissolvedOxygen"></u-input>
+				<span>(单位: mg/L)</span>
 			</u-form-item>
-			
+
 			<u-form-item label-width='100px' label="浊度" prop="waterTurbidity">
-			  <u-input type="number" v-model="dataForm.waterTurbidity"></u-input>
-			  <span>(单位: NTU)</span>
+				<u-input type="number" v-model="dataForm.waterTurbidity"></u-input>
+				<span>(单位: NTU)</span>
 			</u-form-item>
 
 			<u-form-item label-width='100px' label="是否发现NAPL" prop="hasNapl">
@@ -79,8 +79,8 @@
 		</u-form>
 		<u-picker v-model="selectTimeVisible" mode="time" :params="timeParams" @confirm="getTime"
 			:default-time='getCurrentTime()'></u-picker>
-		<u-select v-model="washModeOptions.show" value-name="fullName" label-name="fullName" :list="washModeOptions.list"
-			@confirm="onWashModeOptions"></u-select>
+		<u-select v-model="washModeOptions.show" value-name="fullName" label-name="fullName"
+			:list="washModeOptions.list" @confirm="onWashModeOptions"></u-select>
 
 		<u-select v-model="wellNoOptions.show" value-name="wellNo" label-name="wellNo" :list="wellNoOptions.list"
 			@confirm="onWellNoOptions"></u-select>
@@ -233,12 +233,16 @@
 	}
 
 	function getWashModeOptions() {
-		getDictionaryDataSelector('497336968254857797').then(res => {
-			washModeOptions.list = res.data.list
+		return new Promise(resolve => {
+			getDictionaryDataSelector('497336968254857797').then(res => {
+				washModeOptions.list = res.data.list
+				resolve()
+			})
 		})
 	}
 
-	function parseFiles(_data) {
+	function parseFiles(data) {
+		const _data = data
 		if (_data.files) {
 			_data.files = JSON.stringify(_data.files)
 		} else {
@@ -247,18 +251,23 @@
 		_data.projectId = uni.getStorageSync('projectId')
 		_data.holeId = uni.getStorageSync('holeId')
 		_data.id = uni.getStorageSync('wellWashRecordId')
+		const washMode = washModeOptions?.list?.find(item => item.fullName === _data.washMode)
+			?.enCode ?? '';
+		_data.washMode = washMode
+		return _data
+
 	}
 
 	function addOrUpdateData() {
 		form.value.validate(valid => {
 			if (valid) {
-		parseFiles(dataForm.value)
-		if (!dataForm.value.id) {
-			addWellWashRecord(dataForm.value).then(res => ToastFn('创建成功'))
-		} else {
-			updateWellWashRecord(dataForm.value.id, dataForm.value).then(res => ToastFn('修改成功'))
-		}
-		}
+				dataForm.value = parseFiles(dataForm.value)
+				if (!dataForm.value.id) {
+					addWellWashRecord(dataForm.value).then(res => ToastFn('创建成功'))
+				} else {
+					updateWellWashRecord(dataForm.value.id, dataForm.value).then(res => ToastFn('修改成功'))
+				}
+			}
 		});
 	}
 
@@ -278,6 +287,9 @@
 			_dataAll.files = []
 		}
 		_dataAll.hasNapl = _dataAll.hasNapl == "true" ? "1" : "0"
+		const washMode = washModeOptions?.list?.find(item => item.enCode === _dataAll.washMode)
+			?.fullName ?? '';
+		_dataAll.washMode = washMode
 		return _dataAll
 	}
 
@@ -289,13 +301,10 @@
 			})
 		}
 	}
-	onLoad(() => {
-
-		nextTick(() => {
-			initData()
-		})
+	onLoad(async () => {
 		getWellNoOptions()
-		getWashModeOptions()
+		await getWashModeOptions()
+		initData()
 	})
 
 	function goToBack() {

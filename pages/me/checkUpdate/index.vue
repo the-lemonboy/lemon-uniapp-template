@@ -40,7 +40,7 @@
 			default:null
 		}
 	})
-	const frontEndUrl = inject('define').frontEndUrl
+	const updateAPkURL = inject('define').updateAPkURL
 	const updateDialog = ref(null)
 	const lastVersion = ref(null)
 	// 获取最新版本号
@@ -56,7 +56,7 @@
 		downloadFlag.value = true
 		const downloadTask = uni.downloadFile({
 			// 存放最新安装包的地址
-			url: `${frontEndUrl}${props.apkPath}`,
+			url: `${updateAPkURL}${props.apkPath}`,
 			success: (downloadResult) => {
 				if (downloadResult.statusCode === 200) {
 					plus.runtime.install(

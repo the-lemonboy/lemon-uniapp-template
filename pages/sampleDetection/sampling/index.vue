@@ -41,6 +41,7 @@
 	}
 	function goAddOrEditorData(){
 		if(tabCurent.value == 0){
+			uni.setStorageSync('holeId', null)
 			uni.navigateTo({
 				url: `/pages/sampleDetection/sampling/monitorPoint/addOrEditor`,
 			})
