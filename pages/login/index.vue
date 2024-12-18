@@ -45,7 +45,6 @@
 <script setup>
 	import {
 		login,
-		getDefaultConfig
 	} from '@/api/common.js'
 	// import { mapGetters } from 'vuex'
 	import md5Libs from "@/uni_modules/vk-uview-ui/libs/function/md5";
@@ -96,26 +95,6 @@
 	const sysName = ref('')
 	const form = ref()
 	const store = useStore()
-
-	function onFocus(e) {
-		getConfig(e)
-	}
-
-	function onBlur(e) {
-		getConfig(e)
-	}
-
-	function getConfig(val) {
-		if (!val) return
-		getDefaultConfig(formData.account).then(res => {
-			needCode.value = !!res.data.enableVerificationCode
-			if (needCode.value) {
-				codeLength.value = res.data.verificationCodeNumber || 4
-				changeCode()
-			}
-		})
-	}
-
 	function changeCode() {
 		let timestamp = Math.random()
 		timestamp.value = timestamp

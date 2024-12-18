@@ -1,15 +1,17 @@
 import request from "@/utils/request";
 
-export function getLasterVersionNo(){
-	return request({
-		url:'/api/app/getAppLastVersionNo',
-		method:'get'
-	})
-}
-export function getLasterVersion(){
-	return request({
-		url:'/api/app/getAppLastVersion',
-		method:'get',
-		header:{'Content-Type': 'application/vnd.android'}
+export function getLasterVersionNo() {
+	return new Promise(resolve => {
+		setTimeout(() => {
+			const res = {
+				message: 'sucesseful',
+				code: 200,
+				data: {
+					lastVersion: '0.0.1',
+					url: 'testUrl'
+				}
+			}
+			resolve(res)
+		},1000)
 	})
 }

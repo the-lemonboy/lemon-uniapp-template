@@ -25,9 +25,6 @@
 		inject
 	} from 'vue'
 	import {
-		getLasterVersion
-	} from '@/api/updateVersion/updateVersion.js'
-	import {
 		compareVersion
 	} from '@/utils/index.js'
 	const props = defineProps({

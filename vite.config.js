@@ -9,7 +9,7 @@ export default defineConfig({
 		port: 30019,
 		 proxy: {
 		      '/dev': {
-		        target:'http://112.64.139.162:30019',
+		        target:'dev',
 		        changeOrigin: true,
 		        rewrite: (path) => path.replace(/^\/dev/, ''),
 		      },

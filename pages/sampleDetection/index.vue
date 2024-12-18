@@ -219,7 +219,6 @@
 			// display: flex;
 			// justify-content: space-between;
 			// align-items: center;
-
 			.left-item {
 				margin: 10px;
 
@@ -232,6 +231,7 @@
 					font-size: $uni-font-size-sm;
 					color: $uni-text-color-grey;
 					margin-bottom: $uni-spacing-col-sm;
+					margin-right: 10px;
 				}
 
 				.project {

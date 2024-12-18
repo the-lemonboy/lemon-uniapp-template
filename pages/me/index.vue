@@ -19,15 +19,6 @@
 				</viwe>
 			</view>
 			<view class="me-menu">
-				<view class="message-center link-box" @click="goMessage()">
-					<text class="left-text">消息中心</text>
-					<view class="right-content">
-						<uni-icons type="right" size="30" color="#999"></uni-icons>
-					</view>
-				</view>
-				<!-- #ifdef APP-PLUS -->
-		
-				<!-- #endif -->
 				<view class="message-center link-box" @click="handleUpdate()">
 				
 					<view class="left-content">
@@ -81,7 +72,6 @@
 	} from '@/utils/index.js'
 	import {
 		getLasterVersionNo,
-		getLasterVersion
 	} from '@/api/updateVersion/updateVersion.js'
 	const userInfo = ref({})
 	const baseURL = inject('define').baseURL
@@ -150,7 +140,6 @@
 	async function _getLasterVersionNo() {
 		try {
 			const res = await getLasterVersionNo();
-			console.log(res.data)
 			return res.data;
 		} catch (error) {
 			console.error('获取最新版本号失败:', error);
