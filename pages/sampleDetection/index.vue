@@ -120,9 +120,6 @@
 			content: '您确定要删除此项吗？',
 			success: res => {
 				if (res.confirm) {
-					delProjectDetail(id).then(res => {
-						getMenuList()
-					})
 					uni.showToast({
 						title: '移除成功',
 						icon: 'none'

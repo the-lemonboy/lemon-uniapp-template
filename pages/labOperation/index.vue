@@ -6,19 +6,19 @@
 	<!-- #endif -->
 	<view class="lo-container">
 		<view class="materiel-box">
-			<view class="select-zone" @click="goDetail('/pages/labOperation/materiel/index')">
+			<view class="select-zone">
 				<text class="zone-one">物料库存盘点</text>
 				<text class="zone-two">点击前往</text>
 			</view>
 		</view>
 		<view class="instrument-box">
-			<view class="select-zone" @click="goDetail('/pages/labOperation/instrument/index')">
+			<view class="select-zone">
 			<text class="zone-one">仪器使用登记</text>
 			<text class="zone-two">点击前往</text>
 			</view>
 		</view>
 		<view class="guard-box">
-			<view class="select-zone" @click="goDetail('/pages/labOperation/guard/index')">
+			<view class="select-zone">
 			<text class="zone-one">门禁远程控制</text>
 			<text class="zone-two">点击前往</text>
 			</view>
@@ -27,11 +27,6 @@
 </template>
 
 <script setup>
-	function goDetail(path){
-		uni.navigateTo({
-			url: path,
-		})
-	}
 </script>
 <style lang="scss" scoped>
 	 /* #ifndef H5 */
